@@ -11,6 +11,28 @@
     @endif
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes authBgFade {
+            0%, 17% { opacity: 1; }
+            20%, 97% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+        .auth-bg-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: blur(14px);
+            transform: scale(1.08);
+            opacity: 0;
+            animation: authBgFade 25s infinite;
+        }
+        .auth-bg-slide--1 { animation-delay: 0s; }
+        .auth-bg-slide--2 { animation-delay: 5s; }
+        .auth-bg-slide--3 { animation-delay: 10s; }
+        .auth-bg-slide--4 { animation-delay: 15s; }
+        .auth-bg-slide--5 { animation-delay: 20s; }
+    </style>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -65,10 +87,20 @@
 <body class="bg-gray-50 dark:bg-gray-900 font-sans">
 <section class="bg-gray-50 dark:bg-gray-900">
     <div class="grid min-h-screen grid-cols-1 lg:grid-cols-2">
-        <div class="hidden lg:flex bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800 text-white">
-            <div class="w-full p-10 xl:p-16">
+        <div class="hidden lg:flex relative overflow-hidden text-white">
+            <div class="absolute inset-0">
+                <div class="auth-bg-slide auth-bg-slide--1" style="background-image:url('/assets/image/black-pregnant-women-posing_23-2151446117.jpg')"></div>
+                <div class="auth-bg-slide auth-bg-slide--2" style="background-image:url('/assets/image/black-pregnant-women-posing_23-2151446121.jpg')"></div>
+                <div class="auth-bg-slide auth-bg-slide--3" style="background-image:url('/assets/image/black-pregnant-women-posing_23-2151446129.jpg')"></div>
+                <div class="auth-bg-slide auth-bg-slide--4" style="background-image:url('/assets/image/black-pregnant-women-posing_23-2151446130.jpg')"></div>
+                <div class="auth-bg-slide auth-bg-slide--5" style="background-image:url('/assets/image/young-asian-pregnant-woman-holding-her-belly-talking-with-her-child-mom-feeling-happy-smiling-positive-peaceful-while-take-care-baby-pregnancy-near-window-living-room-home_7861-2180.jpg')"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/85 to-gray-800/80"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(34,197,94,0.20),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(34,197,94,0.10),transparent_60%)]"></div>
+            </div>
+
+            <div class="relative z-10 w-full p-10 xl:p-16">
                 <a href="{{ url('/') }}" class="flex items-center mb-10 text-2xl font-semibold text-white">
-                    <div class="w-9 h-9 mr-3 rounded-lg bg-primary-600"></div>
+                    <img class="w-10 h-10 mr-3 rounded-lg object-contain bg-white/10 p-1" src="{{ asset('assets/image/LOGO-MALKIA-KONNECT.jpg') }}" alt="{{ config('app.name') }} logo">
                     {{ config('app.name') }}
                 </a>
 
@@ -112,7 +144,7 @@
 
         <div class="flex flex-col items-center justify-center px-6 py-10">
             <a href="{{ url('/') }}" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white lg:hidden">
-                <div class="w-8 h-8 mr-2 rounded-lg bg-primary-600"></div>
+                <img class="w-9 h-9 mr-2 rounded-lg object-contain bg-primary-600/10 p-1" src="{{ asset('assets/image/LOGO-MALKIA-KONNECT.jpg') }}" alt="{{ config('app.name') }} logo">
                 {{ config('app.name') }}
             </a>
 
