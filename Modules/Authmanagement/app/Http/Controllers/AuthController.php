@@ -3,6 +3,8 @@
 namespace Modules\Authmanagement\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminActivityLog;
+use App\Models\AdminLoginLog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -51,6 +53,26 @@ class AuthController extends Controller
 
             $user = $request->user();
             if ($user && (($user->role ?? 'user') === 'module' || (bool) ($user->is_admin ?? false))) {
+                if (Schema::hasTable('admin_login_logs')) {
+                    AdminLoginLog::query()->create([
+                        'user_id' => $user->id,
+                        'ip_address' => $request->ip(),
+                        'user_agent' => (string) $request->userAgent(),
+                        'logged_in_at' => now(),
+                    ]);
+                }
+
+                if (Schema::hasTable('admin_activity_logs')) {
+                    AdminActivityLog::query()->create([
+                        'user_id' => $user->id,
+                        'action' => 'login',
+                        'meta' => [
+                            'ip' => $request->ip(),
+                        ],
+                        'created_at' => now(),
+                    ]);
+                }
+
                 return redirect()->to(rtrim(config('app.url'), '/').'/admin');
             }
 

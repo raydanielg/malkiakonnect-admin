@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Adminmodules\Http\Controllers\AdminDashboardController;
 use Modules\Adminmodules\Http\Controllers\AdminmodulesController;
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/admin', function () {
-        return view('adminmodules::dashboard');
-    })->name('admin.dashboard');
+    Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     Route::get('/admin/overview', function () {
         return view('adminmodules::overview');

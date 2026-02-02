@@ -45,28 +45,6 @@
                 </a>
             </li>
 
-            <li>
-                <a href="#" class="group flex items-center gap-3 px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200" aria-controls="dropdown-pages" data-collapse-toggle="dropdown-pages" data-collapse-link>
-                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400">layers</span>
-                    <span class="flex-1">Pages</span>
-                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400 transition-transform" data-collapse-caret>expand_more</span>
-                </a>
-                <ul id="dropdown-pages" class="hidden mt-1 space-y-1">
-                    <li>
-                        <a href="{{ route('adminmodules.index') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">view_module</span>
-                            <span>Admin Modules</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('/dashboard') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">account_circle</span>
-                            <span>User Dashboard</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
             <li class="pt-2">
                 <div class="px-2 pt-2 pb-1 text-[11px] font-bold tracking-widest text-gray-500 dark:text-gray-400">USER MANAGEMENT</div>
             </li>
