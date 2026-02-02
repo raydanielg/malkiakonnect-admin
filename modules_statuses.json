@@ -1,3 +1,4 @@
 {
-    "Adminmodules": true
+    "Adminmodules": true,
+    "Authmanagement": true
 }

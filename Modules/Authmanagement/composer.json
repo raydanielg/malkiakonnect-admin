@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/authmanagement",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Authmanagement\\": "app/",
+            "Modules\\Authmanagement\\Database\\Factories\\": "database/factories/",
+            "Modules\\Authmanagement\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Authmanagement\\Tests\\": "tests/"
+        }
+    }
+}

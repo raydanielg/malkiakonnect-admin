@@ -1,0 +1,11 @@
+{
+    "name": "Authmanagement",
+    "alias": "authmanagement",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Authmanagement\\Providers\\AuthmanagementServiceProvider"
+    ],
+    "files": []
+}
