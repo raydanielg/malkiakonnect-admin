@@ -21,33 +21,34 @@
             </div>
         </div>
 
-        <ul class="space-y-2">
+        <div class="px-2 pt-1 pb-2 text-[11px] font-bold tracking-widest text-gray-500 dark:text-gray-400">NAVIGATION</div>
+
+        <ul class="space-y-1">
             <li>
-                <a href="{{ url('/admin') }}" class="flex items-center p-2 text-base font-normal rounded-lg group {{ request()->is('admin') ? 'text-gray-900 bg-gray-100 dark:text-white dark:bg-gray-700' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                    <svg aria-hidden="true" class="w-6 h-6 text-gray-400 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
-                        <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-                    </svg>
-                    <span class="ml-3">Overview</span>
+                <a href="{{ url('/admin') }}" class="group flex items-center gap-3 px-2 py-2 text-sm font-medium {{ request()->is('admin') ? 'text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-200' }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->is('admin') ? 'text-primary-700 dark:text-primary-300' : 'text-gray-500 dark:text-gray-400' }}">dashboard</span>
+                    <span>Overview</span>
                 </a>
             </li>
 
             <li>
-                <button type="button" class="flex items-center p-2 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-pages" data-collapse-toggle="dropdown-pages">
-                    <svg aria-hidden="true" class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="flex-1 ml-3 text-left whitespace-nowrap">Pages</span>
-                    <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-                <ul id="dropdown-pages" class="hidden py-2 space-y-2">
+                <a href="#" class="group flex items-center gap-3 px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200" aria-controls="dropdown-pages" data-collapse-toggle="dropdown-pages" data-collapse-link>
+                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400">layers</span>
+                    <span class="flex-1">Pages</span>
+                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400 transition-transform" data-collapse-caret>expand_more</span>
+                </a>
+                <ul id="dropdown-pages" class="hidden mt-1 space-y-1">
                     <li>
-                        <a href="{{ route('adminmodules.index') }}" class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Admin Modules</a>
+                        <a href="{{ route('adminmodules.index') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">view_module</span>
+                            <span>Admin Modules</span>
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ url('/dashboard') }}" class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">User Dashboard</a>
+                        <a href="{{ url('/dashboard') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">account_circle</span>
+                            <span>User Dashboard</span>
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -55,11 +56,9 @@
             <li>
                 <form method="POST" action="{{ route('auth.logout') }}">
                     @csrf
-                    <button type="submit" class="w-full flex items-center p-2 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
-                        <svg aria-hidden="true" class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h5a1 1 0 110 2H5v10h4a1 1 0 110 2H4a1 1 0 01-1-1V4zm13.707 6.293a1 1 0 010 1.414l-2 2a1 1 0 11-1.414-1.414L13.586 12H8a1 1 0 110-2h5.586l-1.293-1.293a1 1 0 111.414-1.414l2 2z" clip-rule="evenodd"></path>
-                        </svg>
-                        <span class="ml-3">Logout</span>
+                    <button type="submit" class="w-full group flex items-center gap-3 px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200">
+                        <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400">logout</span>
+                        <span>Logout</span>
                     </button>
                 </form>
             </li>

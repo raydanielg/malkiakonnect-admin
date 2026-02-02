@@ -157,5 +157,28 @@
                 @include('adminmodules::partials.footer')
             </main>
         </div>
+
+        <script>
+            (function () {
+                function updateCarets() {
+                    document.querySelectorAll('[data-collapse-link]').forEach(function (link) {
+                        const targetId = link.getAttribute('data-collapse-toggle');
+                        if (!targetId) return;
+                        const target = document.getElementById(targetId);
+                        const caret = link.querySelector('[data-collapse-caret]');
+                        if (!target || !caret) return;
+                        const expanded = !target.classList.contains('hidden');
+                        caret.classList.toggle('rotate-180', expanded);
+                    });
+                }
+
+                updateCarets();
+                document.addEventListener('click', function (e) {
+                    const link = e.target.closest && e.target.closest('[data-collapse-link]');
+                    if (!link) return;
+                    setTimeout(updateCarets, 0);
+                });
+            })();
+        </script>
     </div>
 </x-adminmodules::layouts.master>
