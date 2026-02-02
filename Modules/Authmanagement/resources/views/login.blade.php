@@ -147,9 +147,9 @@
         </div>
 
         <div class="flex flex-col items-center justify-center px-6 py-10">
-            <a href="{{ url('/') }}" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white lg:hidden">
-                <img class="w-9 h-9 mr-2 rounded-lg object-contain bg-primary-600/10 p-1" src="{{ asset('assets/image/LOGO-MALKIA-KONNECT.jpg') }}" alt="{{ config('app.name') }} logo">
-                {{ config('app.name') }}
+            <a href="{{ url('/') }}" class="lg:hidden flex flex-col items-center text-center mb-6">
+                <img class="w-20 h-20 rounded-2xl object-contain bg-primary-600/10 p-2" src="{{ asset('assets/image/LOGO-MALKIA-KONNECT.jpg') }}" alt="Malkia Konnect logo">
+                <div class="mt-3 text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">Malkia Konnect</div>
             </a>
 
             <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -294,6 +294,14 @@
                         })();
                     </script>
                 </div>
+            </div>
+
+            <div class="lg:hidden mt-6 text-sm text-gray-500 dark:text-gray-400">
+                <a href="#" class="hover:underline">About</a>
+                <span class="px-2">|</span>
+                <a href="#" class="hover:underline">Terms &amp; Conditions</a>
+                <span class="px-2">|</span>
+                <a href="#" class="hover:underline">Contact</a>
             </div>
         </div>
     </div>
