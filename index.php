@@ -6,14 +6,6 @@
 $publicIndex = __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'index.php';
 
 if (is_file($publicIndex)) {
-    $uri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
-
-    if (preg_match('#^/public(?:/|$)#', $uri) !== 1) {
-        http_response_code(302);
-        header('Location: /public' . ($uri === '/' ? '/' : $uri));
-        exit;
-    }
-
     require $publicIndex;
     exit;
 }
