@@ -14,10 +14,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/statistics', [AdminStatisticsController::class, 'index'])->name('admin.statistics');
 
     Route::prefix('/admin')->name('admin.')->group(function () {
-        Route::get('/users', fn () => view('adminmodules::users.all-users'))->name('users.index');
         Route::get('/users/register', fn () => view('adminmodules::users.register-user'))->name('users.register');
         Route::get('/admins', fn () => view('adminmodules::users.all-admin'))->name('admins.index');
-        Route::get('/employees', fn () => view('adminmodules::users.employees'))->name('employees.index');
 
         Route::get('/forms', fn () => view('adminmodules::forms.all-forms'))->name('forms.index');
         Route::get('/forms/membership', fn () => view('adminmodules::forms.membership'))->name('forms.membership');

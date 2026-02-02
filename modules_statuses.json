@@ -1,4 +1,5 @@
 {
     "Adminmodules": true,
-    "Authmanagement": true
+    "Authmanagement": true,
+    "Usermanagement": true
 }

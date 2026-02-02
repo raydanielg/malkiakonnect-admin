@@ -121,6 +121,9 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Modules\\Usermanagement\\Database\\Seeders\\' => 40,
+            'Modules\\Usermanagement\\Database\\Factories\\' => 42,
+            'Modules\\Usermanagement\\' => 23,
             'Modules\\Authmanagement\\Database\\Seeders\\' => 40,
             'Modules\\Authmanagement\\Database\\Factories\\' => 42,
             'Modules\\Authmanagement\\' => 23,
@@ -403,6 +406,18 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'Modules\\Usermanagement\\Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Usermanagement/database/seeders',
+        ),
+        'Modules\\Usermanagement\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Usermanagement/database/factories',
+        ),
+        'Modules\\Usermanagement\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Usermanagement/app',
+        ),
         'Modules\\Authmanagement\\Database\\Seeders\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Modules/Authmanagement/database/seeders',
@@ -414,6 +429,7 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'Modules\\Authmanagement\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Modules/Authmanagement/app',
+            1 => __DIR__ . '/../..' . '/Modules/Authmanagement/app',
         ),
         'Modules\\Adminmodules\\Database\\Seeders\\' => 
         array (
@@ -426,6 +442,7 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'Modules\\Adminmodules\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Modules/Adminmodules/app',
+            1 => __DIR__ . '/../..' . '/Modules/Adminmodules/app',
         ),
         'Modules\\' => 
         array (
@@ -580,6 +597,9 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\InstallController' => __DIR__ . '/../..' . '/app/Http/Controllers/InstallController.php',
         'App\\Http\\Middleware\\EnsureInstalled' => __DIR__ . '/../..' . '/app/Http/Middleware/EnsureInstalled.php',
+        'App\\Models\\AdminActivityLog' => __DIR__ . '/../..' . '/app/Models/AdminActivityLog.php',
+        'App\\Models\\AdminLoginLog' => __DIR__ . '/../..' . '/app/Models/AdminLoginLog.php',
+        'App\\Models\\AdminTask' => __DIR__ . '/../..' . '/app/Models/AdminTask.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
@@ -705,6 +725,8 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
+        'Database\\Seeders\\AdminDashboardSeeder' => __DIR__ . '/../..' . '/database/seeders/AdminDashboardSeeder.php',
+        'Database\\Seeders\\AdminUserSeeder' => __DIR__ . '/../..' . '/database/seeders/AdminUserSeeder.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
@@ -3657,6 +3679,9 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'Mockery\\VerificationDirector' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationDirector.php',
         'Mockery\\VerificationExpectation' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/VerificationExpectation.php',
         'Modules\\Adminmodules\\Database\\Seeders\\AdminmodulesDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/Adminmodules/database/seeders/AdminmodulesDatabaseSeeder.php',
+        'Modules\\Adminmodules\\Http\\Controllers\\AdminDashboardController' => __DIR__ . '/../..' . '/Modules/Adminmodules/app/Http/Controllers/AdminDashboardController.php',
+        'Modules\\Adminmodules\\Http\\Controllers\\AdminOverviewController' => __DIR__ . '/../..' . '/Modules/Adminmodules/app/Http/Controllers/AdminOverviewController.php',
+        'Modules\\Adminmodules\\Http\\Controllers\\AdminStatisticsController' => __DIR__ . '/../..' . '/Modules/Adminmodules/app/Http/Controllers/AdminStatisticsController.php',
         'Modules\\Adminmodules\\Http\\Controllers\\AdminmodulesController' => __DIR__ . '/../..' . '/Modules/Adminmodules/app/Http/Controllers/AdminmodulesController.php',
         'Modules\\Adminmodules\\Providers\\AdminmodulesServiceProvider' => __DIR__ . '/../..' . '/Modules/Adminmodules/app/Providers/AdminmodulesServiceProvider.php',
         'Modules\\Adminmodules\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/Modules/Adminmodules/app/Providers/EventServiceProvider.php',
@@ -3664,6 +3689,11 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'Modules\\Authmanagement\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/Modules/Authmanagement/app/Http/Controllers/AuthController.php',
         'Modules\\Authmanagement\\Providers\\AuthmanagementServiceProvider' => __DIR__ . '/../..' . '/Modules/Authmanagement/app/Providers/AuthmanagementServiceProvider.php',
         'Modules\\Authmanagement\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/Authmanagement/app/Providers/RouteServiceProvider.php',
+        'Modules\\Usermanagement\\Database\\Seeders\\UsermanagementDatabaseSeeder' => __DIR__ . '/../..' . '/Modules/Usermanagement/database/seeders/UsermanagementDatabaseSeeder.php',
+        'Modules\\Usermanagement\\Http\\Controllers\\UsermanagementController' => __DIR__ . '/../..' . '/Modules/Usermanagement/app/Http/Controllers/UsermanagementController.php',
+        'Modules\\Usermanagement\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/Modules/Usermanagement/app/Providers/EventServiceProvider.php',
+        'Modules\\Usermanagement\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/Usermanagement/app/Providers/RouteServiceProvider.php',
+        'Modules\\Usermanagement\\Providers\\UsermanagementServiceProvider' => __DIR__ . '/../..' . '/Modules/Usermanagement/app/Providers/UsermanagementServiceProvider.php',
         'Monolog\\Attribute\\AsMonologProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/AsMonologProcessor.php',
         'Monolog\\Attribute\\WithMonologChannel' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/WithMonologChannel.php',
         'Monolog\\DateTimeImmutable' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/DateTimeImmutable.php',
