@@ -17,11 +17,13 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <script src="https://cdn.tailwindcss.com"></script>
+
         {{-- Vite CSS --}}
         {{-- {{ module_vite('build-adminmodules', 'resources/assets/sass/app.scss') }} --}}
     </head>
 
-    <body>
+    <body class="antialiased text-slate-900">
         {{ $slot }}
 
         {{-- Vite JS --}}
