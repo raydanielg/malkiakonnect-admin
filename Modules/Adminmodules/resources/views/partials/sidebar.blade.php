@@ -21,13 +21,27 @@
             </div>
         </div>
 
-        <div class="px-2 pt-1 pb-2 text-[11px] font-bold tracking-widest text-gray-500 dark:text-gray-400">NAVIGATION</div>
+        <div class="px-2 pt-1 pb-2 text-[11px] font-bold tracking-widest text-gray-500 dark:text-gray-400">DASHBOARD</div>
 
         <ul class="space-y-1">
             <li>
                 <a href="{{ url('/admin') }}" class="group flex items-center gap-3 px-2 py-2 text-sm font-medium {{ request()->is('admin') ? 'text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-200' }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->is('admin') ? 'text-primary-700 dark:text-primary-300' : 'text-gray-500 dark:text-gray-400' }}">dashboard</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url('/admin/overview') }}" class="group flex items-center gap-3 px-2 py-2 text-sm font-medium {{ request()->is('admin/overview') ? 'text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-200' }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->is('admin/overview') ? 'text-primary-700 dark:text-primary-300' : 'text-gray-500 dark:text-gray-400' }}">space_dashboard</span>
                     <span>Overview</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url('/admin/statistics') }}" class="group flex items-center gap-3 px-2 py-2 text-sm font-medium {{ request()->is('admin/statistics') ? 'text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-200' }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->is('admin/statistics') ? 'text-primary-700 dark:text-primary-300' : 'text-gray-500 dark:text-gray-400' }}">bar_chart</span>
+                    <span>Statistics</span>
                 </a>
             </li>
 
@@ -48,6 +62,102 @@
                         <a href="{{ url('/dashboard') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
                             <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">account_circle</span>
                             <span>User Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="pt-2">
+                <div class="px-2 pt-2 pb-1 text-[11px] font-bold tracking-widest text-gray-500 dark:text-gray-400">USER MANAGEMENT</div>
+            </li>
+
+            <li>
+                <a href="#" class="group flex items-center gap-3 px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200" aria-controls="dropdown-users" data-collapse-toggle="dropdown-users" data-collapse-link>
+                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400">group</span>
+                    <span class="flex-1">Users</span>
+                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400 transition-transform" data-collapse-caret>expand_more</span>
+                </a>
+                <ul id="dropdown-users" class="hidden mt-1 space-y-1">
+                    <li>
+                        <a href="{{ url('/admin/users') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">list</span>
+                            <span>All Users</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/users/register') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">person_add</span>
+                            <span>Register User</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/admins') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">admin_panel_settings</span>
+                            <span>All Admin</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/employees') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">badge</span>
+                            <span>Employee</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="pt-2">
+                <div class="px-2 pt-2 pb-1 text-[11px] font-bold tracking-widest text-gray-500 dark:text-gray-400">FORM MANAGEMENT</div>
+            </li>
+
+            <li>
+                <a href="#" class="group flex items-center gap-3 px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200" aria-controls="dropdown-forms" data-collapse-toggle="dropdown-forms" data-collapse-link>
+                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400">description</span>
+                    <span class="flex-1">Forms</span>
+                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400 transition-transform" data-collapse-caret>expand_more</span>
+                </a>
+                <ul id="dropdown-forms" class="hidden mt-1 space-y-1">
+                    <li>
+                        <a href="{{ url('/admin/forms') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">folder_open</span>
+                            <span>All Forms</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/forms/membership') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">card_membership</span>
+                            <span>Membership</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/forms/active-members') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">verified</span>
+                            <span>Active Member</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="pt-2">
+                <div class="px-2 pt-2 pb-1 text-[11px] font-bold tracking-widest text-gray-500 dark:text-gray-400">CHATTING MANAGEMENT</div>
+            </li>
+
+            <li>
+                <a href="#" class="group flex items-center gap-3 px-2 py-2 text-sm font-medium text-gray-700 dark:text-gray-200" aria-controls="dropdown-chat" data-collapse-toggle="dropdown-chat" data-collapse-link>
+                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400">forum</span>
+                    <span class="flex-1">Chat</span>
+                    <span class="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400 transition-transform" data-collapse-caret>expand_more</span>
+                </a>
+                <ul id="dropdown-chat" class="hidden mt-1 space-y-1">
+                    <li>
+                        <a href="{{ url('/admin/communication') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">chat</span>
+                            <span>Communication</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/chat-setup') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">settings</span>
+                            <span>Chat Setup</span>
                         </a>
                     </li>
                 </ul>
