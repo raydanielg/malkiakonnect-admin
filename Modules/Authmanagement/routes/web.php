@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Modules\Authmanagement\Http\Controllers\AuthController;
+
+View::addNamespace('authmanagement', module_path('Authmanagement', 'resources/views'));
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login');
