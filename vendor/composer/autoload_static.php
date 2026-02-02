@@ -121,9 +121,13 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Modules\\Authmanagement\\Database\\Seeders\\' => 40,
+            'Modules\\Authmanagement\\Database\\Factories\\' => 42,
+            'Modules\\Authmanagement\\' => 23,
             'Modules\\Adminmodules\\Database\\Seeders\\' => 38,
             'Modules\\Adminmodules\\Database\\Factories\\' => 40,
             'Modules\\Adminmodules\\' => 21,
+            'Modules\\' => 8,
             'Mockery\\' => 8,
         ),
         'L' => 
@@ -399,6 +403,18 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'Modules\\Authmanagement\\Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Authmanagement/database/seeders',
+        ),
+        'Modules\\Authmanagement\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Authmanagement/database/factories',
+        ),
+        'Modules\\Authmanagement\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules/Authmanagement/app',
+        ),
         'Modules\\Adminmodules\\Database\\Seeders\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Modules/Adminmodules/database/seeders',
@@ -410,6 +426,10 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'Modules\\Adminmodules\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Modules/Adminmodules/app',
+        ),
+        'Modules\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/Modules',
         ),
         'Mockery\\' => 
         array (
@@ -3641,6 +3661,9 @@ class ComposerStaticInitd8f67b824a1bf31c8999ead558d9b485
         'Modules\\Adminmodules\\Providers\\AdminmodulesServiceProvider' => __DIR__ . '/../..' . '/Modules/Adminmodules/app/Providers/AdminmodulesServiceProvider.php',
         'Modules\\Adminmodules\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/Modules/Adminmodules/app/Providers/EventServiceProvider.php',
         'Modules\\Adminmodules\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/Adminmodules/app/Providers/RouteServiceProvider.php',
+        'Modules\\Authmanagement\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/Modules/Authmanagement/app/Http/Controllers/AuthController.php',
+        'Modules\\Authmanagement\\Providers\\AuthmanagementServiceProvider' => __DIR__ . '/../..' . '/Modules/Authmanagement/app/Providers/AuthmanagementServiceProvider.php',
+        'Modules\\Authmanagement\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/Modules/Authmanagement/app/Providers/RouteServiceProvider.php',
         'Monolog\\Attribute\\AsMonologProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/AsMonologProcessor.php',
         'Monolog\\Attribute\\WithMonologChannel' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/WithMonologChannel.php',
         'Monolog\\DateTimeImmutable' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/DateTimeImmutable.php',
