@@ -6,6 +6,10 @@
 
     <title>{{ config('app.name') }} - Login</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
@@ -46,7 +50,7 @@
                 },
                 fontFamily: {
                     'body': [
-                        'Inter',
+                        'Poppins',
                         'ui-sans-serif',
                         'system-ui',
                         '-apple-system',
@@ -63,7 +67,7 @@
                         'Noto Color Emoji'
                     ],
                     'sans': [
-                        'Inter',
+                        'Poppins',
                         'ui-sans-serif',
                         'system-ui',
                         '-apple-system',
@@ -153,6 +157,31 @@
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         Sign in
                     </h1>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button type="button" class="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-primary-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-primary-900/30">
+                            <svg class="h-5 w-5" viewBox="0 0 48 48" aria-hidden="true">
+                                <path fill="#EA4335" d="M24 9.5c3.05 0 5.8 1.05 7.95 2.77l5.45-5.45C34.06 3.91 29.33 2 24 2 14.8 2 6.98 7.2 3.24 14.76l6.66 5.17C11.44 14.28 17.22 9.5 24 9.5z"/>
+                                <path fill="#34A853" d="M46.1 24.55c0-1.57-.14-3.07-.4-4.55H24v8.62h12.4c-.54 2.9-2.2 5.36-4.7 7.02l7.18 5.57C43.06 37.34 46.1 31.5 46.1 24.55z"/>
+                                <path fill="#4A90E2" d="M9.9 28.93a14.5 14.5 0 0 1 0-9.86l-6.66-5.17A23.96 23.96 0 0 0 2 24c0 3.92.94 7.63 2.6 10.9l7.3-5.97z"/>
+                                <path fill="#FBBC05" d="M24 46c5.33 0 9.82-1.77 13.1-4.8l-7.18-5.57c-2 1.35-4.56 2.15-5.92 2.15-6.78 0-12.56-4.78-14.1-11.43l-7.3 5.97C6.98 40.8 14.8 46 24 46z"/>
+                            </svg>
+                            Continue with Google
+                        </button>
+                        <button type="button" class="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-primary-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-primary-900/30">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                                <path d="M16.365 1.43c0 1.14-.42 2.08-1.25 2.82-.99.9-2.2 1.43-3.48 1.33-.11-1.09.43-2.2 1.32-3.02.9-.84 2.26-1.43 3.41-1.13z"/>
+                                <path d="M20.86 17.2c-.6 1.38-.88 2-1.64 3.23-1.05 1.67-2.53 3.75-4.38 3.77-1.64.02-2.06-1.08-4.3-1.07-2.23.01-2.7 1.09-4.33 1.07-1.85-.02-3.27-1.88-4.32-3.55-2.95-4.7-3.26-10.22-1.44-13.02 1.29-2 3.34-3.17 5.29-3.17 1.99 0 3.24 1.09 4.89 1.09 1.6 0 2.58-1.1 4.88-1.1 1.73 0 3.56.94 4.84 2.56-4.26 2.34-3.57 8.43.51 10.19z"/>
+                            </svg>
+                            Continue with Apple
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="h-px w-full bg-gray-200 dark:bg-gray-700"></div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">or</span>
+                        <div class="h-px w-full bg-gray-200 dark:bg-gray-700"></div>
+                    </div>
 
                     @if ($errors->any())
                         <div class="rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-200">
