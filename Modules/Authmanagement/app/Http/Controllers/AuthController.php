@@ -51,7 +51,7 @@ class AuthController extends Controller
 
             $user = $request->user();
             if ($user && (($user->role ?? 'user') === 'module' || (bool) ($user->is_admin ?? false))) {
-                return redirect('/admin');
+                return redirect()->to(rtrim(config('app.url'), '/').'/admin');
             }
 
             return redirect()->route('auth.dashboard');
