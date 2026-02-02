@@ -1,13 +1,5 @@
 <header class="sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-slate-200">
     <div class="h-16 px-4 sm:px-6 flex items-center gap-3">
-        <button type="button" class="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-slate-200 text-slate-700" data-sidebar-toggle>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <path d="M4 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-        </button>
-
         <div class="flex-1">
             <div class="text-sm text-slate-500">Dashboard</div>
             <div class="text-lg font-semibold text-slate-900">Welcome back, {{ auth()->user()->name ?? auth()->user()->email }}</div>
