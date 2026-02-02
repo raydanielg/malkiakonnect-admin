@@ -100,7 +100,7 @@
                             <h2 class="text-base font-extrabold text-slate-900">Calendar</h2>
                             <div class="text-xs text-slate-500">Task due dates</div>
                         </div>
-                        <div class="mt-4" id="adminCalendar"></div>
+                        <div class="mt-4 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm" id="adminCalendar"></div>
                     </section>
                 </div>
 
@@ -179,6 +179,79 @@
             })();
         </script>
 
+        <style>
+            #adminCalendar .fc {
+                --fc-border-color: #e2e8f0;
+                --fc-page-bg-color: transparent;
+                --fc-today-bg-color: rgba(16, 185, 129, 0.10);
+                --fc-neutral-bg-color: transparent;
+                --fc-event-bg-color: #059669;
+                --fc-event-border-color: #059669;
+                --fc-event-text-color: #ffffff;
+                font-size: 0.875rem;
+            }
+
+            #adminCalendar .fc .fc-toolbar-title {
+                font-size: 1rem;
+                font-weight: 800;
+                color: #0f172a;
+            }
+
+            #adminCalendar .fc .fc-button {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                color: #0f172a;
+                border-radius: 0.75rem;
+                padding: 0.45rem 0.75rem;
+                font-weight: 700;
+                box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+            }
+
+            #adminCalendar .fc .fc-button:hover {
+                background: #f8fafc;
+                border-color: #cbd5e1;
+            }
+
+            #adminCalendar .fc .fc-button-primary:not(:disabled).fc-button-active,
+            #adminCalendar .fc .fc-button-primary:not(:disabled):active {
+                background: #047857;
+                border-color: #047857;
+                color: #ffffff;
+            }
+
+            #adminCalendar .fc .fc-scrollgrid {
+                border-radius: 1rem;
+                overflow: hidden;
+            }
+
+            #adminCalendar .fc .fc-col-header-cell {
+                background: #f8fafc;
+                border-color: #e2e8f0;
+            }
+
+            #adminCalendar .fc .fc-col-header-cell-cushion {
+                padding: 0.75rem 0.5rem;
+                font-weight: 800;
+                color: #334155;
+            }
+
+            #adminCalendar .fc .fc-daygrid-day-number {
+                padding: 0.5rem;
+                font-weight: 700;
+                color: #334155;
+            }
+
+            #adminCalendar .fc .fc-daygrid-event {
+                border-radius: 9999px;
+                padding: 0.1rem 0.55rem;
+                font-weight: 700;
+            }
+
+            #adminCalendar .fc .fc-daygrid-event .fc-event-title {
+                padding: 0.1rem 0;
+            }
+        </style>
+
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
@@ -251,6 +324,13 @@
                             center: 'title',
                             right: 'dayGridMonth,timeGridWeek',
                         },
+                        buttonText: {
+                            today: 'Today',
+                            month: 'Month',
+                            week: 'Week',
+                        },
+                        nowIndicator: true,
+                        dayMaxEvents: 3,
                         events: taskEvents,
                     });
                     calendar.render();

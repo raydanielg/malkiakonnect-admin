@@ -2,18 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Adminmodules\Http\Controllers\AdminDashboardController;
+use Modules\Adminmodules\Http\Controllers\AdminOverviewController;
+use Modules\Adminmodules\Http\Controllers\AdminStatisticsController;
 use Modules\Adminmodules\Http\Controllers\AdminmodulesController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::get('/admin/overview', function () {
-        return view('adminmodules::overview');
-    })->name('admin.overview');
+    Route::get('/admin/overview', [AdminOverviewController::class, 'index'])->name('admin.overview');
 
-    Route::get('/admin/statistics', function () {
-        return view('adminmodules::statistics');
-    })->name('admin.statistics');
+    Route::get('/admin/statistics', [AdminStatisticsController::class, 'index'])->name('admin.statistics');
 
     Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/users', fn () => view('adminmodules::users.all-users'))->name('users.index');
