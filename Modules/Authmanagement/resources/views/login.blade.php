@@ -21,6 +21,27 @@
             20%, 97% { opacity: 0; }
             100% { opacity: 0; }
         }
+
+        @keyframes waWave {
+            0% { transform: translate(-50%, -50%) scale(.75); opacity: .55; }
+            100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+        }
+
+        .wa-wave {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 70px;
+            height: 70px;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.25);
+            animation: waWave 1.8s ease-out infinite;
+        }
+
+        .wa-wave.wa-wave--2 {
+            animation-delay: .6s;
+        }
+
         .auth-bg-slide {
             position: absolute;
             inset: 0;
@@ -303,6 +324,16 @@
                 <span class="px-2">|</span>
                 <a href="#" class="hover:underline">Contact</a>
             </div>
+
+            <a href="https://wa.me/255742710054" target="_blank" rel="noopener noreferrer" class="lg:hidden fixed bottom-6 right-6 z-50">
+                <span class="relative block">
+                    <span class="wa-wave"></span>
+                    <span class="wa-wave wa-wave--2"></span>
+                    <span class="relative inline-flex items-center justify-center h-14 w-14 rounded-full bg-primary-600 shadow-lg ring-1 ring-white/15">
+                        <img class="h-8 w-8" src="{{ asset('assets/image/whatsapp.png') }}" alt="WhatsApp">
+                    </span>
+                </span>
+            </a>
         </div>
     </div>
 </section>
