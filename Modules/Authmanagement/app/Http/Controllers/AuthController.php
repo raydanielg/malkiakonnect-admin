@@ -5,6 +5,7 @@ namespace Modules\Authmanagement\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
@@ -16,23 +17,35 @@ class AuthController extends Controller
         return view('authmanagement::login');
     }
 
+    public function showForgotPassword(Request $request): View
+    {
+        return view('authmanagement::forgot-password');
+    }
+
     public function login(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'email' => ['required', 'email'],
+            'login' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        $throttleKey = strtolower($validated['email']).'|'.$request->ip();
+        $loginValue = trim($validated['login']);
+        $throttleKey = strtolower($loginValue).'|'.$request->ip();
 
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
             return back()->withInput()->withErrors([
-                'email' => "Too many attempts. Try again in {$seconds} seconds.",
+                'login' => "Too many attempts. Try again in {$seconds} seconds.",
             ]);
         }
 
-        if (Auth::attempt(['email' => $validated['email'], 'password' => $validated['password']], $request->boolean('remember'))) {
+        $attempted = Auth::attempt(['email' => $loginValue, 'password' => $validated['password']], $request->boolean('remember'));
+
+        if (! $attempted && Schema::hasColumn('users', 'username')) {
+            $attempted = Auth::attempt(['username' => $loginValue, 'password' => $validated['password']], $request->boolean('remember'));
+        }
+
+        if ($attempted) {
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
@@ -42,7 +55,7 @@ class AuthController extends Controller
         RateLimiter::hit($throttleKey, 60);
 
         return back()->withInput()->withErrors([
-            'email' => 'Invalid credentials.',
+            'login' => 'Invalid credentials.',
         ]);
     }
 
