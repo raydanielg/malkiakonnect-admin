@@ -13,7 +13,7 @@ class AuthmanagementServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadViewsFrom(module_path($this->name, 'resources/views'), $this->nameLower);
+        $this->loadViewsFrom(base_path('Modules/Authmanagement/resources/views'), $this->nameLower);
     }
 
     public function register(): void
