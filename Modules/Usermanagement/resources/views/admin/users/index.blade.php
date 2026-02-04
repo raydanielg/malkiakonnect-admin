@@ -13,18 +13,51 @@
             @include('adminmodules::partials.header')
 
             <main class="px-4 sm:px-6 py-6">
-                <div class="rounded-2xl border border-slate-200 bg-white p-6">
-                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                        <div>
-                            <div class="text-sm font-semibold text-slate-500">User Management</div>
-                            <h1 class="mt-1 text-2xl font-extrabold text-slate-900">All Users</h1>
-                            <p class="mt-2 text-slate-600">Manage registered users in the system.</p>
+                <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+                    <div class="px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h1 class="text-base font-extrabold text-slate-900">All Users</h1>
+                                    <span class="text-sm text-slate-500">{{ number_format($users->total()) }} Results</span>
+                                    <span class="material-symbols-outlined text-slate-400" style="font-size: 18px">info</span>
+                                </div>
+                                <div class="mt-1 text-xs text-slate-500">User Management</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">
+                                <span class="material-symbols-outlined" style="font-size: 18px">open_in_new</span>
+                                View
+                            </a>
+                            <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">
+                                <span class="material-symbols-outlined" style="font-size: 18px">download</span>
+                                Export
+                            </a>
+                            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">
+                                Actions
+                                <span class="material-symbols-outlined" style="font-size: 18px">expand_more</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="px-6 py-4 border-t border-slate-200 bg-white flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <div class="text-sm font-semibold text-slate-700">Filter by:</div>
+                            <button type="button" class="px-3 py-1.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">Role</button>
+                            <button type="button" class="px-3 py-1.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">Created</button>
+                            <button type="button" class="px-3 py-1.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">Status</button>
+                            <button type="button" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-sm font-semibold text-primary-700 hover:bg-primary-50">
+                                <span class="material-symbols-outlined" style="font-size: 18px">add_circle</span>
+                                More options
+                            </button>
                         </div>
 
                         <form method="get" class="flex items-center gap-2">
                             <div class="relative">
                                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-                                <input name="q" value="{{ $q ?? '' }}" placeholder="Search name, email, username" class="pl-10 pr-4 py-2.5 w-72 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" />
+                                <input name="q" value="{{ $q ?? '' }}" placeholder="Search name, email, username" class="pl-10 pr-4 py-2.5 w-72 max-w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" />
                             </div>
                             <button class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Search</button>
                         </form>
