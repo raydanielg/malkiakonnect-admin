@@ -27,6 +27,9 @@
                         </div>
 
                         <div class="flex items-center gap-2">
+                            <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">
+                                Register User
+                            </a>
                             <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">
                                 <svg class="w-5 h-5 text-slate-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                                     <path d="M18 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3.546l3.2 3.659a1 1 0 0 0 1.506 0L13.454 14H18a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-8 10H5a1 1 0 0 1 0-2h5a1 1 0 1 1 0 2Zm5-4H5a1 1 0 0 1 0-2h10a1 1 0 1 1 0 2Z"/>
@@ -102,17 +105,17 @@
                                         <td class="py-3 px-4 text-slate-600">{{ optional($user->created_at)->format('M d, Y') }}</td>
                                         <td class="py-3 px-4">
                                             <div class="flex items-center justify-end gap-2">
-                                                <a href="#" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Details">
+                                                <a href="{{ route('admin.users.show', $user) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Details">
                                                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
                                                         <path d="M16 0H4a2 2 0 0 0-2 2v1H1a1 1 0 0 0 0 2h1v2H1a1 1 0 0 0 0 2h1v2H1a1 1 0 0 0 0 2h1v2H1a1 1 0 0 0 0 2h1v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM13.929 17H7.071a.5.5 0 0 1-.5-.5 3.935 3.935 0 1 1 7.858 0 .5.5 0 0 1-.5.5Z"/>
                                                     </svg>
                                                 </a>
-                                                <button type="button" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition" title="Delete">
+                                                <button type="button" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition" title="Delete" data-delete-user-button data-delete-user-id="{{ $user->id }}" data-delete-user-name="{{ $user->name ?? $user->email ?? 'User' }}" data-delete-user-action="{{ route('admin.users.destroy', $user) }}">
                                                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                                                         <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z"/>
                                                     </svg>
                                                 </button>
-                                                <a href="#" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Logs / Track">
+                                                <a href="{{ route('admin.users.logs', $user) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Logs / Track">
                                                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 14 20">
                                                         <path d="M12.133 10.632v-1.8A5.406 5.406 0 0 0 7.979 3.57.946.946 0 0 0 8 3.464V1.1a1 1 0 0 0-2 0v2.364a.946.946 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C1.867 13.018 0 13.614 0 14.807 0 15.4 0 16 .538 16h12.924C14 16 14 15.4 14 14.807c0-1.193-1.867-1.789-1.867-4.175ZM3.823 17a3.453 3.453 0 0 0 6.354 0H3.823Z"/>
                                                     </svg>
@@ -138,6 +141,31 @@
             </main>
         </div>
 
+        <div id="info-popup" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+            <div class="relative p-4 w-full max-w-lg h-full md:h-auto">
+                <div class="relative p-4 bg-white rounded-2xl border border-slate-200 shadow md:p-8">
+                    <div class="mb-4 text-sm font-light text-slate-600">
+                        <h3 class="mb-3 text-2xl font-extrabold text-slate-900">Confirm delete</h3>
+                        <p>
+                            You are about to delete <span class="font-extrabold text-slate-900" data-delete-user-name></span>.
+                            This action cannot be undone.
+                        </p>
+                    </div>
+                    <div class="justify-between items-center pt-0 space-y-4 sm:flex sm:space-y-0">
+                        <a href="#" class="font-semibold text-primary-700 hover:underline">Learn more</a>
+                        <div class="items-center space-y-4 sm:space-x-4 sm:flex sm:space-y-0">
+                            <button id="close-modal" type="button" class="py-2.5 px-4 w-full text-sm font-semibold text-slate-600 bg-white rounded-xl border border-slate-200 sm:w-auto hover:bg-slate-50 focus:ring-4 focus:outline-none focus:ring-primary-200 hover:text-slate-900 focus:z-10">Cancel</button>
+                            <form method="POST" id="delete-user-form" action="#" class="w-full sm:w-auto">
+                                @csrf
+                                @method('DELETE')
+                                <button id="confirm-button" type="submit" class="py-2.5 px-4 w-full text-sm font-semibold text-center text-white rounded-xl bg-rose-600 sm:w-auto hover:bg-rose-500 focus:ring-4 focus:outline-none focus:ring-rose-200">Confirm</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script>
             (function () {
                 function updateCarets() {
@@ -157,6 +185,46 @@
                     const link = e.target.closest && e.target.closest('[data-collapse-link]');
                     if (!link) return;
                     setTimeout(updateCarets, 0);
+                });
+            })();
+        </script>
+
+        <script>
+            (function () {
+                const modalEl = document.getElementById('info-popup');
+                if (!modalEl || typeof Modal === 'undefined') return;
+
+                const deleteModal = new Modal(modalEl, {
+                    placement: 'center',
+                });
+
+                const nameEl = modalEl.querySelector('[data-delete-user-name]');
+                const formEl = document.getElementById('delete-user-form');
+
+                function openModal(name, action) {
+                    if (!nameEl || !formEl) return;
+                    nameEl.textContent = name || 'User';
+                    formEl.setAttribute('action', action || '#');
+                    deleteModal.show();
+                }
+
+                function closeModal() {
+                    deleteModal.hide();
+                }
+
+                document.addEventListener('click', function (e) {
+                    const btn = e.target.closest && e.target.closest('[data-delete-user-button]');
+                    if (btn) {
+                        openModal(btn.getAttribute('data-delete-user-name'), btn.getAttribute('data-delete-user-action'));
+                        return;
+                    }
+                });
+
+                const closeBtn = document.getElementById('close-modal');
+                if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+                modalEl.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') closeModal();
                 });
             })();
         </script>
