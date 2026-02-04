@@ -76,6 +76,7 @@
                                     <th class="text-left py-3 px-4">Phone</th>
                                     <th class="text-left py-3 px-4">Status</th>
                                     <th class="text-left py-3 px-4">Hired</th>
+                                    <th class="text-right py-3 px-4">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
@@ -95,10 +96,23 @@
                                             </span>
                                         </td>
                                         <td class="py-3 px-4 text-slate-600">{{ optional($employee->hired_at)->format('M d, Y') ?? '-' }}</td>
+                                        <td class="py-3 px-4">
+                                            <div class="flex items-center justify-end gap-2">
+                                                <a href="#" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Details">
+                                                    <span class="material-symbols-outlined" style="font-size: 18px">visibility</span>
+                                                </a>
+                                                <button type="button" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition" title="Delete">
+                                                    <span class="material-symbols-outlined" style="font-size: 18px">delete</span>
+                                                </button>
+                                                <a href="#" class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Logs / Track">
+                                                    <span class="material-symbols-outlined" style="font-size: 18px">history</span>
+                                                </a>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="py-8 px-4 text-slate-500">No employees found.</td>
+                                        <td colspan="8" class="py-8 px-4 text-slate-500">No employees found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
