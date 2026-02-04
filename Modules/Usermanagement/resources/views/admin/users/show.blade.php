@@ -16,31 +16,31 @@
                 <div class="rounded-2xl border border-slate-200 bg-white p-6">
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div>
-                            <div class="text-sm font-semibold text-slate-500">User Details</div>
+                            <div class="text-sm font-semibold text-slate-500">Maelezo ya Mtumiaji</div>
                             <h1 class="mt-1 text-2xl font-extrabold text-slate-900">{{ $user->name ?? 'User' }}</h1>
-                            <p class="mt-2 text-slate-600">Account overview and system access.</p>
+                            <p class="mt-2 text-slate-600">Muhtasari wa akaunti na ruhusa za mfumo.</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <a href="{{ route('admin.users.logs', $user) }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Logs</a>
-                            <a href="{{ route('admin.users.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Back to Users</a>
+                            <a href="{{ route('admin.users.logs', $user) }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Rekodi</a>
+                            <a href="{{ route('admin.users.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Rudi Kwa Watumiaji</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4">
                     <section class="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-5">
-                        <h2 class="text-base font-extrabold text-slate-900">Profile</h2>
+                        <h2 class="text-base font-extrabold text-slate-900">Taarifa</h2>
                         <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Email</div>
+                                <div class="text-xs font-semibold text-slate-500">Barua pepe</div>
                                 <div class="mt-1 font-extrabold text-slate-900">{{ $user->email ?? '-' }}</div>
                             </div>
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Username</div>
+                                <div class="text-xs font-semibold text-slate-500">Jina la mtumiaji</div>
                                 <div class="mt-1 font-extrabold text-slate-900">{{ $user->username ?? '-' }}</div>
                             </div>
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Role</div>
+                                <div class="text-xs font-semibold text-slate-500">Aina</div>
                                 @php($isAdmin = (($user->role ?? 'user') === 'module') || (bool) ($user->is_admin ?? false))
                                 <div class="mt-2">
                                     <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold {{ $isAdmin ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-700' }}">
@@ -49,20 +49,20 @@
                                 </div>
                             </div>
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Created</div>
+                                <div class="text-xs font-semibold text-slate-500">Tarehe</div>
                                 <div class="mt-1 font-extrabold text-slate-900">{{ optional($user->created_at)->format('M d, Y H:i') }}</div>
                             </div>
                         </div>
                     </section>
 
                     <aside class="bg-white rounded-2xl border border-slate-200 p-5">
-                        <h2 class="text-base font-extrabold text-slate-900">Quick Actions</h2>
+                        <h2 class="text-base font-extrabold text-slate-900">Vitendo</h2>
                         <div class="mt-4 space-y-2">
-                            <a href="{{ route('admin.users.logs', $user) }}" class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 font-semibold transition">View Logs</a>
-                            <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="w-full" onsubmit="return confirm('Delete this user?');">
+                            <a href="{{ route('admin.users.logs', $user) }}" class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 font-semibold transition">Angalia Rekodi</a>
+                            <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="w-full" onsubmit="return confirm('Unataka kumfuta mtumiaji huyu?');">
                                 @csrf
                                 @method('DELETE')
-                                <button class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold transition">Delete User</button>
+                                <button class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold transition">Futa Mtumiaji</button>
                             </form>
                         </div>
                     </aside>

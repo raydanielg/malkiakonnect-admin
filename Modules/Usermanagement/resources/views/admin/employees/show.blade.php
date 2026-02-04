@@ -16,27 +16,27 @@
                 <div class="rounded-2xl border border-slate-200 bg-white p-6">
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div>
-                            <div class="text-sm font-semibold text-slate-500">Employee Details</div>
+                            <div class="text-sm font-semibold text-slate-500">Maelezo ya Mfanyakazi</div>
                             <h1 class="mt-1 text-2xl font-extrabold text-slate-900">{{ $employee->full_name }}</h1>
-                            <p class="mt-2 text-slate-600">Directory profile and status.</p>
+                            <p class="mt-2 text-slate-600">Taarifa za mfanyakazi na hali yake.</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <a href="{{ route('admin.employees.logs', $employee) }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Logs</a>
-                            <a href="{{ route('admin.employees.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Back to Employees</a>
+                            <a href="{{ route('admin.employees.logs', $employee) }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Rekodi</a>
+                            <a href="{{ route('admin.employees.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Rudi Kwa Wafanyakazi</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4">
                     <section class="xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-5">
-                        <h2 class="text-base font-extrabold text-slate-900">Profile</h2>
+                        <h2 class="text-base font-extrabold text-slate-900">Taarifa</h2>
                         <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Employee Code</div>
+                                <div class="text-xs font-semibold text-slate-500">Kodi ya Mfanyakazi</div>
                                 <div class="mt-1 font-extrabold text-slate-900">{{ $employee->employee_code ?? '-' }}</div>
                             </div>
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Status</div>
+                                <div class="text-xs font-semibold text-slate-500">Hali</div>
                                 <div class="mt-2">
                                     <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold {{ ($employee->status ?? 'active') === 'active' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-700' }}">
                                         {{ $employee->status ?? 'active' }}
@@ -44,36 +44,36 @@
                                 </div>
                             </div>
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Email</div>
+                                <div class="text-xs font-semibold text-slate-500">Barua pepe</div>
                                 <div class="mt-1 font-extrabold text-slate-900">{{ $employee->email ?? '-' }}</div>
                             </div>
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Phone</div>
+                                <div class="text-xs font-semibold text-slate-500">Simu</div>
                                 <div class="mt-1 font-extrabold text-slate-900">{{ $employee->phone ?? '-' }}</div>
                             </div>
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Position</div>
+                                <div class="text-xs font-semibold text-slate-500">Cheo</div>
                                 <div class="mt-1 font-extrabold text-slate-900">{{ $employee->position ?? '-' }}</div>
                             </div>
                             <div class="rounded-2xl border border-slate-200 p-4">
-                                <div class="text-xs font-semibold text-slate-500">Hired At</div>
+                                <div class="text-xs font-semibold text-slate-500">Tarehe ya Kuajiriwa</div>
                                 <div class="mt-1 font-extrabold text-slate-900">{{ optional($employee->hired_at)->format('M d, Y') ?? '-' }}</div>
                             </div>
                             <div class="rounded-2xl border border-slate-200 p-4 sm:col-span-2">
-                                <div class="text-xs font-semibold text-slate-500">Linked User</div>
+                                <div class="text-xs font-semibold text-slate-500">Mtumiaji Aliyeunganishwa</div>
                                 <div class="mt-1 font-extrabold text-slate-900">{{ $employee->user?->email ?? '-' }}</div>
                             </div>
                         </div>
                     </section>
 
                     <aside class="bg-white rounded-2xl border border-slate-200 p-5">
-                        <h2 class="text-base font-extrabold text-slate-900">Quick Actions</h2>
+                        <h2 class="text-base font-extrabold text-slate-900">Vitendo</h2>
                         <div class="mt-4 space-y-2">
-                            <a href="{{ route('admin.employees.logs', $employee) }}" class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 font-semibold transition">View Logs</a>
-                            <form method="POST" action="{{ route('admin.employees.destroy', $employee) }}" class="w-full" onsubmit="return confirm('Delete this employee?');">
+                            <a href="{{ route('admin.employees.logs', $employee) }}" class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 font-semibold transition">Angalia Rekodi</a>
+                            <form method="POST" action="{{ route('admin.employees.destroy', $employee) }}" class="w-full" onsubmit="return confirm('Unataka kumfuta mfanyakazi huyu?');">
                                 @csrf
                                 @method('DELETE')
-                                <button class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold transition">Delete Employee</button>
+                                <button class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold transition">Futa Mfanyakazi</button>
                             </form>
                         </div>
                     </aside>

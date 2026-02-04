@@ -16,11 +16,11 @@
                 <div class="rounded-2xl border border-slate-200 bg-white p-6">
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div>
-                            <div class="text-sm font-semibold text-slate-500">Employee Management</div>
-                            <h1 class="mt-1 text-2xl font-extrabold text-slate-900">Register Employee</h1>
-                            <p class="mt-2 text-slate-600">Create an employee account (role: employee) and link it to an employee record.</p>
+                            <div class="text-sm font-semibold text-slate-500">Usimamizi wa Wafanyakazi</div>
+                            <h1 class="mt-1 text-2xl font-extrabold text-slate-900">Sajili Mfanyakazi</h1>
+                            <p class="mt-2 text-slate-600">Tengeneza akaunti ya mfanyakazi (role: employee) na uiunganishe na taarifa za mfanyakazi.</p>
                         </div>
-                        <a href="{{ route('admin.employees.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Back</a>
+                        <a href="{{ route('admin.employees.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Rudi</a>
                     </div>
                 </div>
 
@@ -29,13 +29,13 @@
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-bold text-slate-700">Employee Code</label>
+                            <label class="text-sm font-bold text-slate-700">Kodi ya Mfanyakazi</label>
                             <input name="employee_code" value="{{ old('employee_code') }}" class="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" placeholder="EMP-0001" required>
                             @error('employee_code') <div class="mt-1 text-sm text-rose-600">{{ $message }}</div> @enderror
                         </div>
 
                         <div>
-                            <label class="text-sm font-bold text-slate-700">Status</label>
+                            <label class="text-sm font-bold text-slate-700">Hali</label>
                             <select name="status" class="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" required>
                                 <option value="active" @selected(old('status', 'active') === 'active')>active</option>
                                 <option value="inactive" @selected(old('status') === 'inactive')>inactive</option>
@@ -44,51 +44,51 @@
                         </div>
 
                         <div>
-                            <label class="text-sm font-bold text-slate-700">First Name</label>
+                            <label class="text-sm font-bold text-slate-700">Jina la Kwanza</label>
                             <input name="first_name" value="{{ old('first_name') }}" class="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" required>
                             @error('first_name') <div class="mt-1 text-sm text-rose-600">{{ $message }}</div> @enderror
                         </div>
 
                         <div>
-                            <label class="text-sm font-bold text-slate-700">Last Name</label>
+                            <label class="text-sm font-bold text-slate-700">Jina la Mwisho</label>
                             <input name="last_name" value="{{ old('last_name') }}" class="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" required>
                             @error('last_name') <div class="mt-1 text-sm text-rose-600">{{ $message }}</div> @enderror
                         </div>
 
                         <div>
-                            <label class="text-sm font-bold text-slate-700">Email (Login)</label>
+                            <label class="text-sm font-bold text-slate-700">Barua pepe (Kuingia)</label>
                             <input name="email" type="email" value="{{ old('email') }}" class="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" required>
                             @error('email') <div class="mt-1 text-sm text-rose-600">{{ $message }}</div> @enderror
                         </div>
 
                         <div>
-                            <label class="text-sm font-bold text-slate-700">Password</label>
+                            <label class="text-sm font-bold text-slate-700">Nenosiri</label>
                             <input name="password" type="password" class="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" required>
                             @error('password') <div class="mt-1 text-sm text-rose-600">{{ $message }}</div> @enderror
                         </div>
 
                         <div>
-                            <label class="text-sm font-bold text-slate-700">Phone</label>
+                            <label class="text-sm font-bold text-slate-700">Simu</label>
                             <input name="phone" value="{{ old('phone') }}" class="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" placeholder="+255...">
                             @error('phone') <div class="mt-1 text-sm text-rose-600">{{ $message }}</div> @enderror
                         </div>
 
                         <div>
-                            <label class="text-sm font-bold text-slate-700">Position</label>
+                            <label class="text-sm font-bold text-slate-700">Cheo</label>
                             <input name="position" value="{{ old('position') }}" class="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300" placeholder="Accountant / Support / Sales">
                             @error('position') <div class="mt-1 text-sm text-rose-600">{{ $message }}</div> @enderror
                         </div>
 
                         <div>
-                            <label class="text-sm font-bold text-slate-700">Hired At</label>
+                            <label class="text-sm font-bold text-slate-700">Tarehe ya Kuajiriwa</label>
                             <input name="hired_at" type="date" value="{{ old('hired_at') }}" class="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-300">
                             @error('hired_at') <div class="mt-1 text-sm text-rose-600">{{ $message }}</div> @enderror
                         </div>
                     </div>
 
                     <div class="mt-6 flex items-center justify-end gap-2">
-                        <a href="{{ route('admin.employees.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Cancel</a>
-                        <button class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Create Employee</button>
+                        <a href="{{ route('admin.employees.index') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Ghairi</a>
+                        <button class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Hifadhi Mfanyakazi</button>
                     </div>
                 </form>
 

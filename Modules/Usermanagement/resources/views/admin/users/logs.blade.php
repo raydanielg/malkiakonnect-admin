@@ -16,13 +16,13 @@
                 <div class="rounded-2xl border border-slate-200 bg-white p-6">
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div>
-                            <div class="text-sm font-semibold text-slate-500">Logs</div>
+                            <div class="text-sm font-semibold text-slate-500">Rekodi</div>
                             <h1 class="mt-1 text-2xl font-extrabold text-slate-900">{{ $user->email ?? 'User' }}</h1>
-                            <p class="mt-2 text-slate-600">Login history and recent activities.</p>
+                            <p class="mt-2 text-slate-600">Historia ya kuingia na shughuli za hivi karibuni.</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <a href="{{ route('admin.users.show', $user) }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Details</a>
-                            <a href="{{ route('admin.users.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Back to Users</a>
+                            <a href="{{ route('admin.users.show', $user) }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Maelezo</a>
+                            <a href="{{ route('admin.users.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Rudi Kwa Watumiaji</a>
                         </div>
                     </div>
                 </div>
@@ -30,13 +30,13 @@
                 <div class="mt-6 grid grid-cols-1 xl:grid-cols-2 gap-4">
                     <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
                         <div class="px-5 py-4 border-b border-slate-200">
-                            <h2 class="text-base font-extrabold text-slate-900">Login Logs</h2>
+                            <h2 class="text-base font-extrabold text-slate-900">Rekodi za Kuingia</h2>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-sm">
                                 <thead class="text-xs uppercase text-slate-500 bg-slate-50 border-b border-slate-200">
                                     <tr>
-                                        <th class="text-left py-3 px-4">Time</th>
+                                        <th class="text-left py-3 px-4">Muda</th>
                                         <th class="text-left py-3 px-4">IP</th>
                                         <th class="text-left py-3 px-4">User Agent</th>
                                     </tr>
@@ -50,7 +50,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="3" class="py-8 px-4 text-slate-500">No login logs.</td>
+                                            <td colspan="3" class="py-8 px-4 text-slate-500">Hakuna rekodi za kuingia.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -61,14 +61,14 @@
 
                     <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
                         <div class="px-5 py-4 border-b border-slate-200">
-                            <h2 class="text-base font-extrabold text-slate-900">Activity Logs</h2>
+                            <h2 class="text-base font-extrabold text-slate-900">Rekodi za Shughuli</h2>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-sm">
                                 <thead class="text-xs uppercase text-slate-500 bg-slate-50 border-b border-slate-200">
                                     <tr>
-                                        <th class="text-left py-3 px-4">Time</th>
-                                        <th class="text-left py-3 px-4">Action</th>
+                                        <th class="text-left py-3 px-4">Muda</th>
+                                        <th class="text-left py-3 px-4">Tukio</th>
                                         <th class="text-left py-3 px-4">Meta</th>
                                     </tr>
                                 </thead>
@@ -81,7 +81,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="3" class="py-8 px-4 text-slate-500">No activity logs.</td>
+                                            <td colspan="3" class="py-8 px-4 text-slate-500">Hakuna rekodi za shughuli.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
