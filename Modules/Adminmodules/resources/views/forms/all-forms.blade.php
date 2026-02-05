@@ -109,6 +109,50 @@
                     </div>
                 </div>
 
+                <div id="mk-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+                    <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+                        <div class="relative p-4 bg-white rounded-2xl border border-slate-200 shadow md:p-8">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <div class="text-sm font-semibold text-slate-500">Edit</div>
+                                    <h3 class="mt-1 text-2xl font-extrabold text-slate-900" id="mk-modal-title">MK Number</h3>
+                                </div>
+                                <button id="mk-close" type="button" class="py-2 px-4 text-sm font-semibold text-slate-600 bg-white rounded-xl border border-slate-200 hover:bg-slate-50">Funga</button>
+                            </div>
+
+                            <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Full Name</div>
+                                        <div class="mt-1 text-sm font-semibold text-slate-900" id="mk-full-name">-</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Whatsapp Number</div>
+                                        <div class="mt-1 text-sm font-semibold text-slate-900" id="mk-phone">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-5">
+                                <div class="text-xs font-bold text-slate-500 uppercase">MK Number</div>
+                                <div class="mt-2 flex items-center gap-2">
+                                    <div class="px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-extrabold text-slate-900">MK-</div>
+                                    <input id="mk-digits" class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-900" placeholder="2631" inputmode="numeric" />
+                                    <button id="mk-generate" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Generate</button>
+                                </div>
+                                <div class="mt-2 text-xs text-slate-500">Namba lazima iwe unique. Prefix ya <span class="font-extrabold">MK-</span> haiwezi kubadilishwa.</div>
+                                <div class="mt-3 hidden" id="mk-error">
+                                    <div class="px-4 py-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-sm font-semibold"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 flex items-center justify-end gap-2">
+                                <button id="mk-save" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Hifadhi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 @include('adminmodules::partials.footer')
             </main>
         </div>
@@ -125,6 +169,143 @@
                         const expanded = !target.classList.contains('hidden');
                         caret.classList.toggle('rotate-180', expanded);
                     });
+                }
+
+                function setMkError(message) {
+                    if (!mkErrorWrapEl || !mkErrorTextEl) return;
+                    mkErrorTextEl.textContent = message;
+                    mkErrorWrapEl.classList.remove('hidden');
+                }
+
+                function clearMkError() {
+                    if (!mkErrorWrapEl) return;
+                    mkErrorWrapEl.classList.add('hidden');
+                }
+
+                async function openEdit(sourceId, fullName, phone) {
+                    if (!editModal || !mkDigitsEl) return;
+                    activeEdit = { sourceId: String(sourceId), fullName: fullName || '', phone: phone || '' };
+                    clearMkError();
+
+                    mkModalTitleEl.textContent = 'Edit MK Number';
+                    if (mkFullNameEl) mkFullNameEl.textContent = fullName || '-';
+                    if (mkPhoneEl) mkPhoneEl.textContent = phone || '-';
+                    mkDigitsEl.value = '';
+                    editModal.show();
+
+                    try {
+                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(sourceId) + '/mk';
+                        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                        if (!res.ok) return;
+                        const json = await res.json();
+                        const mkNumber = json && json.data ? json.data.mk_number : null;
+                        if (mkNumber && typeof mkNumber === 'string' && mkNumber.startsWith('MK-')) {
+                            mkDigitsEl.value = mkNumber.slice(3);
+                        }
+                    } catch (err) {
+                        // ignore
+                    }
+                }
+
+                async function saveMk() {
+                    if (!activeEdit || !mkDigitsEl) return;
+                    clearMkError();
+                    const digits = String(mkDigitsEl.value || '').trim();
+                    if (!/^[0-9]{1,10}$/.test(digits)) {
+                        setMkError('Weka namba sahihi (digits tu).');
+                        return;
+                    }
+
+                    if (mkSaveBtn) {
+                        mkSaveBtn.disabled = true;
+                        mkSaveBtn.textContent = 'Inahifadhi...';
+                    }
+
+                    try {
+                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(activeEdit.sourceId) + '/mk';
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                            body: JSON.stringify({
+                                mk_digits: digits,
+                                full_name: activeEdit.fullName,
+                                phone: activeEdit.phone,
+                            }),
+                        });
+
+                        const json = await res.json().catch(function () { return null; });
+                        if (!res.ok) {
+                            const msg = (json && json.message) ? json.message : 'Imeshindikana kuhifadhi MK Number.';
+                            setMkError(msg);
+                            return;
+                        }
+
+                        const mkNumber = json && json.data ? json.data.mk_number : null;
+                        if (mkNumber) {
+                            mkBySourceId[activeEdit.sourceId] = mkNumber;
+                            fetchList();
+                        }
+
+                        if (editModal) editModal.hide();
+                    } catch (err) {
+                        setMkError('Imeshindikana kuhifadhi MK Number.');
+                    } finally {
+                        if (mkSaveBtn) {
+                            mkSaveBtn.disabled = false;
+                            mkSaveBtn.textContent = 'Hifadhi';
+                        }
+                    }
+                }
+
+                async function generateMk() {
+                    if (!activeEdit) return;
+                    clearMkError();
+
+                    if (mkGenerateBtn) {
+                        mkGenerateBtn.disabled = true;
+                        mkGenerateBtn.textContent = 'Inatengeneza...';
+                    }
+
+                    try {
+                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(activeEdit.sourceId) + '/mk/generate';
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                            body: JSON.stringify({
+                                full_name: activeEdit.fullName,
+                                phone: activeEdit.phone,
+                            }),
+                        });
+
+                        const json = await res.json().catch(function () { return null; });
+                        if (!res.ok) {
+                            const msg = (json && json.message) ? json.message : 'Imeshindikana kutengeneza MK Number.';
+                            setMkError(msg);
+                            return;
+                        }
+
+                        const mkNumber = json && json.data ? json.data.mk_number : null;
+                        if (mkNumber && mkDigitsEl) {
+                            mkDigitsEl.value = String(mkNumber).startsWith('MK-') ? String(mkNumber).slice(3) : '';
+                            mkBySourceId[activeEdit.sourceId] = mkNumber;
+                            fetchList();
+                        }
+                    } catch (err) {
+                        setMkError('Imeshindikana kutengeneza MK Number.');
+                    } finally {
+                        if (mkGenerateBtn) {
+                            mkGenerateBtn.disabled = false;
+                            mkGenerateBtn.textContent = 'Generate';
+                        }
+                    }
                 }
 
                 updateCarets();
@@ -157,6 +338,17 @@
                 const modalGridEl = document.getElementById('intake-modal-grid');
                 const modalCloseEl = document.getElementById('intake-close');
 
+                const mkModalEl = document.getElementById('mk-modal');
+                const mkModalTitleEl = document.getElementById('mk-modal-title');
+                const mkCloseEl = document.getElementById('mk-close');
+                const mkFullNameEl = document.getElementById('mk-full-name');
+                const mkPhoneEl = document.getElementById('mk-phone');
+                const mkDigitsEl = document.getElementById('mk-digits');
+                const mkGenerateBtn = document.getElementById('mk-generate');
+                const mkSaveBtn = document.getElementById('mk-save');
+                const mkErrorWrapEl = document.getElementById('mk-error');
+                const mkErrorTextEl = mkErrorWrapEl ? mkErrorWrapEl.querySelector('div') : null;
+
                 const errorWrapEl = document.getElementById('mother-intakes-error');
                 const errorTextEl = errorWrapEl ? errorWrapEl.querySelector('div') : null;
 
@@ -164,8 +356,15 @@
                 let lastPage = 1;
                 let debounceTimer = null;
 
+                const mkBySourceId = {};
+                let activeEdit = null;
+
                 const detailsModal = (modalEl && typeof Modal !== 'undefined')
                     ? new Modal(modalEl, { placement: 'center' })
+                    : null;
+
+                const editModal = (mkModalEl && typeof Modal !== 'undefined')
+                    ? new Modal(mkModalEl, { placement: 'center' })
                     : null;
 
                 function escapeHtml(str) {
@@ -243,7 +442,8 @@
 
                 function mkNumber(row) {
                     if (!row) return '-';
-                    return row.mk_number || row.mkNumber || '-';
+                    const id = row.id;
+                    return mkBySourceId[id] || row.mk_number || row.mkNumber || '-';
                 }
 
                 function renderRows(rows) {
@@ -269,6 +469,12 @@
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M2.062 12.348a1 1 0 0 1 0-.696C3.423 8.02 7.36 5 12 5c4.64 0 8.577 3.02 9.938 6.652a1 1 0 0 1 0 .696C20.577 15.98 16.64 19 12 19c-4.64 0-8.577-3.02-9.938-6.652" />'
                                             + '<circle cx="12" cy="12" r="3" />'
+                                        + '</svg>'
+                                    + '</button>'
+                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-edit-intake="' + escapeHtml(r.id) + '" data-edit-name="' + escapeHtml(r.full_name || '') + '" data-edit-phone="' + escapeHtml(r.phone || '') + '" title="Edit">'
+                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                            + '<path d="M12 20h9" />'
+                                            + '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />'
                                         + '</svg>'
                                     + '</button>'
                                     + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-assess-intake="' + escapeHtml(r.id) + '" title="Assess">'
@@ -448,6 +654,16 @@
                 });
 
                 document.addEventListener('click', function (e) {
+                    const btn = e.target.closest && e.target.closest('[data-edit-intake]');
+                    if (!btn) return;
+                    openEdit(
+                        btn.getAttribute('data-edit-intake'),
+                        btn.getAttribute('data-edit-name'),
+                        btn.getAttribute('data-edit-phone')
+                    );
+                });
+
+                document.addEventListener('click', function (e) {
                     const btn = e.target.closest && e.target.closest('[data-assess-intake]');
                     if (!btn) return;
                     openDetails(btn.getAttribute('data-assess-intake'));
@@ -457,6 +673,25 @@
                     modalCloseEl.addEventListener('click', function () {
                         if (!detailsModal) return;
                         detailsModal.hide();
+                    });
+                }
+
+                if (mkCloseEl) {
+                    mkCloseEl.addEventListener('click', function () {
+                        if (!editModal) return;
+                        editModal.hide();
+                    });
+                }
+
+                if (mkSaveBtn) {
+                    mkSaveBtn.addEventListener('click', function () {
+                        saveMk();
+                    });
+                }
+
+                if (mkGenerateBtn) {
+                    mkGenerateBtn.addEventListener('click', function () {
+                        generateMk();
                     });
                 }
 
