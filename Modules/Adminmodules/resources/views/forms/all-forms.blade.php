@@ -1,4 +1,14 @@
 <x-adminmodules::layouts.master>
+    <style>
+        .action-btn {
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background-color: #f8fafc;
+        }
+    </style>
     <div class="min-h-screen bg-slate-50">
         @include('adminmodules::partials.sidebar')
 
@@ -467,21 +477,21 @@
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
-                            + '<td class="py-3 px-4">'
-                                + '<div class="flex items-center justify-end gap-2">'
-                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-view-intake="' + escapeHtml(r.id) + '" title="View">'
+                            + '<td class="py-3 px-4 relative">'
+                                + '<div class="flex items-center justify-end gap-2 relative z-10">'
+                                    + '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-view-intake="' + escapeHtml(r.id) + '" title="View">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M2.062 12.348a1 1 0 0 1 0-.696C3.423 8.02 7.36 5 12 5c4.64 0 8.577 3.02 9.938 6.652a1 1 0 0 1 0 .696C20.577 15.98 16.64 19 12 19c-4.64 0-8.577-3.02-9.938-6.652" />'
                                             + '<circle cx="12" cy="12" r="3" />'
                                         + '</svg>'
                                     + '</button>'
-                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-edit-intake="' + escapeHtml(r.id) + '" data-edit-name="' + escapeHtml(r.full_name || '') + '" data-edit-phone="' + escapeHtml(r.phone || '') + '" title="Edit">'
+                                    + '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-edit-intake="' + escapeHtml(r.id) + '" data-edit-name="' + escapeHtml(r.full_name || '') + '" data-edit-phone="' + escapeHtml(r.phone || '') + '" title="Edit">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M12 20h9" />'
                                             + '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />'
                                         + '</svg>'
                                     + '</button>'
-                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-assess-intake="' + escapeHtml(r.id) + '" title="Assess">'
+                                    + '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-assess-intake="' + escapeHtml(r.id) + '" title="Assess">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M3 3v18h18" />'
                                             + '<path d="M7 14l4-4 4 4 6-6" />'
