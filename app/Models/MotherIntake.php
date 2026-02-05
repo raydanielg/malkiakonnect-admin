@@ -9,6 +9,8 @@ class MotherIntake extends Model
     protected $table = 'mother_intakes';
 
     protected $fillable = [
+        'source_id',
+        'mk_number',
         'full_name',
         'phone',
         'journey_stage',

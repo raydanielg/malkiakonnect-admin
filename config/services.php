@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'malkia_api' => [
+        'base_url' => env('MALKIA_API_BASE_URL', 'https://malkia.co.tz/public'),
+    ],
+
 ];
