@@ -66,18 +66,19 @@
                         <table class="min-w-full text-sm">
                             <thead class="text-xs uppercase text-slate-500 bg-slate-50 border-b border-slate-200">
                                 <tr>
-                                    <th class="text-left py-3 px-4">#</th>
-                                    <th class="text-left py-3 px-4">Jina</th>
-                                    <th class="text-left py-3 px-4">Simu</th>
-                                    <th class="text-left py-3 px-4">Hatua</th>
-                                    <th class="text-left py-3 px-4">Status</th>
-                                    <th class="text-left py-3 px-4">Tarehe</th>
-                                    <th class="text-right py-3 px-4">Vitendo</th>
+                                    <th class="text-left py-3 px-4">MK Number</th>
+                                    <th class="text-left py-3 px-4">Full Name</th>
+                                    <th class="text-left py-3 px-4">Whatsapp Number</th>
+                                    <th class="text-left py-3 px-4">Journey Stage</th>
+                                    <th class="text-left py-3 px-4">Weeks while joining</th>
+                                    <th class="text-left py-3 px-4">Date of Joining</th>
+                                    <th class="text-left py-3 px-4">Hospital Planned</th>
+                                    <th class="text-right py-3 px-4">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="mother-intakes-body" class="divide-y divide-slate-100">
                                 <tr>
-                                    <td colspan="7" class="py-10 px-4 text-slate-500" id="mother-intakes-loading">Inapakia...</td>
+                                    <td colspan="8" class="py-10 px-4 text-slate-500" id="mother-intakes-loading">Inapakia...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -190,7 +191,7 @@
                     if (!tbody) return;
                     tbody.innerHTML = [
                         '<tr class="animate-pulse">',
-                        '<td colspan="7" class="py-6 px-4">',
+                        '<td colspan="8" class="py-6 px-4">',
                         '<div class="h-3 bg-slate-100 rounded w-1/4"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/2"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/3"></div>',
@@ -227,25 +228,55 @@
                     return dateOnly || '-';
                 }
 
+                function weeksWhileJoining(row) {
+                    if (!row) return '-';
+                    if (row.journey_stage === 'pregnant' && row.pregnancy_weeks != null) {
+                        return row.pregnancy_weeks;
+                    }
+                    if (row.journey_stage === 'postpartum' && row.baby_weeks_old != null) {
+                        return row.baby_weeks_old;
+                    }
+                    if (row.pregnancy_weeks != null) return row.pregnancy_weeks;
+                    if (row.baby_weeks_old != null) return row.baby_weeks_old;
+                    return '-';
+                }
+
+                function mkNumber(row) {
+                    if (!row) return '-';
+                    return row.mk_number || row.mkNumber || '-';
+                }
+
                 function renderRows(rows) {
                     if (!tbody) return;
                     if (!rows || rows.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="7" class="py-10 px-4 text-slate-500">Hakuna majibu ya fomu.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="8" class="py-10 px-4 text-slate-500">Hakuna majibu ya fomu.</td></tr>';
                         return;
                     }
 
                     tbody.innerHTML = rows.map(function (r) {
                         return (
                             '<tr class="hover:bg-slate-50">'
-                            + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(r.id) + '</td>'
-                            + '<td class="py-3 px-4 text-slate-900">' + escapeHtml(r.full_name || '-') + '</td>'
+                            + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(mkNumber(r)) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-900 font-semibold">' + escapeHtml(r.full_name || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.phone || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.journey_stage || '-') + '</td>'
-                            + '<td class="py-3 px-4">' + statusBadge(r.status) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
                             + '<td class="py-3 px-4">'
                                 + '<div class="flex items-center justify-end gap-2">'
-                                    + '<button type="button" class="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition" data-view-intake="' + escapeHtml(r.id) + '">Angalia</button>'
+                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-view-intake="' + escapeHtml(r.id) + '" title="View">'
+                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                            + '<path d="M2.062 12.348a1 1 0 0 1 0-.696C3.423 8.02 7.36 5 12 5c4.64 0 8.577 3.02 9.938 6.652a1 1 0 0 1 0 .696C20.577 15.98 16.64 19 12 19c-4.64 0-8.577-3.02-9.938-6.652" />'
+                                            + '<circle cx="12" cy="12" r="3" />'
+                                        + '</svg>'
+                                    + '</button>'
+                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-assess-intake="' + escapeHtml(r.id) + '" title="Assess">'
+                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                            + '<path d="M3 3v18h18" />'
+                                            + '<path d="M7 14l4-4 4 4 6-6" />'
+                                        + '</svg>'
+                                    + '</button>'
                                 + '</div>'
                             + '</td>'
                             + '</tr>'
@@ -329,7 +360,7 @@
                         if (nextBtn) nextBtn.disabled = currentPage >= lastPage;
                     } catch (err) {
                         if (tbody) {
-                            tbody.innerHTML = '<tr><td colspan="7" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
+                            tbody.innerHTML = '<tr><td colspan="8" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
                         }
                         setError((err && err.message) ? err.message : 'Imeshindikana kupata data.');
                     }
@@ -414,6 +445,12 @@
                     const btn = e.target.closest && e.target.closest('[data-view-intake]');
                     if (!btn) return;
                     openDetails(btn.getAttribute('data-view-intake'));
+                });
+
+                document.addEventListener('click', function (e) {
+                    const btn = e.target.closest && e.target.closest('[data-assess-intake]');
+                    if (!btn) return;
+                    openDetails(btn.getAttribute('data-assess-intake'));
                 });
 
                 if (modalCloseEl) {
