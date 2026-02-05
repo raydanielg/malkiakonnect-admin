@@ -468,6 +468,7 @@
                     }
 
                     tbody.innerHTML = rows.map(function (r) {
+                        const viewUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.id));
                         return (
                             '<tr class="hover:bg-slate-50">'
                             + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(mkNumber(r)) + '</td>'
@@ -479,12 +480,12 @@
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
                             + '<td class="py-3 px-4 relative">'
                                 + '<div class="flex items-center justify-end gap-2 relative z-10">'
-                                    + '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-view-intake="' + escapeHtml(r.id) + '" title="View">'
+                                    + '<a href="' + escapeHtml(viewUrl) + '" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="View">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M2.062 12.348a1 1 0 0 1 0-.696C3.423 8.02 7.36 5 12 5c4.64 0 8.577 3.02 9.938 6.652a1 1 0 0 1 0 .696C20.577 15.98 16.64 19 12 19c-4.64 0-8.577-3.02-9.938-6.652" />'
                                             + '<circle cx="12" cy="12" r="3" />'
                                         + '</svg>'
-                                    + '</button>'
+                                    + '</a>'
                                     + '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-edit-intake="' + escapeHtml(r.id) + '" data-edit-name="' + escapeHtml(r.full_name || '') + '" data-edit-phone="' + escapeHtml(r.phone || '') + '" title="Edit">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M12 20h9" />'

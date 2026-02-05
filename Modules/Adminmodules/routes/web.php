@@ -22,6 +22,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admins', fn () => view('adminmodules::users.all-admin'))->name('admins.index');
 
         Route::get('/forms', fn () => view('adminmodules::forms.all-forms'))->name('forms.index');
+        Route::get('/forms/intakes/{id}', function (int $id) {
+            return view('adminmodules::forms.intake-details', ['intakeId' => $id]);
+        })->name('forms.intakes.show');
         Route::get('/forms/membership', fn () => view('adminmodules::forms.membership'))->name('forms.membership');
         Route::get('/forms/active-members', fn () => view('adminmodules::forms.active-members'))->name('forms.active_members');
 
