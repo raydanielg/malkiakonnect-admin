@@ -140,6 +140,8 @@
                 const tbody = document.getElementById('mother-intakes-body');
                 const metaEl = document.getElementById('mother-intakes-meta');
 
+                const API_BASE_URL = @json(rtrim((string) config('app.api_base_url'), '/'));
+
                 const statusEl = document.getElementById('filter-status');
                 const phoneEl = document.getElementById('filter-phone');
                 const fullNameEl = document.getElementById('filter-full-name');
@@ -175,7 +177,7 @@
                 }
 
                 function buildUrl() {
-                    const url = new URL('/api/mother-intakes', window.location.origin);
+                    const url = new URL('/api/mother-intakes', API_BASE_URL || window.location.origin);
                     url.searchParams.set('per_page', perPageEl ? perPageEl.value : '25');
                     url.searchParams.set('page', String(currentPage));
                     if (statusEl && statusEl.value) url.searchParams.set('status', statusEl.value);
@@ -340,7 +342,7 @@
                     detailsModal.show();
 
                     try {
-                        const url = new URL('/api/mother-intakes/' + id, window.location.origin);
+                        const url = new URL('/api/mother-intakes/' + id, API_BASE_URL || window.location.origin);
                         const res = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
                         if (!res.ok) {
                             throw new Error('Imeshindikana kupata maelezo ya fomu.');

@@ -97,6 +97,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'api_base_url' => env('API_BASE_URL', env('APP_URL')),
+
     'key' => env('APP_KEY'),
 
     'previous_keys' => [
