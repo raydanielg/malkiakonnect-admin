@@ -14,8 +14,100 @@
 
             <main class="px-4 sm:px-6 py-6">
                 <div class="bg-white rounded-2xl border border-slate-200 p-6">
-                    <div class="text-sm text-slate-500">Form Management</div>
-                    <h1 class="mt-1 text-2xl font-extrabold text-slate-900">Membership</h1>
+                    <div class="text-sm text-slate-500">Usimamizi wa Wanachama</div>
+                    <h1 class="mt-1 text-2xl font-extrabold text-slate-900">Members</h1>
+                    <p class="mt-2 text-slate-600">Hawa ni wale wenye MK Number tu (members halisi). Wengine bila MK Number hawataonekana.</p>
+                </div>
+
+                <div class="mt-6 bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-200 bg-white">
+                        <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full">
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Status</div>
+                                    <select id="filter-status" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                                        <option value="">Zote</option>
+                                        <option value="pending">pending</option>
+                                        <option value="reviewed">reviewed</option>
+                                        <option value="completed">completed</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Whatsapp Number</div>
+                                    <input id="filter-phone" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Mfano: +2557..." />
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Full Name</div>
+                                    <input id="filter-full-name" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Tafuta jina..." />
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Kwa ukurasa</div>
+                                    <select id="filter-per-page" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                                        <option value="10">10</option>
+                                        <option value="25" selected>25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button id="btn-sync" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-900 hover:bg-slate-800 text-white font-semibold transition">Sync</button>
+                                <button id="btn-refresh" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Onyesha upya</button>
+                                <button id="btn-apply" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Tafuta</button>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 hidden" id="members-error">
+                            <div class="px-4 py-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-sm font-semibold"></div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm">
+                            <thead class="text-xs uppercase text-slate-500 bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th class="text-left py-3 px-4">MK Number</th>
+                                    <th class="text-left py-3 px-4">Full Name</th>
+                                    <th class="text-left py-3 px-4">Whatsapp Number</th>
+                                    <th class="text-left py-3 px-4">Journey Stage</th>
+                                    <th class="text-left py-3 px-4">Weeks while joining</th>
+                                    <th class="text-left py-3 px-4">Date of Joining</th>
+                                    <th class="text-left py-3 px-4">Hospital Planned</th>
+                                    <th class="text-right py-3 px-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="members-body" class="divide-y divide-slate-100">
+                                <tr>
+                                    <td colspan="8" class="py-10 px-4 text-slate-500">Inapakia...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="px-6 py-4 border-t border-slate-200 bg-white flex items-center justify-between gap-3">
+                        <div class="text-sm text-slate-600" id="members-meta"></div>
+                        <div class="flex items-center gap-2">
+                            <button id="btn-prev" class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Nyuma</button>
+                            <button id="btn-next" class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Mbele</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="member-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+                    <div class="relative p-4 w-full max-w-3xl h-full md:h-auto">
+                        <div class="relative p-4 bg-white rounded-2xl border border-slate-200 shadow md:p-8">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <div class="text-sm font-semibold text-slate-500">Maelezo ya Member</div>
+                                    <h3 class="mt-1 text-2xl font-extrabold text-slate-900" id="member-modal-title">Member</h3>
+                                </div>
+                                <button id="member-close" type="button" class="py-2 px-4 text-sm font-semibold text-slate-600 bg-white rounded-xl border border-slate-200 hover:bg-slate-50">Funga</button>
+                            </div>
+
+                            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4" id="member-modal-grid"></div>
+                        </div>
+                    </div>
                 </div>
 
                 @include('adminmodules::partials.footer')
@@ -42,6 +134,350 @@
                     if (!link) return;
                     setTimeout(updateCarets, 0);
                 });
+            })();
+        </script>
+
+        <script>
+            (function () {
+                const tbody = document.getElementById('members-body');
+                const metaEl = document.getElementById('members-meta');
+
+                const API_BASE_URL = window.location.origin;
+
+                const statusEl = document.getElementById('filter-status');
+                const phoneEl = document.getElementById('filter-phone');
+                const fullNameEl = document.getElementById('filter-full-name');
+                const perPageEl = document.getElementById('filter-per-page');
+                const applyBtn = document.getElementById('btn-apply');
+                const syncBtn = document.getElementById('btn-sync');
+                const refreshBtn = document.getElementById('btn-refresh');
+                const prevBtn = document.getElementById('btn-prev');
+                const nextBtn = document.getElementById('btn-next');
+
+                const modalEl = document.getElementById('member-modal');
+                const modalTitleEl = document.getElementById('member-modal-title');
+                const modalGridEl = document.getElementById('member-modal-grid');
+                const modalCloseEl = document.getElementById('member-close');
+
+                const errorWrapEl = document.getElementById('members-error');
+                const errorTextEl = errorWrapEl ? errorWrapEl.querySelector('div') : null;
+
+                let currentPage = 1;
+                let lastPage = 1;
+                let debounceTimer = null;
+
+                const detailsModal = (modalEl && typeof Modal !== 'undefined')
+                    ? new Modal(modalEl, { placement: 'center' })
+                    : null;
+
+                function escapeHtml(str) {
+                    return String(str ?? '')
+                        .replaceAll('&', '&amp;')
+                        .replaceAll('<', '&lt;')
+                        .replaceAll('>', '&gt;')
+                        .replaceAll('"', '&quot;')
+                        .replaceAll("'", '&#039;');
+                }
+
+                function buildUrl() {
+                    const url = new URL('/api/members', API_BASE_URL);
+                    url.searchParams.set('per_page', perPageEl ? perPageEl.value : '25');
+                    url.searchParams.set('page', String(currentPage));
+                    if (statusEl && statusEl.value) url.searchParams.set('status', statusEl.value);
+                    if (phoneEl && phoneEl.value) url.searchParams.set('phone', phoneEl.value);
+                    if (fullNameEl && fullNameEl.value) url.searchParams.set('full_name', fullNameEl.value);
+                    return url.toString();
+                }
+
+                function setLoading() {
+                    if (!tbody) return;
+                    tbody.innerHTML = [
+                        '<tr class="animate-pulse">',
+                        '<td colspan="8" class="py-6 px-4">',
+                        '<div class="h-3 bg-slate-100 rounded w-1/4"></div>',
+                        '<div class="mt-3 h-3 bg-slate-100 rounded w-1/2"></div>',
+                        '<div class="mt-3 h-3 bg-slate-100 rounded w-1/3"></div>',
+                        '</td>',
+                        '</tr>'
+                    ].join('');
+                }
+
+                function setError(message) {
+                    if (!errorWrapEl || !errorTextEl) return;
+                    errorTextEl.textContent = message;
+                    errorWrapEl.classList.remove('hidden');
+                }
+
+                function clearError() {
+                    if (!errorWrapEl) return;
+                    errorWrapEl.classList.add('hidden');
+                }
+
+                function fmtDate(dateString) {
+                    if (!dateString) return '-';
+                    const dateOnly = String(dateString).slice(0, 10);
+                    return dateOnly || '-';
+                }
+
+                function weeksWhileJoining(row) {
+                    if (!row) return '-';
+                    if (row.journey_stage === 'pregnant' && row.pregnancy_weeks != null) {
+                        return row.pregnancy_weeks;
+                    }
+                    if (row.journey_stage === 'postpartum' && row.baby_weeks_old != null) {
+                        return row.baby_weeks_old;
+                    }
+                    if (row.pregnancy_weeks != null) return row.pregnancy_weeks;
+                    if (row.baby_weeks_old != null) return row.baby_weeks_old;
+                    return '-';
+                }
+
+                function cardItem(label, value) {
+                    return [
+                        '<div class="p-4 rounded-2xl border border-slate-200 bg-white">',
+                        '<div class="text-[11px] font-extrabold text-slate-500 uppercase">' + escapeHtml(label) + '</div>',
+                        '<div class="mt-1 text-sm font-semibold text-slate-900 break-words">' + escapeHtml(value ?? '-') + '</div>',
+                        '</div>'
+                    ].join('');
+                }
+
+                function renderDetails(data) {
+                    if (!modalGridEl) return;
+                    const interests = Array.isArray(data && data.interests) ? data.interests.join(', ') : (data && data.interests ? String(data.interests) : '-');
+
+                    modalGridEl.innerHTML = [
+                        cardItem('mk_number', data && data.mk_number),
+                        cardItem('full_name', data && data.full_name),
+                        cardItem('phone', data && data.phone),
+                        cardItem('journey_stage', data && data.journey_stage),
+                        cardItem('pregnancy_weeks', data && data.pregnancy_weeks),
+                        cardItem('baby_weeks_old', data && data.baby_weeks_old),
+                        cardItem('hospital_planned', data && data.hospital_planned),
+                        cardItem('hospital_alternative', data && data.hospital_alternative),
+                        cardItem('delivery_hospital', data && data.delivery_hospital),
+                        cardItem('birth_hospital', data && data.birth_hospital),
+                        cardItem('ttc_duration', data && data.ttc_duration),
+                        cardItem('agree_comms', (data && typeof data.agree_comms !== 'undefined') ? String(!!data.agree_comms) : '-'),
+                        cardItem('disclaimer_ack', (data && typeof data.disclaimer_ack !== 'undefined') ? String(!!data.disclaimer_ack) : '-'),
+                        cardItem('email', data && data.email),
+                        cardItem('age', data && data.age),
+                        cardItem('pregnancy_stage', data && data.pregnancy_stage),
+                        cardItem('due_date', data && data.due_date),
+                        cardItem('location', data && data.location),
+                        cardItem('previous_pregnancies', data && data.previous_pregnancies),
+                        cardItem('concerns', data && data.concerns),
+                        cardItem('interests', interests),
+                        cardItem('status', data && data.status),
+                        cardItem('reviewed_by', data && data.reviewed_by),
+                        cardItem('reviewed_at', data && data.reviewed_at),
+                        cardItem('completed_at', data && data.completed_at),
+                        cardItem('notes', data && data.notes),
+                        cardItem('priority', data && data.priority),
+                        cardItem('user_id', data && data.user_id),
+                        cardItem('created_at', data && data.created_at),
+                        cardItem('updated_at', data && data.updated_at)
+                    ].join('');
+                }
+
+                function renderRows(rows) {
+                    if (!tbody) return;
+                    if (!rows || rows.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="8" class="py-10 px-4 text-slate-500">Hakuna members kwa sasa.</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = rows.map(function (r) {
+                        return (
+                            '<tr class="hover:bg-slate-50">'
+                            + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(r.mk_number || '-') + '</td>'
+                            + '<td class="py-3 px-4 text-slate-900 font-semibold">' + escapeHtml(r.full_name || '-') + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.phone || '-') + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.journey_stage || '-') + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
+                            + '<td class="py-3 px-4">'
+                                + '<div class="flex items-center justify-end gap-2">'
+                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-view-member="' + escapeHtml(r.id) + '" title="View">'
+                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                            + '<path d="M2.062 12.348a1 1 0 0 1 0-.696C3.423 8.02 7.36 5 12 5c4.64 0 8.577 3.02 9.938 6.652a1 1 0 0 1 0 .696C20.577 15.98 16.64 19 12 19c-4.64 0-8.577-3.02-9.938-6.652" />'
+                                            + '<circle cx="12" cy="12" r="3" />'
+                                        + '</svg>'
+                                    + '</button>'
+                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-assess-member="' + escapeHtml(r.id) + '" title="Assess">'
+                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                            + '<path d="M3 3v18h18" />'
+                                            + '<path d="M7 14l4-4 4 4 6-6" />'
+                                        + '</svg>'
+                                    + '</button>'
+                                + '</div>'
+                            + '</td>'
+                            + '</tr>'
+                        );
+                    }).join('');
+                }
+
+                async function fetchList() {
+                    clearError();
+                    setLoading();
+                    try {
+                        const res = await fetch(buildUrl(), { headers: { 'Accept': 'application/json' } });
+                        if (!res.ok) {
+                            throw new Error('Imeshindikana kupata members. Jaribu tena.');
+                        }
+                        const json = await res.json();
+                        const meta = json && json.meta ? json.meta : null;
+                        lastPage = meta && meta.last_page ? meta.last_page : 1;
+
+                        renderRows(json && json.data ? json.data : []);
+
+                        if (metaEl && meta) {
+                            metaEl.textContent = 'Ukurasa ' + meta.current_page + ' / ' + meta.last_page + ' (Jumla: ' + meta.total + ')';
+                        }
+
+                        if (prevBtn) prevBtn.disabled = currentPage <= 1;
+                        if (nextBtn) nextBtn.disabled = currentPage >= lastPage;
+                    } catch (err) {
+                        if (tbody) {
+                            tbody.innerHTML = '<tr><td colspan="8" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
+                        }
+                        setError((err && err.message) ? err.message : 'Imeshindikana kupata members.');
+                    }
+                }
+
+                async function runSync() {
+                    if (!syncBtn) return;
+                    const originalText = syncBtn.textContent;
+                    syncBtn.disabled = true;
+                    syncBtn.textContent = 'Inasync...';
+
+                    try {
+                        const res = await fetch(@json(url('/admin/forms/members/sync')), {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                            body: JSON.stringify({}),
+                        });
+
+                        if (!res.ok) {
+                            throw new Error('Sync imeshindikana.');
+                        }
+
+                        await res.json();
+                        currentPage = 1;
+                        await fetchList();
+                    } catch (err) {
+                        setError((err && err.message) ? err.message : 'Sync imeshindikana.');
+                    } finally {
+                        syncBtn.disabled = false;
+                        syncBtn.textContent = originalText;
+                    }
+                }
+
+                async function openDetails(id) {
+                    if (!detailsModal || !modalGridEl) return;
+                    modalTitleEl.textContent = 'Member #' + id;
+                    modalGridEl.innerHTML = '<div class="md:col-span-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-sm font-semibold">Inapakia...</div>';
+                    detailsModal.show();
+
+                    try {
+                        const url = new URL('/api/mother-intakes/' + id, API_BASE_URL);
+                        const res = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
+                        if (!res.ok) {
+                            throw new Error('Imeshindikana kupata maelezo ya member.');
+                        }
+                        const json = await res.json();
+                        renderDetails(json && json.data ? json.data : null);
+                    } catch (err) {
+                        modalGridEl.innerHTML = '<div class="md:col-span-2 px-4 py-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-sm font-semibold">Imeshindikana kupata maelezo ya member.</div>';
+                    }
+                }
+
+                function scheduleFetch() {
+                    if (debounceTimer) window.clearTimeout(debounceTimer);
+                    debounceTimer = window.setTimeout(function () {
+                        currentPage = 1;
+                        fetchList();
+                    }, 450);
+                }
+
+                if (applyBtn) {
+                    applyBtn.addEventListener('click', function () {
+                        currentPage = 1;
+                        fetchList();
+                    });
+                }
+
+                if (refreshBtn) {
+                    refreshBtn.addEventListener('click', function () {
+                        fetchList();
+                    });
+                }
+
+                if (syncBtn) {
+                    syncBtn.addEventListener('click', function () {
+                        runSync();
+                    });
+                }
+
+                if (statusEl) {
+                    statusEl.addEventListener('change', scheduleFetch);
+                }
+
+                if (perPageEl) {
+                    perPageEl.addEventListener('change', function () {
+                        currentPage = 1;
+                        fetchList();
+                    });
+                }
+
+                if (phoneEl) {
+                    phoneEl.addEventListener('input', scheduleFetch);
+                }
+
+                if (fullNameEl) {
+                    fullNameEl.addEventListener('input', scheduleFetch);
+                }
+
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', function () {
+                        if (currentPage <= 1) return;
+                        currentPage -= 1;
+                        fetchList();
+                    });
+                }
+
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function () {
+                        if (currentPage >= lastPage) return;
+                        currentPage += 1;
+                        fetchList();
+                    });
+                }
+
+                document.addEventListener('click', function (e) {
+                    const btn = e.target.closest && e.target.closest('[data-view-member]');
+                    if (!btn) return;
+                    openDetails(btn.getAttribute('data-view-member'));
+                });
+
+                document.addEventListener('click', function (e) {
+                    const btn = e.target.closest && e.target.closest('[data-assess-member]');
+                    if (!btn) return;
+                    openDetails(btn.getAttribute('data-assess-member'));
+                });
+
+                if (modalCloseEl) {
+                    modalCloseEl.addEventListener('click', function () {
+                        if (!detailsModal) return;
+                        detailsModal.hide();
+                    });
+                }
+
+                fetchList();
             })();
         </script>
     </div>

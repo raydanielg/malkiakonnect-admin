@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use Modules\Adminmodules\Http\Controllers\AdminDashboardController;
 use Modules\Adminmodules\Http\Controllers\AdminOverviewController;
 use Modules\Adminmodules\Http\Controllers\AdminStatisticsController;
@@ -20,6 +21,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/forms', fn () => view('adminmodules::forms.all-forms'))->name('forms.index');
         Route::get('/forms/membership', fn () => view('adminmodules::forms.membership'))->name('forms.membership');
         Route::get('/forms/active-members', fn () => view('adminmodules::forms.active-members'))->name('forms.active_members');
+
+        Route::post('/forms/members/sync', function () {
+            Artisan::call('mother-intakes:sync', ['--per-page' => 25]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Sync imekamilika.',
+                'output' => Artisan::output(),
+            ]);
+        })->name('forms.members.sync');
 
         Route::get('/communication', fn () => view('adminmodules::chat.communication'))->name('communication');
         Route::get('/chat-setup', fn () => view('adminmodules::chat.chat-setup'))->name('chat.setup');
