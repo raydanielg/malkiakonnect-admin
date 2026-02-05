@@ -7,7 +7,7 @@ use Modules\Authmanagement\Http\Controllers\AuthController;
 View::addNamespace('authmanagement', base_path('Modules/Authmanagement/resources/views'));
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('auth.login');
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('auth.login.submit');
     Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('auth.forgot');
 });

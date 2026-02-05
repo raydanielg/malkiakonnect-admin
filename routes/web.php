@@ -24,5 +24,5 @@ if (file_exists(base_path('Modules/Usermanagement/routes/web.php'))) {
 }
 
 Route::get('/', function () {
-    return redirect()->route('auth.login');
+    return redirect()->route('login');
 });
