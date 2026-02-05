@@ -170,144 +170,6 @@
                         caret.classList.toggle('rotate-180', expanded);
                     });
                 }
-
-                function setMkError(message) {
-                    if (!mkErrorWrapEl || !mkErrorTextEl) return;
-                    mkErrorTextEl.textContent = message;
-                    mkErrorWrapEl.classList.remove('hidden');
-                }
-
-                function clearMkError() {
-                    if (!mkErrorWrapEl) return;
-                    mkErrorWrapEl.classList.add('hidden');
-                }
-
-                async function openEdit(sourceId, fullName, phone) {
-                    if (!editModal || !mkDigitsEl) return;
-                    activeEdit = { sourceId: String(sourceId), fullName: fullName || '', phone: phone || '' };
-                    clearMkError();
-
-                    mkModalTitleEl.textContent = 'Edit MK Number';
-                    if (mkFullNameEl) mkFullNameEl.textContent = fullName || '-';
-                    if (mkPhoneEl) mkPhoneEl.textContent = phone || '-';
-                    mkDigitsEl.value = '';
-                    editModal.show();
-
-                    try {
-                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(sourceId) + '/mk';
-                        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-                        if (!res.ok) return;
-                        const json = await res.json();
-                        const mkNumber = json && json.data ? json.data.mk_number : null;
-                        if (mkNumber && typeof mkNumber === 'string' && mkNumber.startsWith('MK-')) {
-                            mkDigitsEl.value = mkNumber.slice(3);
-                        }
-                    } catch (err) {
-                        // ignore
-                    }
-                }
-
-                async function saveMk() {
-                    if (!activeEdit || !mkDigitsEl) return;
-                    clearMkError();
-                    const digits = String(mkDigitsEl.value || '').trim();
-                    if (!/^[0-9]{1,10}$/.test(digits)) {
-                        setMkError('Weka namba sahihi (digits tu).');
-                        return;
-                    }
-
-                    if (mkSaveBtn) {
-                        mkSaveBtn.disabled = true;
-                        mkSaveBtn.textContent = 'Inahifadhi...';
-                    }
-
-                    try {
-                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(activeEdit.sourceId) + '/mk';
-                        const res = await fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': @json(csrf_token()),
-                            },
-                            body: JSON.stringify({
-                                mk_digits: digits,
-                                full_name: activeEdit.fullName,
-                                phone: activeEdit.phone,
-                            }),
-                        });
-
-                        const json = await res.json().catch(function () { return null; });
-                        if (!res.ok) {
-                            const msg = (json && json.message) ? json.message : 'Imeshindikana kuhifadhi MK Number.';
-                            setMkError(msg);
-                            return;
-                        }
-
-                        const mkNumber = json && json.data ? json.data.mk_number : null;
-                        if (mkNumber) {
-                            mkBySourceId[activeEdit.sourceId] = mkNumber;
-                            fetchList();
-                        }
-
-                        if (editModal) editModal.hide();
-                    } catch (err) {
-                        setMkError('Imeshindikana kuhifadhi MK Number.');
-                    } finally {
-                        if (mkSaveBtn) {
-                            mkSaveBtn.disabled = false;
-                            mkSaveBtn.textContent = 'Hifadhi';
-                        }
-                    }
-                }
-
-                async function generateMk() {
-                    if (!activeEdit) return;
-                    clearMkError();
-
-                    if (mkGenerateBtn) {
-                        mkGenerateBtn.disabled = true;
-                        mkGenerateBtn.textContent = 'Inatengeneza...';
-                    }
-
-                    try {
-                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(activeEdit.sourceId) + '/mk/generate';
-                        const res = await fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': @json(csrf_token()),
-                            },
-                            body: JSON.stringify({
-                                full_name: activeEdit.fullName,
-                                phone: activeEdit.phone,
-                            }),
-                        });
-
-                        const json = await res.json().catch(function () { return null; });
-                        if (!res.ok) {
-                            const msg = (json && json.message) ? json.message : 'Imeshindikana kutengeneza MK Number.';
-                            setMkError(msg);
-                            return;
-                        }
-
-                        const mkNumber = json && json.data ? json.data.mk_number : null;
-                        if (mkNumber && mkDigitsEl) {
-                            mkDigitsEl.value = String(mkNumber).startsWith('MK-') ? String(mkNumber).slice(3) : '';
-                            mkBySourceId[activeEdit.sourceId] = mkNumber;
-                            fetchList();
-                        }
-                    } catch (err) {
-                        setMkError('Imeshindikana kutengeneza MK Number.');
-                    } finally {
-                        if (mkGenerateBtn) {
-                            mkGenerateBtn.disabled = false;
-                            mkGenerateBtn.textContent = 'Generate';
-                        }
-                    }
-                }
-
                 updateCarets();
                 document.addEventListener('click', function (e) {
                     const link = e.target.closest && e.target.closest('[data-collapse-link]');
@@ -366,6 +228,148 @@
                 const editModal = (mkModalEl && typeof Modal !== 'undefined')
                     ? new Modal(mkModalEl, { placement: 'center' })
                     : null;
+
+                function setMkError(message) {
+                    if (!mkErrorWrapEl || !mkErrorTextEl) return;
+                    mkErrorTextEl.textContent = message;
+                    mkErrorWrapEl.classList.remove('hidden');
+                }
+
+                function clearMkError() {
+                    if (!mkErrorWrapEl) return;
+                    mkErrorWrapEl.classList.add('hidden');
+                }
+
+                async function generateMk() {
+                    if (!activeEdit) return;
+                    clearMkError();
+
+                    if (mkGenerateBtn) {
+                        mkGenerateBtn.disabled = true;
+                        mkGenerateBtn.textContent = 'Inatengeneza...';
+                    }
+
+                    try {
+                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(activeEdit.sourceId) + '/mk/generate';
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                            body: JSON.stringify({
+                                full_name: activeEdit.fullName,
+                                phone: activeEdit.phone,
+                            }),
+                        });
+
+                        const json = await res.json().catch(function () { return null; });
+                        if (!res.ok) {
+                            const msg = (json && json.message) ? json.message : 'Imeshindikana kutengeneza MK Number.';
+                            setMkError(msg);
+                            return;
+                        }
+
+                        const mkNumber = json && json.data ? json.data.mk_number : null;
+                        if (mkNumber && mkDigitsEl) {
+                            mkDigitsEl.value = String(mkNumber).startsWith('MK-') ? String(mkNumber).slice(3) : '';
+                            mkBySourceId[activeEdit.sourceId] = mkNumber;
+                            fetchList();
+                        }
+                    } catch (err) {
+                        setMkError('Imeshindikana kutengeneza MK Number.');
+                    } finally {
+                        if (mkGenerateBtn) {
+                            mkGenerateBtn.disabled = false;
+                            mkGenerateBtn.textContent = 'Generate';
+                        }
+                    }
+                }
+
+                async function openEdit(sourceId, fullName, phone) {
+                    if (!editModal || !mkDigitsEl) return;
+                    activeEdit = { sourceId: String(sourceId), fullName: fullName || '', phone: phone || '' };
+                    clearMkError();
+
+                    if (mkModalTitleEl) mkModalTitleEl.textContent = 'Edit MK Number';
+                    if (mkFullNameEl) mkFullNameEl.textContent = fullName || '-';
+                    if (mkPhoneEl) mkPhoneEl.textContent = phone || '-';
+                    mkDigitsEl.value = '';
+                    editModal.show();
+
+                    try {
+                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(sourceId) + '/mk';
+                        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                        if (!res.ok) return;
+                        const json = await res.json();
+                        const mkNumber = json && json.data ? json.data.mk_number : null;
+
+                        if (mkNumber && typeof mkNumber === 'string' && mkNumber.startsWith('MK-')) {
+                            mkDigitsEl.value = mkNumber.slice(3);
+                            mkBySourceId[activeEdit.sourceId] = mkNumber;
+                            return;
+                        }
+
+                        await generateMk();
+                    } catch (err) {
+                        // ignore
+                    }
+                }
+
+                async function saveMk() {
+                    if (!activeEdit || !mkDigitsEl) return;
+                    clearMkError();
+                    const digits = String(mkDigitsEl.value || '').trim();
+                    if (!/^[0-9]{1,10}$/.test(digits)) {
+                        setMkError('Weka namba sahihi (digits tu).');
+                        return;
+                    }
+
+                    if (mkSaveBtn) {
+                        mkSaveBtn.disabled = true;
+                        mkSaveBtn.textContent = 'Inahifadhi...';
+                    }
+
+                    try {
+                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(activeEdit.sourceId) + '/mk';
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                            body: JSON.stringify({
+                                mk_digits: digits,
+                                full_name: activeEdit.fullName,
+                                phone: activeEdit.phone,
+                            }),
+                        });
+
+                        const json = await res.json().catch(function () { return null; });
+                        if (!res.ok) {
+                            const msg = (json && json.message) ? json.message : 'Imeshindikana kuhifadhi MK Number.';
+                            setMkError(msg);
+                            return;
+                        }
+
+                        const mkNumber = json && json.data ? json.data.mk_number : null;
+                        if (mkNumber) {
+                            mkBySourceId[activeEdit.sourceId] = mkNumber;
+                            fetchList();
+                        }
+
+                        if (editModal) editModal.hide();
+                    } catch (err) {
+                        setMkError('Imeshindikana kuhifadhi MK Number.');
+                    } finally {
+                        if (mkSaveBtn) {
+                            mkSaveBtn.disabled = false;
+                            mkSaveBtn.textContent = 'Hifadhi';
+                        }
+                    }
+                }
 
                 function escapeHtml(str) {
                     return String(str ?? '')
