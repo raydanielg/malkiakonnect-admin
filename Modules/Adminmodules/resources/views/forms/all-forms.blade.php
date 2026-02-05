@@ -20,27 +20,45 @@
                 </div>
 
                 <div class="mt-6 bg-white rounded-2xl border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-200 bg-white flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                        <div class="flex items-center gap-3 flex-wrap">
-                            <div class="text-sm font-semibold text-slate-700">Chuja kwa:</div>
-                            <select id="filter-status" class="px-3 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
-                                <option value="">Status (yote)</option>
-                                <option value="pending">pending</option>
-                                <option value="reviewed">reviewed</option>
-                                <option value="completed">completed</option>
-                            </select>
-                            <input id="filter-phone" class="px-3 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Simu" />
-                            <input id="filter-full-name" class="px-3 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Jina kamili" />
+                    <div class="px-6 py-4 border-b border-slate-200 bg-white">
+                        <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full">
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Status</div>
+                                    <select id="filter-status" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                                        <option value="">Zote</option>
+                                        <option value="pending">pending</option>
+                                        <option value="reviewed">reviewed</option>
+                                        <option value="completed">completed</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Simu</div>
+                                    <input id="filter-phone" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Mfano: +2557..." />
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Jina</div>
+                                    <input id="filter-full-name" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Tafuta jina..." />
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Kwa ukurasa</div>
+                                    <select id="filter-per-page" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                                        <option value="10">10</option>
+                                        <option value="25" selected>25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button id="btn-refresh" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Onyesha upya</button>
+                                <button id="btn-apply" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Tafuta</button>
+                            </div>
                         </div>
 
-                        <div class="flex items-center gap-2">
-                            <select id="filter-per-page" class="px-3 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
-                                <option value="10">10</option>
-                                <option value="25" selected>25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                            <button id="btn-apply" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Tafuta</button>
+                        <div class="mt-3 hidden" id="mother-intakes-error">
+                            <div class="px-4 py-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-sm font-semibold"></div>
                         </div>
                     </div>
 
@@ -85,9 +103,7 @@
                                 <button id="intake-close" type="button" class="py-2 px-4 text-sm font-semibold text-slate-600 bg-white rounded-xl border border-slate-200 hover:bg-slate-50">Funga</button>
                             </div>
 
-                            <div class="mt-5">
-                                <pre id="intake-modal-json" class="text-xs bg-slate-50 border border-slate-200 rounded-xl p-4 overflow-auto"></pre>
-                            </div>
+                            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4" id="intake-modal-grid"></div>
                         </div>
                     </div>
                 </div>
@@ -129,16 +145,21 @@
                 const fullNameEl = document.getElementById('filter-full-name');
                 const perPageEl = document.getElementById('filter-per-page');
                 const applyBtn = document.getElementById('btn-apply');
+                const refreshBtn = document.getElementById('btn-refresh');
                 const prevBtn = document.getElementById('btn-prev');
                 const nextBtn = document.getElementById('btn-next');
 
                 const modalEl = document.getElementById('intake-modal');
                 const modalTitleEl = document.getElementById('intake-modal-title');
-                const modalJsonEl = document.getElementById('intake-modal-json');
+                const modalGridEl = document.getElementById('intake-modal-grid');
                 const modalCloseEl = document.getElementById('intake-close');
+
+                const errorWrapEl = document.getElementById('mother-intakes-error');
+                const errorTextEl = errorWrapEl ? errorWrapEl.querySelector('div') : null;
 
                 let currentPage = 1;
                 let lastPage = 1;
+                let debounceTimer = null;
 
                 const detailsModal = (modalEl && typeof Modal !== 'undefined')
                     ? new Modal(modalEl, { placement: 'center' })
@@ -165,7 +186,43 @@
 
                 function setLoading() {
                     if (!tbody) return;
-                    tbody.innerHTML = '<tr><td colspan="7" class="py-10 px-4 text-slate-500">Inapakia...</td></tr>';
+                    tbody.innerHTML = [
+                        '<tr class="animate-pulse">',
+                        '<td colspan="7" class="py-6 px-4">',
+                        '<div class="h-3 bg-slate-100 rounded w-1/4"></div>',
+                        '<div class="mt-3 h-3 bg-slate-100 rounded w-1/2"></div>',
+                        '<div class="mt-3 h-3 bg-slate-100 rounded w-1/3"></div>',
+                        '</td>',
+                        '</tr>'
+                    ].join('');
+                }
+
+                function setError(message) {
+                    if (!errorWrapEl || !errorTextEl) return;
+                    errorTextEl.textContent = message;
+                    errorWrapEl.classList.remove('hidden');
+                }
+
+                function clearError() {
+                    if (!errorWrapEl) return;
+                    errorWrapEl.classList.add('hidden');
+                }
+
+                function statusBadge(status) {
+                    const s = String(status || '').toLowerCase();
+                    if (s === 'completed') {
+                        return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">completed</span>';
+                    }
+                    if (s === 'reviewed') {
+                        return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">reviewed</span>';
+                    }
+                    return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">' + escapeHtml(status || 'pending') + '</span>';
+                }
+
+                function fmtDate(dateString) {
+                    if (!dateString) return '-';
+                    const dateOnly = String(dateString).slice(0, 10);
+                    return dateOnly || '-';
                 }
 
                 function renderRows(rows) {
@@ -182,12 +239,8 @@
                             + '<td class="py-3 px-4 text-slate-900">' + escapeHtml(r.full_name || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.phone || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.journey_stage || '-') + '</td>'
-                            + '<td class="py-3 px-4">'
-                                + '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700">'
-                                + escapeHtml(r.status || '-')
-                                + '</span>'
-                            + '</td>'
-                            + '<td class="py-3 px-4 text-slate-600">' + escapeHtml((r.created_at || '').slice(0, 10) || '-') + '</td>'
+                            + '<td class="py-3 px-4">' + statusBadge(r.status) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
                             + '<td class="py-3 px-4">'
                                 + '<div class="flex items-center justify-end gap-2">'
                                     + '<button type="button" class="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition" data-view-intake="' + escapeHtml(r.id) + '">Angalia</button>'
@@ -198,39 +251,113 @@
                     }).join('');
                 }
 
+                function cardItem(label, value) {
+                    return [
+                        '<div class="p-4 rounded-2xl border border-slate-200 bg-white">',
+                        '<div class="text-[11px] font-extrabold text-slate-500 uppercase">' + escapeHtml(label) + '</div>',
+                        '<div class="mt-1 text-sm font-semibold text-slate-900 break-words">' + escapeHtml(value ?? '-') + '</div>',
+                        '</div>'
+                    ].join('');
+                }
+
+                function renderDetails(data) {
+                    if (!modalGridEl) return;
+                    const interests = Array.isArray(data && data.interests) ? data.interests.join(', ') : (data && data.interests ? String(data.interests) : '-');
+
+                    modalGridEl.innerHTML = [
+                        cardItem('id', data && data.id),
+                        cardItem('full_name', data && data.full_name),
+                        cardItem('phone', data && data.phone),
+                        cardItem('journey_stage', data && data.journey_stage),
+                        cardItem('pregnancy_weeks', data && data.pregnancy_weeks),
+                        cardItem('baby_weeks_old', data && data.baby_weeks_old),
+                        cardItem('hospital_planned', data && data.hospital_planned),
+                        cardItem('hospital_alternative', data && data.hospital_alternative),
+                        cardItem('delivery_hospital', data && data.delivery_hospital),
+                        cardItem('birth_hospital', data && data.birth_hospital),
+                        cardItem('ttc_duration', data && data.ttc_duration),
+                        cardItem('agree_comms', (data && typeof data.agree_comms !== 'undefined') ? String(!!data.agree_comms) : '-'),
+                        cardItem('disclaimer_ack', (data && typeof data.disclaimer_ack !== 'undefined') ? String(!!data.disclaimer_ack) : '-'),
+                        cardItem('email', data && data.email),
+                        cardItem('age', data && data.age),
+                        cardItem('pregnancy_stage', data && data.pregnancy_stage),
+                        cardItem('due_date', data && data.due_date),
+                        cardItem('location', data && data.location),
+                        cardItem('previous_pregnancies', data && data.previous_pregnancies),
+                        cardItem('concerns', data && data.concerns),
+                        cardItem('interests', interests),
+                        cardItem('status', data && data.status),
+                        cardItem('reviewed_by', data && data.reviewed_by),
+                        cardItem('reviewed_at', data && data.reviewed_at),
+                        cardItem('completed_at', data && data.completed_at),
+                        cardItem('notes', data && data.notes),
+                        cardItem('priority', data && data.priority),
+                        cardItem('user_id', data && data.user_id),
+                        cardItem('created_at', data && data.created_at),
+                        cardItem('updated_at', data && data.updated_at)
+                    ].join('');
+                }
+
                 async function fetchList() {
+                    clearError();
                     setLoading();
-                    const res = await fetch(buildUrl(), {
-                        headers: {
-                            'Accept': 'application/json'
+                    try {
+                        const res = await fetch(buildUrl(), {
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        if (!res.ok) {
+                            throw new Error('Imeshindikana kupata data. Jaribu tena.');
                         }
-                    });
 
-                    const json = await res.json();
-                    const meta = json && json.meta ? json.meta : null;
+                        const json = await res.json();
+                        const meta = json && json.meta ? json.meta : null;
 
-                    lastPage = meta && meta.last_page ? meta.last_page : 1;
+                        lastPage = meta && meta.last_page ? meta.last_page : 1;
 
-                    renderRows(json && json.data ? json.data : []);
+                        renderRows(json && json.data ? json.data : []);
 
-                    if (metaEl && meta) {
-                        metaEl.textContent = 'Ukurasa ' + meta.current_page + ' / ' + meta.last_page + ' (Jumla: ' + meta.total + ')';
+                        if (metaEl && meta) {
+                            metaEl.textContent = 'Ukurasa ' + meta.current_page + ' / ' + meta.last_page + ' (Jumla: ' + meta.total + ')';
+                        }
+
+                        if (prevBtn) prevBtn.disabled = currentPage <= 1;
+                        if (nextBtn) nextBtn.disabled = currentPage >= lastPage;
+                    } catch (err) {
+                        if (tbody) {
+                            tbody.innerHTML = '<tr><td colspan="7" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
+                        }
+                        setError((err && err.message) ? err.message : 'Imeshindikana kupata data.');
                     }
-
-                    if (prevBtn) prevBtn.disabled = currentPage <= 1;
-                    if (nextBtn) nextBtn.disabled = currentPage >= lastPage;
                 }
 
                 async function openDetails(id) {
-                    if (!detailsModal || !modalJsonEl) return;
+                    if (!detailsModal || !modalGridEl) return;
                     modalTitleEl.textContent = 'Mother Intake #' + id;
-                    modalJsonEl.textContent = 'Inapakia...';
+                    modalGridEl.innerHTML = '<div class="md:col-span-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-sm font-semibold">Inapakia...</div>';
                     detailsModal.show();
 
-                    const url = new URL('/api/mother-intakes/' + id, window.location.origin);
-                    const res = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
-                    const json = await res.json();
-                    modalJsonEl.textContent = JSON.stringify(json, null, 2);
+                    try {
+                        const url = new URL('/api/mother-intakes/' + id, window.location.origin);
+                        const res = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
+                        if (!res.ok) {
+                            throw new Error('Imeshindikana kupata maelezo ya fomu.');
+                        }
+                        const json = await res.json();
+                        renderDetails(json && json.data ? json.data : null);
+                    } catch (err) {
+                        modalGridEl.innerHTML = '<div class="md:col-span-2 px-4 py-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-sm font-semibold">Imeshindikana kupata maelezo ya fomu.</div>';
+                    }
+                }
+
+                function scheduleFetch() {
+                    if (debounceTimer) window.clearTimeout(debounceTimer);
+                    debounceTimer = window.setTimeout(function () {
+                        currentPage = 1;
+                        fetchList();
+                    }, 450);
                 }
 
                 if (applyBtn) {
@@ -238,6 +365,31 @@
                         currentPage = 1;
                         fetchList();
                     });
+                }
+
+                if (refreshBtn) {
+                    refreshBtn.addEventListener('click', function () {
+                        fetchList();
+                    });
+                }
+
+                if (statusEl) {
+                    statusEl.addEventListener('change', scheduleFetch);
+                }
+
+                if (perPageEl) {
+                    perPageEl.addEventListener('change', function () {
+                        currentPage = 1;
+                        fetchList();
+                    });
+                }
+
+                if (phoneEl) {
+                    phoneEl.addEventListener('input', scheduleFetch);
+                }
+
+                if (fullNameEl) {
+                    fullNameEl.addEventListener('input', scheduleFetch);
                 }
 
                 if (prevBtn) {
