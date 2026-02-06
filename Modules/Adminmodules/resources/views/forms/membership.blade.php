@@ -142,8 +142,6 @@
                 const tbody = document.getElementById('members-body');
                 const metaEl = document.getElementById('members-meta');
 
-                const API_BASE_URL = @json(rtrim((string) config('app.api_base_url'), '/').'/');
-
                 const statusEl = document.getElementById('filter-status');
                 const phoneEl = document.getElementById('filter-phone');
                 const fullNameEl = document.getElementById('filter-full-name');
@@ -179,7 +177,7 @@
                 }
 
                 function buildUrl() {
-                    const url = new URL('api/members', API_BASE_URL || window.location.origin);
+                    const url = new URL(@json(url('/api/members')));
                     url.searchParams.set('per_page', perPageEl ? perPageEl.value : '25');
                     url.searchParams.set('page', String(currentPage));
                     if (statusEl && statusEl.value) url.searchParams.set('status', statusEl.value);
@@ -325,7 +323,8 @@
                     try {
                         const res = await fetch(buildUrl(), { headers: { 'Accept': 'application/json' } });
                         if (!res.ok) {
-                            throw new Error('Imeshindikana kupata members. Jaribu tena.');
+                            const text = await res.text().catch(function () { return ''; });
+                            throw new Error(text ? (text.slice(0, 220) + (text.length > 220 ? '...' : '')) : 'Imeshindikana kupata members. Jaribu tena.');
                         }
                         const json = await res.json();
                         const meta = json && json.meta ? json.meta : null;
@@ -354,7 +353,7 @@
                     detailsModal.show();
 
                     try {
-                        const url = new URL('api/mother-intakes/' + id, API_BASE_URL || window.location.origin);
+                        const url = new URL(@json(url('/api/mother-intakes')) + '/' + encodeURIComponent(String(id)));
                         const res = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
                         if (!res.ok) {
                             throw new Error('Imeshindikana kupata maelezo ya member.');
