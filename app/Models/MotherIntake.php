@@ -11,6 +11,8 @@ class MotherIntake extends Model
     protected $fillable = [
         'source_id',
         'mk_number',
+        'approved_at',
+        'approved_by',
         'full_name',
         'phone',
         'journey_stage',
@@ -49,6 +51,7 @@ class MotherIntake extends Model
         'previous_pregnancies' => 'integer',
         'interests' => 'array',
         'due_date' => 'date',
+        'approved_at' => 'datetime',
         'reviewed_at' => 'datetime',
         'completed_at' => 'datetime',
     ];

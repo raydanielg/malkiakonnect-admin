@@ -68,7 +68,9 @@ class MotherIntakeController extends Controller
         $fullName = trim((string) $request->query('full_name', ''));
         $status = trim((string) $request->query('status', ''));
 
-        $query = MotherIntake::query()->whereNotNull('mk_number');
+        $query = MotherIntake::query()
+            ->whereNotNull('mk_number')
+            ->whereNotNull('approved_at');
 
         if ($phone !== '') {
             $query->where('phone', 'like', "%{$phone}%");

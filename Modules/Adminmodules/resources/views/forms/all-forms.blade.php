@@ -565,6 +565,8 @@
                 }
 
                 function isApproved(row) {
+                    if (!row) return false;
+                    if (row.approved_at) return true;
                     const mk = mkNumber(row);
                     return mk && mk !== '-';
                 }

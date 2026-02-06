@@ -25,7 +25,7 @@ class MotherIntakeApprovalController
         }
 
         try {
-            $result = DB::transaction(function () use ($sourceId, $validated, $baseUrl, $generator) {
+            $result = DB::transaction(function () use ($request, $sourceId, $validated, $baseUrl, $generator) {
                 $record = MotherIntake::query()->where('source_id', $sourceId)->lockForUpdate()->first();
 
                 if (! $record) {
@@ -90,6 +90,11 @@ class MotherIntakeApprovalController
 
                 if (! $record->mk_number) {
                     return ['error' => 'Imeshindikana kutengeneza MK Number.', 'status' => 500];
+                }
+
+                if (! $record->approved_at) {
+                    $record->approved_at = now();
+                    $record->approved_by = $request->user()?->id;
                 }
 
                 $record->save();

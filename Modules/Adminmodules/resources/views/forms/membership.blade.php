@@ -14,9 +14,9 @@
 
             <main class="px-4 sm:px-6 py-6">
                 <div class="bg-white rounded-2xl border border-slate-200 p-6">
-                    <div class="text-sm text-slate-500">Usimamizi wa Wanachama</div>
+                    <div class="text-sm text-slate-500">Approved Members</div>
                     <h1 class="mt-1 text-2xl font-extrabold text-slate-900">Members</h1>
-                    <p class="mt-2 text-slate-600">Hawa ni wale wenye MK Number tu (members halisi). Wengine bila MK Number hawataonekana.</p>
+                    <p class="mt-2 text-slate-600">Hapa tunaonyesha walio-approve tu. Wale ambao hawaja-approve hawataonekana.</p>
                 </div>
 
                 <div class="mt-6 bg-white rounded-2xl border border-slate-200 overflow-hidden">
@@ -142,7 +142,7 @@
                 const tbody = document.getElementById('members-body');
                 const metaEl = document.getElementById('members-meta');
 
-                const API_BASE_URL = window.location.origin;
+                const API_BASE_URL = @json(rtrim((string) config('app.api_base_url'), '/').'/');
 
                 const statusEl = document.getElementById('filter-status');
                 const phoneEl = document.getElementById('filter-phone');
@@ -180,7 +180,7 @@
                 }
 
                 function buildUrl() {
-                    const url = new URL('/api/members', API_BASE_URL);
+                    const url = new URL('api/members', API_BASE_URL || window.location.origin);
                     url.searchParams.set('per_page', perPageEl ? perPageEl.value : '25');
                     url.searchParams.set('page', String(currentPage));
                     if (statusEl && statusEl.value) url.searchParams.set('status', statusEl.value);
