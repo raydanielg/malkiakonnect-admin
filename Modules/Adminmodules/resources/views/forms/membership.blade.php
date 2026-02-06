@@ -52,7 +52,6 @@
                             </div>
 
                             <div class="flex items-center gap-2">
-                                <button id="btn-sync" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-900 hover:bg-slate-800 text-white font-semibold transition">Sync</button>
                                 <button id="btn-refresh" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Onyesha upya</button>
                                 <button id="btn-apply" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Tafuta</button>
                             </div>
@@ -73,13 +72,14 @@
                                     <th class="text-left py-3 px-4">Journey Stage</th>
                                     <th class="text-left py-3 px-4">Weeks while joining</th>
                                     <th class="text-left py-3 px-4">Date of Joining</th>
+                                    <th class="text-left py-3 px-4">Approved Date</th>
                                     <th class="text-left py-3 px-4">Hospital Planned</th>
                                     <th class="text-right py-3 px-4">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="members-body" class="divide-y divide-slate-100">
                                 <tr>
-                                    <td colspan="8" class="py-10 px-4 text-slate-500">Inapakia...</td>
+                                    <td colspan="9" class="py-10 px-4 text-slate-500">Inapakia...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -149,7 +149,6 @@
                 const fullNameEl = document.getElementById('filter-full-name');
                 const perPageEl = document.getElementById('filter-per-page');
                 const applyBtn = document.getElementById('btn-apply');
-                const syncBtn = document.getElementById('btn-sync');
                 const refreshBtn = document.getElementById('btn-refresh');
                 const prevBtn = document.getElementById('btn-prev');
                 const nextBtn = document.getElementById('btn-next');
@@ -193,7 +192,7 @@
                     if (!tbody) return;
                     tbody.innerHTML = [
                         '<tr class="animate-pulse">',
-                        '<td colspan="8" class="py-6 px-4">',
+                        '<td colspan="9" class="py-6 px-4">',
                         '<div class="h-3 bg-slate-100 rounded w-1/4"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/2"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/3"></div>',
@@ -247,6 +246,8 @@
 
                     modalGridEl.innerHTML = [
                         cardItem('mk_number', data && data.mk_number),
+                        cardItem('approved_at', data && data.approved_at),
+                        cardItem('approved_by', data && data.approved_by),
                         cardItem('full_name', data && data.full_name),
                         cardItem('phone', data && data.phone),
                         cardItem('journey_stage', data && data.journey_stage),
@@ -282,7 +283,7 @@
                 function renderRows(rows) {
                     if (!tbody) return;
                     if (!rows || rows.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="8" class="py-10 px-4 text-slate-500">Hakuna members kwa sasa.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="9" class="py-10 px-4 text-slate-500">Hakuna members kwa sasa.</td></tr>';
                         return;
                     }
 
@@ -295,6 +296,7 @@
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.journey_stage || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.approved_at)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
                             + '<td class="py-3 px-4">'
                                 + '<div class="flex items-center justify-end gap-2">'
@@ -339,41 +341,9 @@
                         if (nextBtn) nextBtn.disabled = currentPage >= lastPage;
                     } catch (err) {
                         if (tbody) {
-                            tbody.innerHTML = '<tr><td colspan="8" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
+                            tbody.innerHTML = '<tr><td colspan="9" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
                         }
                         setError((err && err.message) ? err.message : 'Imeshindikana kupata members.');
-                    }
-                }
-
-                async function runSync() {
-                    if (!syncBtn) return;
-                    const originalText = syncBtn.textContent;
-                    syncBtn.disabled = true;
-                    syncBtn.textContent = 'Inasync...';
-
-                    try {
-                        const res = await fetch(@json(url('/admin/forms/members/sync')), {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': @json(csrf_token()),
-                            },
-                            body: JSON.stringify({}),
-                        });
-
-                        if (!res.ok) {
-                            throw new Error('Sync imeshindikana.');
-                        }
-
-                        await res.json();
-                        currentPage = 1;
-                        await fetchList();
-                    } catch (err) {
-                        setError((err && err.message) ? err.message : 'Sync imeshindikana.');
-                    } finally {
-                        syncBtn.disabled = false;
-                        syncBtn.textContent = originalText;
                     }
                 }
 
@@ -384,7 +354,7 @@
                     detailsModal.show();
 
                     try {
-                        const url = new URL('/api/mother-intakes/' + id, API_BASE_URL);
+                        const url = new URL('api/mother-intakes/' + id, API_BASE_URL || window.location.origin);
                         const res = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
                         if (!res.ok) {
                             throw new Error('Imeshindikana kupata maelezo ya member.');
@@ -414,12 +384,6 @@
                 if (refreshBtn) {
                     refreshBtn.addEventListener('click', function () {
                         fetchList();
-                    });
-                }
-
-                if (syncBtn) {
-                    syncBtn.addEventListener('click', function () {
-                        runSync();
                     });
                 }
 
