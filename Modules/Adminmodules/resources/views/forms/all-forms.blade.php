@@ -243,6 +243,7 @@
                 let pollTimer = null;
 
                 const mkBySourceId = {};
+                const approvedBySourceId = {};
                 let activeEdit = null;
 
                 const detailsModal = (modalEl && typeof Modal !== 'undefined')
@@ -432,6 +433,8 @@
                             mkBySourceId[String(sourceId)] = mk;
                         }
 
+                        approvedBySourceId[String(sourceId)] = true;
+
                         await fetchList();
                     } catch (e) {
                         setError('Imeshindikana ku-approve intake.');
@@ -566,9 +569,43 @@
 
                 function isApproved(row) {
                     if (!row) return false;
+                    const key = String(row.id ?? '');
+                    if (approvedBySourceId[key]) return true;
                     if (row.approved_at) return true;
                     const mk = mkNumber(row);
                     return mk && mk !== '-';
+                }
+
+                async function hydrateLocalStatus(rows) {
+                    try {
+                        const ids = (Array.isArray(rows) ? rows : [])
+                            .map(function (r) { return r && typeof r.id !== 'undefined' ? String(r.id) : ''; })
+                            .filter(function (v) { return v && /^[0-9]+$/.test(v); });
+
+                        if (!ids.length) return;
+
+                        const url = new URL(@json(url('/admin/forms/mother-intakes/local/batch')), window.location.origin);
+                        url.searchParams.set('source_ids', ids.join(','));
+
+                        const res = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
+                        if (!res.ok) return;
+                        const json = await res.json().catch(function () { return null; });
+                        const data = json && json.data ? json.data : null;
+                        if (!data) return;
+
+                        Object.keys(data).forEach(function (k) {
+                            const item = data[k];
+                            if (!item) return;
+                            if (item.mk_number) {
+                                mkBySourceId[String(k)] = item.mk_number;
+                            }
+                            if (item.approved_at) {
+                                approvedBySourceId[String(k)] = true;
+                            }
+                        });
+                    } catch (e) {
+                        // ignore
+                    }
                 }
 
                 function renderRows(rows) {
@@ -697,6 +734,8 @@
                         lastPage = meta && meta.last_page ? meta.last_page : 1;
 
                         const rows = json && json.data ? json.data : [];
+
+                        await hydrateLocalStatus(rows);
                         renderRows(rows);
 
                         const first = Array.isArray(rows) ? rows[0] : null;

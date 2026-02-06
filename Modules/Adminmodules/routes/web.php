@@ -43,6 +43,43 @@ Route::middleware(['auth'])->group(function () {
             ]);
         })->name('forms.mother_intakes.local.show');
 
+        Route::get('/forms/mother-intakes/local/batch', function (Request $request) {
+            $raw = (string) $request->query('source_ids', '');
+            $ids = collect(explode(',', $raw))
+                ->map(fn ($v) => trim((string) $v))
+                ->filter(fn ($v) => $v !== '' && preg_match('/^[0-9]+$/', $v))
+                ->map(fn ($v) => (int) $v)
+                ->unique()
+                ->take(200)
+                ->values()
+                ->all();
+
+            if (empty($ids)) {
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                ]);
+            }
+
+            $rows = MotherIntake::query()
+                ->whereIn('source_id', $ids)
+                ->get(['source_id', 'mk_number', 'approved_at']);
+
+            $map = $rows->mapWithKeys(function (MotherIntake $r) {
+                return [
+                    (string) $r->source_id => [
+                        'mk_number' => $r->mk_number,
+                        'approved_at' => $r->approved_at?->toISOString(),
+                    ],
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'data' => $map,
+            ]);
+        })->name('forms.mother_intakes.local.batch');
+
         Route::get('/forms/mother-intakes/{sourceId}/mk', function (int $sourceId) {
             $record = MotherIntake::query()->where('source_id', $sourceId)->first();
 
