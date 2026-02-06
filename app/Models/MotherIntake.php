@@ -37,7 +37,9 @@ class MotherIntake extends Model
         'reviewed_by',
         'reviewed_at',
         'completed_at',
+        'completed_by',
         'notes',
+        'progress_comment',
         'priority',
         'user_id',
     ];

@@ -11,6 +11,7 @@ use Modules\Adminmodules\Http\Controllers\AdminDashboardController;
 use Modules\Adminmodules\Http\Controllers\AdminOverviewController;
 use Modules\Adminmodules\Http\Controllers\AdminStatisticsController;
 use Modules\Adminmodules\Http\Controllers\AdminmodulesController;
+use Modules\Adminmodules\Http\Controllers\MotherIntakeProgressController;
 use Modules\Adminmodules\Http\Controllers\MotherIntakeApprovalController;
 
 Route::middleware(['auth'])->group(function () {
@@ -35,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/forms/members/{id}/progress', function (int $id) {
             return view('adminmodules::forms.member-progress', ['intakeId' => $id]);
         })->name('forms.members.progress');
+        Route::post('/forms/members/{id}/progress', [MotherIntakeProgressController::class, 'update'])
+            ->name('forms.members.progress.update');
         Route::get('/forms/active-members', fn () => view('adminmodules::forms.active-members'))->name('forms.active_members');
 
         Route::get('/forms/mother-intakes/{sourceId}/local', function (int $sourceId) {

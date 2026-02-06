@@ -26,6 +26,29 @@
 
                 <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4" id="progress-summary"></div>
 
+                <div class="mt-6 bg-white rounded-2xl border border-slate-200 p-6">
+                    <div class="text-sm text-slate-500">Completion</div>
+                    <h2 class="mt-1 text-lg font-extrabold text-slate-900">Work Status</h2>
+
+                    <div class="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Reviewed</div>
+                            <div class="mt-1 text-sm font-extrabold text-slate-900" id="reviewed-state">-</div>
+                            <button id="btn-reviewed" type="button" class="mt-3 w-full px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold transition">Mark Reviewed</button>
+                        </div>
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Completed</div>
+                            <div class="mt-1 text-sm font-extrabold text-slate-900" id="completed-state">-</div>
+                            <button id="btn-completed" type="button" class="mt-3 w-full px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold transition">Mark Completed</button>
+                        </div>
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Comment</div>
+                            <textarea id="progress-comment" rows="4" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200" placeholder="Andika comment..." ></textarea>
+                            <button id="btn-save-comment" type="button" class="mt-3 w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-extrabold transition">Save Comment</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mt-6">
                     <div class="flex items-center justify-between gap-3">
                         <h2 class="text-lg font-extrabold text-slate-900">Timeline</h2>
@@ -74,8 +97,18 @@
                 const gridEl = document.getElementById('progress-grid');
                 const summaryEl = document.getElementById('progress-summary');
                 const refreshBtn = document.getElementById('btn-refresh');
+                const reviewedStateEl = document.getElementById('reviewed-state');
+                const completedStateEl = document.getElementById('completed-state');
+                const reviewedBtn = document.getElementById('btn-reviewed');
+                const completedBtn = document.getElementById('btn-completed');
+                const commentEl = document.getElementById('progress-comment');
+                const saveCommentBtn = document.getElementById('btn-save-comment');
                 const errorWrapEl = document.getElementById('progress-error');
                 const errorTextEl = errorWrapEl ? errorWrapEl.querySelector('div') : null;
+
+                const csrfToken = @json(csrf_token());
+
+                let current = null;
 
                 function escapeHtml(str) {
                     return String(str ?? '')
@@ -101,6 +134,32 @@
                     if (!dateString) return '-';
                     const s = String(dateString);
                     return s.slice(0, 10) || '-';
+                }
+
+                function renderCompletion(data) {
+                    if (reviewedStateEl) {
+                        reviewedStateEl.textContent = data && data.reviewed_at ? ('Ndiyo (' + fmtDate(data.reviewed_at) + ')') : 'Hapana';
+                    }
+                    if (completedStateEl) {
+                        completedStateEl.textContent = data && data.completed_at ? ('Ndiyo (' + fmtDate(data.completed_at) + ')') : 'Hapana';
+                    }
+                    if (commentEl) {
+                        const v = (data && (data.progress_comment || data.notes)) ? String(data.progress_comment || data.notes) : '';
+                        if (commentEl.value !== v) {
+                            commentEl.value = v;
+                        }
+                    }
+
+                    if (reviewedBtn) {
+                        reviewedBtn.disabled = !!(data && data.reviewed_at);
+                        reviewedBtn.classList.toggle('opacity-50', reviewedBtn.disabled);
+                        reviewedBtn.classList.toggle('cursor-not-allowed', reviewedBtn.disabled);
+                    }
+                    if (completedBtn) {
+                        completedBtn.disabled = !!(data && data.completed_at);
+                        completedBtn.classList.toggle('opacity-50', completedBtn.disabled);
+                        completedBtn.classList.toggle('cursor-not-allowed', completedBtn.disabled);
+                    }
                 }
 
                 function card(label, value) {
@@ -198,8 +257,10 @@
                 function renderTimeline(data) {
                     if (!gridEl || !summaryEl) return;
 
+                    renderCompletion(data);
+
                     const timeline = buildTimeline(data);
-                    const notes = data && data.notes ? String(data.notes) : '';
+                    const notes = data && (data.progress_comment || data.notes) ? String(data.progress_comment || data.notes) : '';
 
                     summaryEl.innerHTML = [
                         card('MK Number', data && data.mk_number),
@@ -256,16 +317,62 @@
                         }
 
                         const json = await res.json();
-                        renderTimeline(json && json.data ? json.data : null);
+                        current = json && json.data ? json.data : null;
+                        renderTimeline(current);
                     } catch (e) {
                         setError((e && e.message) ? e.message : 'Imeshindikana kupata taarifa za progress.');
                         if (gridEl) gridEl.innerHTML = '<div class="p-6 rounded-2xl border border-rose-200 bg-rose-50 text-rose-800 text-sm font-semibold">Imeshindikana kupata taarifa.</div>';
                     }
                 }
 
+                async function saveProgress(payload) {
+                    clearError();
+
+                    try {
+                        const res = await fetch(@json(url('/admin/forms/members')) + '/' + encodeURIComponent(String(intakeId)) + '/progress', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                            body: JSON.stringify(payload || {}),
+                        });
+
+                        if (!res.ok) {
+                            const text = await res.text().catch(function () { return ''; });
+                            throw new Error(text ? (text.slice(0, 220) + (text.length > 220 ? '...' : '')) : 'Imeshindikana kuhifadhi progress.');
+                        }
+
+                        const json = await res.json();
+                        current = json && json.data ? json.data : current;
+                        renderTimeline(current);
+                    } catch (e) {
+                        setError((e && e.message) ? e.message : 'Imeshindikana kuhifadhi progress.');
+                    }
+                }
+
                 if (refreshBtn) {
                     refreshBtn.addEventListener('click', function () {
                         fetchData();
+                    });
+                }
+
+                if (reviewedBtn) {
+                    reviewedBtn.addEventListener('click', function () {
+                        saveProgress({ action: 'reviewed' });
+                    });
+                }
+
+                if (completedBtn) {
+                    completedBtn.addEventListener('click', function () {
+                        saveProgress({ action: 'completed' });
+                    });
+                }
+
+                if (saveCommentBtn) {
+                    saveCommentBtn.addEventListener('click', function () {
+                        saveProgress({ action: 'comment', comment: commentEl ? commentEl.value : '' });
                     });
                 }
 
