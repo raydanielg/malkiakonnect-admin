@@ -27,15 +27,9 @@
 
                 <div class="mt-6 bg-white rounded-2xl border border-slate-200 p-6">
                     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                        <div class="flex-1">
+                        <div>
                             <div class="text-xs font-bold text-slate-500 uppercase">MK Number</div>
-                            <div class="mt-2 flex items-center flex-wrap gap-2">
-                                <div class="px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-extrabold text-slate-900">MK-</div>
-                                <input id="mk-digits" class="w-full max-w-[220px] px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-900" placeholder="0001" inputmode="numeric" />
-                                <button id="mk-generate" type="button" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Generate</button>
-                                <button id="mk-save" type="button" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Hifadhi</button>
-                            </div>
-                            <div class="mt-2 text-xs text-slate-500">Namba lazima iwe unique. Prefix ya <span class="font-extrabold">MK-</span> haiwezi kubadilishwa.</div>
+                            <div class="mt-1 text-2xl font-extrabold text-slate-900" id="mk-number">-</div>
                             <div class="mt-3 hidden" id="mk-error">
                                 <div class="px-4 py-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-sm font-semibold"></div>
                             </div>
@@ -47,7 +41,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4">
                         <div class="p-4 rounded-2xl border border-slate-200 bg-white">
                             <div class="text-[11px] font-extrabold text-slate-500 uppercase">Full Name</div>
                             <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-full-name">-</div>
@@ -59,6 +53,18 @@
                         <div class="p-4 rounded-2xl border border-slate-200 bg-white">
                             <div class="text-[11px] font-extrabold text-slate-500 uppercase">Journey Stage</div>
                             <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-journey">-</div>
+                        </div>
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Email</div>
+                            <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-email">-</div>
+                        </div>
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Age</div>
+                            <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-age">-</div>
+                        </div>
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Location</div>
+                            <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-location">-</div>
                         </div>
                     </div>
                 </div>
@@ -161,6 +167,9 @@
                     const fullNameEl = document.getElementById('intake-full-name');
                     const phoneEl = document.getElementById('intake-phone');
                     const journeyEl = document.getElementById('intake-journey');
+                    const emailEl = document.getElementById('intake-email');
+                    const ageEl = document.getElementById('intake-age');
+                    const locationEl = document.getElementById('intake-location');
 
                     if (intakeIdEl) intakeIdEl.textContent = String(id ?? '-');
 
@@ -188,6 +197,9 @@
                         if (fullNameEl) fullNameEl.textContent = data.full_name || '-';
                         if (phoneEl) phoneEl.textContent = data.phone || '-';
                         if (journeyEl) journeyEl.textContent = data.journey_stage || '-';
+                        if (emailEl) emailEl.textContent = data.email || '-';
+                        if (ageEl) ageEl.textContent = (data.age != null && data.age !== '') ? String(data.age) : '-';
+                        if (locationEl) locationEl.textContent = data.location || '-';
                         if (intakeDateEl) intakeDateEl.textContent = fmtDate(data.created_at);
 
                         const mk = (data.mk_number || data.mkNumber) ? (data.mk_number || data.mkNumber) : (await loadMkNumber(id));
@@ -201,6 +213,18 @@
                                     { label: 'Whatsapp Number', value: data.phone },
                                     { label: 'Journey Stage', value: data.journey_stage },
                                     { label: 'Interests', value: Array.isArray(data.interests) ? data.interests.join(', ') : data.interests },
+                                ],
+                            },
+                            {
+                                title: 'Taarifa za Mtu',
+                                items: [
+                                    { label: 'Email', value: data.email },
+                                    { label: 'Age', value: data.age },
+                                    { label: 'Location', value: data.location },
+                                    { label: 'Pregnancy Stage', value: data.pregnancy_stage },
+                                    { label: 'Due Date', value: data.due_date },
+                                    { label: 'Previous Pregnancies', value: data.previous_pregnancies },
+                                    { label: 'Concerns', value: data.concerns },
                                 ],
                             },
                             {
@@ -227,13 +251,25 @@
                                     { label: 'Disclaimer Ack', value: (typeof data.disclaimer_ack !== 'undefined') ? String(!!data.disclaimer_ack) : null },
                                 ],
                             },
+                            {
+                                title: 'Ufuatiliaji (Local/Admin)',
+                                items: [
+                                    { label: 'Status', value: data.status },
+                                    { label: 'Priority', value: data.priority },
+                                    { label: 'Notes', value: data.notes },
+                                ],
+                            },
                         ];
 
                         const extraKeys = Object.keys(data || {}).filter(function (k) {
                             return ![
-                                'id', 'full_name', 'phone', 'journey_stage', 'pregnancy_weeks', 'baby_weeks_old', 'ttc_duration',
+                                'id', 'full_name', 'phone', 'journey_stage',
+                                'email', 'age', 'location', 'pregnancy_stage', 'due_date', 'previous_pregnancies', 'concerns',
+                                'pregnancy_weeks', 'baby_weeks_old', 'ttc_duration',
                                 'hospital_planned', 'hospital_alternative', 'delivery_hospital', 'birth_hospital',
-                                'interests', 'agree_comms', 'disclaimer_ack', 'created_at', 'updated_at', 'mk_number', 'mkNumber'
+                                'interests', 'agree_comms', 'disclaimer_ack',
+                                'status', 'priority', 'notes',
+                                'created_at', 'updated_at', 'mk_number', 'mkNumber'
                             ].includes(k);
                         });
 
