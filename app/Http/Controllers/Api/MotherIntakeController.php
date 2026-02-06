@@ -73,8 +73,6 @@ class MotherIntakeController extends Controller
 
         if (Schema::hasColumn('mother_intakes', 'approved_at')) {
             $query->whereNotNull('approved_at');
-        } else {
-            $query->whereRaw('0 = 1');
         }
 
         if ($phone !== '') {
