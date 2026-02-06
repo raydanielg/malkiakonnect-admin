@@ -69,6 +69,7 @@
                                     <th class="text-left py-3 px-4">MK Number</th>
                                     <th class="text-left py-3 px-4">Full Name</th>
                                     <th class="text-left py-3 px-4">Whatsapp Number</th>
+                                    <th class="text-left py-3 px-4">Progress</th>
                                     <th class="text-left py-3 px-4">Journey Stage</th>
                                     <th class="text-left py-3 px-4">Weeks while joining</th>
                                     <th class="text-left py-3 px-4">Date of Joining</th>
@@ -79,7 +80,7 @@
                             </thead>
                             <tbody id="members-body" class="divide-y divide-slate-100">
                                 <tr>
-                                    <td colspan="9" class="py-10 px-4 text-slate-500">Inapakia...</td>
+                                    <td colspan="10" class="py-10 px-4 text-slate-500">Inapakia...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -190,7 +191,7 @@
                     if (!tbody) return;
                     tbody.innerHTML = [
                         '<tr class="animate-pulse">',
-                        '<td colspan="9" class="py-6 px-4">',
+                        '<td colspan="10" class="py-6 px-4">',
                         '<div class="h-3 bg-slate-100 rounded w-1/4"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/2"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/3"></div>',
@@ -208,6 +209,20 @@
                 function clearError() {
                     if (!errorWrapEl) return;
                     errorWrapEl.classList.add('hidden');
+                }
+
+                function statusBadge(status) {
+                    const s = String(status || '').toLowerCase();
+                    if (s === 'completed') {
+                        return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">completed</span>';
+                    }
+                    if (s === 'reviewed') {
+                        return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">reviewed</span>';
+                    }
+                    if (s === 'pending') {
+                        return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">pending</span>';
+                    }
+                    return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">' + escapeHtml(status || '-') + '</span>';
                 }
 
                 function fmtDate(dateString) {
@@ -281,16 +296,19 @@
                 function renderRows(rows) {
                     if (!tbody) return;
                     if (!rows || rows.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="9" class="py-10 px-4 text-slate-500">Hakuna members kwa sasa.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="10" class="py-10 px-4 text-slate-500">Hakuna members kwa sasa.</td></tr>';
                         return;
                     }
 
                     tbody.innerHTML = rows.map(function (r) {
+                        const editUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.id)) + '/edit';
+                        const progressUrl = @json(url('/admin/forms/members')) + '/' + encodeURIComponent(String(r.id)) + '/progress';
                         return (
                             '<tr class="hover:bg-slate-50">'
                             + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(r.mk_number || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-900 font-semibold">' + escapeHtml(r.full_name || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.phone || '-') + '</td>'
+                            + '<td class="py-3 px-4">' + statusBadge(r.status) + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.journey_stage || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
@@ -304,6 +322,18 @@
                                             + '<circle cx="12" cy="12" r="3" />'
                                         + '</svg>'
                                     + '</button>'
+                                    + '<a href="' + escapeHtml(progressUrl) + '" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Progress">'
+                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                            + '<path d="M3 3v18h18" />'
+                                            + '<path d="M7 14l4-4 4 4 6-6" />'
+                                        + '</svg>'
+                                    + '</a>'
+                                    + '<a href="' + escapeHtml(editUrl) + '" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Edit">'
+                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                            + '<path d="M12 20h9" />'
+                                            + '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />'
+                                        + '</svg>'
+                                    + '</a>'
                                     + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-assess-member="' + escapeHtml(r.id) + '" title="Assess">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M3 3v18h18" />'
@@ -340,7 +370,7 @@
                         if (nextBtn) nextBtn.disabled = currentPage >= lastPage;
                     } catch (err) {
                         if (tbody) {
-                            tbody.innerHTML = '<tr><td colspan="9" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
+                            tbody.innerHTML = '<tr><td colspan="10" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
                         }
                         setError((err && err.message) ? err.message : 'Imeshindikana kupata members.');
                     }

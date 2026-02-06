@@ -32,6 +32,9 @@ Route::middleware(['auth'])->group(function () {
             return view('adminmodules::forms.intake-edit', ['intakeId' => $id]);
         })->name('forms.intakes.edit');
         Route::get('/forms/membership', fn () => view('adminmodules::forms.membership'))->name('forms.membership');
+        Route::get('/forms/members/{id}/progress', function (int $id) {
+            return view('adminmodules::forms.member-progress', ['intakeId' => $id]);
+        })->name('forms.members.progress');
         Route::get('/forms/active-members', fn () => view('adminmodules::forms.active-members'))->name('forms.active_members');
 
         Route::get('/forms/mother-intakes/{sourceId}/local', function (int $sourceId) {
