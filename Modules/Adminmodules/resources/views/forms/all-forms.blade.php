@@ -469,6 +469,7 @@
 
                     tbody.innerHTML = rows.map(function (r) {
                         const viewUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.id));
+                        const editUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.id)) + '/edit';
                         return (
                             '<tr class="hover:bg-slate-50">'
                             + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(mkNumber(r)) + '</td>'
@@ -486,12 +487,12 @@
                                             + '<circle cx="12" cy="12" r="3" />'
                                         + '</svg>'
                                     + '</a>'
-                                    + '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-edit-intake="' + escapeHtml(r.id) + '" data-edit-name="' + escapeHtml(r.full_name || '') + '" data-edit-phone="' + escapeHtml(r.phone || '') + '" title="Edit">'
+                                    + '<a href="' + escapeHtml(editUrl) + '" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Edit">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M12 20h9" />'
                                             + '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />'
                                         + '</svg>'
-                                    + '</button>'
+                                    + '</a>'
                                     + '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-assess-intake="' + escapeHtml(r.id) + '" title="Assess">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M3 3v18h18" />'
@@ -666,16 +667,6 @@
                     const btn = e.target.closest && e.target.closest('[data-view-intake]');
                     if (!btn) return;
                     openDetails(btn.getAttribute('data-view-intake'));
-                });
-
-                document.addEventListener('click', function (e) {
-                    const btn = e.target.closest && e.target.closest('[data-edit-intake]');
-                    if (!btn) return;
-                    openEdit(
-                        btn.getAttribute('data-edit-intake'),
-                        btn.getAttribute('data-edit-name'),
-                        btn.getAttribute('data-edit-phone')
-                    );
                 });
 
                 document.addEventListener('click', function (e) {

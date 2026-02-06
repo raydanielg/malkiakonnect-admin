@@ -74,6 +74,10 @@ class SyncMotherIntakes extends Command
 
                     $existing = MotherIntake::query()->where('source_id', $sourceId)->first();
 
+                    if (! $existing || ! $existing->mk_number) {
+                        continue;
+                    }
+
                     $payload = [
                         'source_id' => $sourceId,
                         'user_id' => Arr::get($row, 'user_id'),
@@ -107,18 +111,9 @@ class SyncMotherIntakes extends Command
                         'updated_at' => Arr::get($row, 'updated_at'),
                     ];
 
-                    if (! $existing) {
-                        $payload['mk_number'] = $mk->next();
-                        MotherIntake::query()->create($payload);
-                        $imported++;
-                    } else {
-                        $existing->fill($payload);
-                        if (! $existing->mk_number) {
-                            $existing->mk_number = $mk->next();
-                        }
-                        $existing->save();
-                        $updated++;
-                    }
+                    $existing->fill($payload);
+                    $existing->save();
+                    $updated++;
                 }
             });
 

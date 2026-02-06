@@ -13,20 +13,32 @@
             @include('adminmodules::partials.header')
 
             <main class="px-4 sm:px-6 py-6">
-                <div class="flex items-center justify-between gap-3">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div>
                         <div class="text-sm text-slate-500">Mother Intake</div>
                         <h1 class="mt-1 text-2xl font-extrabold text-slate-900">Intake Details</h1>
                     </div>
 
-                    <a href="{{ url('/admin/forms') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Rudi nyuma</a>
+                    <div class="flex items-center gap-2">
+                        <button id="btn-toggle-edit" type="button" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Washa Uhariri</button>
+                        <a href="{{ url('/admin/forms') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Rudi nyuma</a>
+                    </div>
                 </div>
 
                 <div class="mt-6 bg-white rounded-2xl border border-slate-200 p-6">
                     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                        <div>
+                        <div class="flex-1">
                             <div class="text-xs font-bold text-slate-500 uppercase">MK Number</div>
-                            <div class="mt-1 text-2xl font-extrabold text-slate-900" id="mk-number">-</div>
+                            <div class="mt-2 flex items-center flex-wrap gap-2">
+                                <div class="px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-extrabold text-slate-900">MK-</div>
+                                <input id="mk-digits" class="w-full max-w-[220px] px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-900" placeholder="0001" inputmode="numeric" />
+                                <button id="mk-generate" type="button" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Generate</button>
+                                <button id="mk-save" type="button" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Hifadhi</button>
+                            </div>
+                            <div class="mt-2 text-xs text-slate-500">Namba lazima iwe unique. Prefix ya <span class="font-extrabold">MK-</span> haiwezi kubadilishwa.</div>
+                            <div class="mt-3 hidden" id="mk-error">
+                                <div class="px-4 py-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-sm font-semibold"></div>
+                            </div>
                         </div>
 
                         <div class="flex flex-col sm:flex-row sm:items-center gap-2">
