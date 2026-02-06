@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MotherIntake;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class MotherIntakeController extends Controller
 {
@@ -68,9 +69,13 @@ class MotherIntakeController extends Controller
         $fullName = trim((string) $request->query('full_name', ''));
         $status = trim((string) $request->query('status', ''));
 
-        $query = MotherIntake::query()
-            ->whereNotNull('mk_number')
-            ->whereNotNull('approved_at');
+        $query = MotherIntake::query()->whereNotNull('mk_number');
+
+        if (Schema::hasColumn('mother_intakes', 'approved_at')) {
+            $query->whereNotNull('approved_at');
+        } else {
+            $query->whereRaw('0 = 1');
+        }
 
         if ($phone !== '') {
             $query->where('phone', 'like', "%{$phone}%");

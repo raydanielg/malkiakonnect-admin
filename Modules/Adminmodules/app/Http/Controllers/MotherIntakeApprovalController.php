@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 
 class MotherIntakeApprovalController
 {
@@ -92,8 +93,10 @@ class MotherIntakeApprovalController
                     return ['error' => 'Imeshindikana kutengeneza MK Number.', 'status' => 500];
                 }
 
-                if (! $record->approved_at) {
+                if (Schema::hasColumn('mother_intakes', 'approved_at') && ! $record->approved_at) {
                     $record->approved_at = now();
+                }
+                if (Schema::hasColumn('mother_intakes', 'approved_by') && ! $record->approved_by) {
                     $record->approved_by = $request->user()?->id;
                 }
 
