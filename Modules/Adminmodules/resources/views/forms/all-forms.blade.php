@@ -62,7 +62,16 @@
                             </div>
 
                             <div class="flex items-center gap-2">
-                                <button id="btn-refresh" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Onyesha upya</button>
+                                <button id="btn-refresh" class="relative inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">
+                                    <span class="inline-flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 12a9 9 0 1 1-3-6.7" />
+                                            <path d="M21 3v6h-6" />
+                                        </svg>
+                                    </span>
+                                    <span>Onyesha upya</span>
+                                    <span id="refresh-badge" class="hidden absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-rose-600 text-white text-[11px] leading-5 text-center font-extrabold">0</span>
+                                </button>
                                 <button id="btn-apply" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Tafuta</button>
                             </div>
                         </div>
@@ -228,6 +237,11 @@
                 let lastPage = 1;
                 let debounceTimer = null;
 
+                const refreshBadgeEl = document.getElementById('refresh-badge');
+                let pendingUpdates = 0;
+                let lastSeenTopId = null;
+                let pollTimer = null;
+
                 const mkBySourceId = {};
                 let activeEdit = null;
 
@@ -381,6 +395,54 @@
                     }
                 }
 
+                async function approveIntake(sourceId, fullName, phone, buttonEl) {
+                    if (!sourceId) return;
+
+                    clearError();
+
+                    if (buttonEl) {
+                        buttonEl.disabled = true;
+                        buttonEl.classList.add('opacity-60');
+                    }
+
+                    try {
+                        const url = @json(url('/admin/forms/mother-intakes')) + '/' + encodeURIComponent(String(sourceId)) + '/approve';
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                            body: JSON.stringify({
+                                full_name: fullName || null,
+                                phone: phone || null,
+                            }),
+                        });
+
+                        const json = await res.json().catch(function () { return null; });
+                        if (!res.ok) {
+                            const msg = (json && json.message) ? json.message : 'Imeshindikana ku-approve intake.';
+                            setError(msg);
+                            return;
+                        }
+
+                        const mk = json && json.data ? json.data.mk_number : null;
+                        if (mk) {
+                            mkBySourceId[String(sourceId)] = mk;
+                        }
+
+                        await fetchList();
+                    } catch (e) {
+                        setError('Imeshindikana ku-approve intake.');
+                    } finally {
+                        if (buttonEl) {
+                            buttonEl.disabled = false;
+                            buttonEl.classList.remove('opacity-60');
+                        }
+                    }
+                }
+
                 function escapeHtml(str) {
                     return String(str ?? '')
                         .replaceAll('&', '&amp;')
@@ -398,6 +460,48 @@
                     if (phoneEl && phoneEl.value) url.searchParams.set('phone', phoneEl.value);
                     if (fullNameEl && fullNameEl.value) url.searchParams.set('full_name', fullNameEl.value);
                     return url.toString();
+                }
+
+                function setPendingUpdates(count) {
+                    pendingUpdates = Math.max(0, Number(count) || 0);
+                    if (!refreshBadgeEl) return;
+                    if (pendingUpdates <= 0) {
+                        refreshBadgeEl.textContent = '0';
+                        refreshBadgeEl.classList.add('hidden');
+                        return;
+                    }
+
+                    refreshBadgeEl.textContent = String(Math.min(99, pendingUpdates));
+                    refreshBadgeEl.classList.remove('hidden');
+                }
+
+                async function pollForUpdates() {
+                    try {
+                        const url = new URL('api/mother-intakes', API_BASE_URL || window.location.origin);
+                        url.searchParams.set('per_page', '1');
+                        url.searchParams.set('page', '1');
+
+                        const res = await fetch(url.toString(), {
+                            headers: { 'Accept': 'application/json' }
+                        });
+
+                        if (!res.ok) return;
+                        const json = await res.json().catch(function () { return null; });
+                        const first = json && Array.isArray(json.data) ? json.data[0] : null;
+                        const topId = first && typeof first.id !== 'undefined' ? String(first.id) : null;
+                        if (!topId) return;
+
+                        if (lastSeenTopId === null) {
+                            lastSeenTopId = topId;
+                            return;
+                        }
+
+                        if (topId !== lastSeenTopId) {
+                            setPendingUpdates(pendingUpdates + 1);
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
                 }
 
                 function setLoading() {
@@ -460,6 +564,11 @@
                     return mkBySourceId[id] || row.mk_number || row.mkNumber || '-';
                 }
 
+                function isApproved(row) {
+                    const mk = mkNumber(row);
+                    return mk && mk !== '-';
+                }
+
                 function renderRows(rows) {
                     if (!tbody) return;
                     if (!rows || rows.length === 0) {
@@ -470,6 +579,7 @@
                     tbody.innerHTML = rows.map(function (r) {
                         const viewUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.id));
                         const editUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.id)) + '/edit';
+                        const approved = isApproved(r);
                         return (
                             '<tr class="hover:bg-slate-50">'
                             + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(mkNumber(r)) + '</td>'
@@ -481,6 +591,18 @@
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
                             + '<td class="py-3 px-4 relative">'
                                 + '<div class="flex items-center justify-end gap-2 relative z-10">'
+                                    + (approved
+                                        ? '<span class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700" title="Approved">'
+                                            + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                                + '<path d="M20 6 9 17l-5-5" />'
+                                            + '</svg>'
+                                        + '</span>'
+                                        : '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-approve-intake="' + escapeHtml(r.id) + '" data-approve-full-name="' + escapeHtml(r.full_name || '') + '" data-approve-phone="' + escapeHtml(r.phone || '') + '" title="Approve">'
+                                            + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                                + '<path d="M20 6 9 17l-5-5" />'
+                                            + '</svg>'
+                                        + '</button>'
+                                    )
                                     + '<a href="' + escapeHtml(viewUrl) + '" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="View">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
                                             + '<path d="M2.062 12.348a1 1 0 0 1 0-.696C3.423 8.02 7.36 5 12 5c4.64 0 8.577 3.02 9.938 6.652a1 1 0 0 1 0 .696C20.577 15.98 16.64 19 12 19c-4.64 0-8.577-3.02-9.938-6.652" />'
@@ -572,7 +694,16 @@
 
                         lastPage = meta && meta.last_page ? meta.last_page : 1;
 
-                        renderRows(json && json.data ? json.data : []);
+                        const rows = json && json.data ? json.data : [];
+                        renderRows(rows);
+
+                        const first = Array.isArray(rows) ? rows[0] : null;
+                        const topId = first && typeof first.id !== 'undefined' ? String(first.id) : null;
+                        if (topId) {
+                            lastSeenTopId = topId;
+                        }
+
+                        setPendingUpdates(0);
 
                         if (metaEl && meta) {
                             metaEl.textContent = 'Ukurasa ' + meta.current_page + ' / ' + meta.last_page + ' (Jumla: ' + meta.total + ')';
@@ -624,6 +755,7 @@
 
                 if (refreshBtn) {
                     refreshBtn.addEventListener('click', function () {
+                        setPendingUpdates(0);
                         fetchList();
                     });
                 }
@@ -675,6 +807,17 @@
                     openDetails(btn.getAttribute('data-assess-intake'));
                 });
 
+                document.addEventListener('click', function (e) {
+                    const btn = e.target.closest && e.target.closest('[data-approve-intake]');
+                    if (!btn) return;
+                    approveIntake(
+                        btn.getAttribute('data-approve-intake'),
+                        btn.getAttribute('data-approve-full-name'),
+                        btn.getAttribute('data-approve-phone'),
+                        btn
+                    );
+                });
+
                 if (modalCloseEl) {
                     modalCloseEl.addEventListener('click', function () {
                         if (!detailsModal) return;
@@ -701,6 +844,7 @@
                     });
                 }
 
+                pollTimer = window.setInterval(pollForUpdates, 30000);
                 fetchList();
             })();
         </script>

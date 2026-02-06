@@ -20,8 +20,8 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <button id="btn-toggle-edit" type="button" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Washa Uhariri</button>
-                        <a href="{{ url('/admin/forms') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Rudi nyuma</a>
+                        <button id="btn-toggle-edit" type="button" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Enable Editing</button>
+                        <a href="{{ url('/admin/forms') }}" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Back</a>
                     </div>
                 </div>
 
@@ -37,7 +37,7 @@
 
                         <div class="flex flex-col sm:flex-row sm:items-center gap-2">
                             <div class="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-sm font-semibold">ID: <span class="font-extrabold" id="intake-id">-</span></div>
-                            <div class="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-sm font-semibold">Tarehe: <span class="font-extrabold" id="intake-date">-</span></div>
+                            <div class="px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-sm font-semibold">Date: <span class="font-extrabold" id="intake-date">-</span></div>
                         </div>
                     </div>
 
@@ -47,7 +47,7 @@
                             <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-full-name">-</div>
                         </div>
                         <div class="p-4 rounded-2xl border border-slate-200 bg-white">
-                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Whatsapp Number</div>
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Phone Number</div>
                             <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-phone">-</div>
                         </div>
                         <div class="p-4 rounded-2xl border border-slate-200 bg-white">
@@ -65,6 +65,22 @@
                         <div class="p-4 rounded-2xl border border-slate-200 bg-white">
                             <div class="text-[11px] font-extrabold text-slate-500 uppercase">Location</div>
                             <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-location">-</div>
+                        </div>
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Planned Hospital</div>
+                            <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-hospital-planned">-</div>
+                        </div>
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Pregnancy Weeks</div>
+                            <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-pregnancy-weeks">-</div>
+                        </div>
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Consent: Advice (WhatsApp/SMS)</div>
+                            <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-agree-comms">-</div>
+                        </div>
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-white">
+                            <div class="text-[11px] font-extrabold text-slate-500 uppercase">Consent: Disclaimer</div>
+                            <div class="mt-1 text-sm font-semibold text-slate-900" id="intake-disclaimer-ack">-</div>
                         </div>
                     </div>
                 </div>
@@ -170,6 +186,10 @@
                     const emailEl = document.getElementById('intake-email');
                     const ageEl = document.getElementById('intake-age');
                     const locationEl = document.getElementById('intake-location');
+                    const hospitalPlannedEl = document.getElementById('intake-hospital-planned');
+                    const pregnancyWeeksEl = document.getElementById('intake-pregnancy-weeks');
+                    const agreeCommsEl = document.getElementById('intake-agree-comms');
+                    const disclaimerAckEl = document.getElementById('intake-disclaimer-ack');
 
                     if (intakeIdEl) intakeIdEl.textContent = String(id ?? '-');
 
@@ -200,6 +220,10 @@
                         if (emailEl) emailEl.textContent = data.email || '-';
                         if (ageEl) ageEl.textContent = (data.age != null && data.age !== '') ? String(data.age) : '-';
                         if (locationEl) locationEl.textContent = data.location || '-';
+                        if (hospitalPlannedEl) hospitalPlannedEl.textContent = data.hospital_planned || '-';
+                        if (pregnancyWeeksEl) pregnancyWeeksEl.textContent = (data.pregnancy_weeks != null && data.pregnancy_weeks !== '') ? String(data.pregnancy_weeks) : '-';
+                        if (agreeCommsEl) agreeCommsEl.textContent = (typeof data.agree_comms !== 'undefined') ? (data.agree_comms ? 'Yes' : 'No') : '-';
+                        if (disclaimerAckEl) disclaimerAckEl.textContent = (typeof data.disclaimer_ack !== 'undefined') ? (data.disclaimer_ack ? 'Yes' : 'No') : '-';
                         if (intakeDateEl) intakeDateEl.textContent = fmtDate(data.created_at);
 
                         const mk = (data.mk_number || data.mkNumber) ? (data.mk_number || data.mkNumber) : (await loadMkNumber(id));
@@ -207,20 +231,20 @@
 
                         const sections = [
                             {
-                                title: 'Taarifa za Msingi',
+                                title: 'Personal Details',
                                 items: [
                                     { label: 'Full Name', value: data.full_name },
-                                    { label: 'Whatsapp Number', value: data.phone },
+                                    { label: 'Phone Number', value: data.phone },
                                     { label: 'Journey Stage', value: data.journey_stage },
+                                    { label: 'Email', value: data.email },
+                                    { label: 'Age', value: data.age },
+                                    { label: 'Location', value: data.location },
                                     { label: 'Interests', value: Array.isArray(data.interests) ? data.interests.join(', ') : data.interests },
                                 ],
                             },
                             {
-                                title: 'Taarifa za Mtu',
+                                title: 'Maternity Journey',
                                 items: [
-                                    { label: 'Email', value: data.email },
-                                    { label: 'Age', value: data.age },
-                                    { label: 'Location', value: data.location },
                                     { label: 'Pregnancy Stage', value: data.pregnancy_stage },
                                     { label: 'Due Date', value: data.due_date },
                                     { label: 'Previous Pregnancies', value: data.previous_pregnancies },
@@ -228,7 +252,7 @@
                                 ],
                             },
                             {
-                                title: 'Ujauzito / Mtoto',
+                                title: 'Pregnancy / Baby',
                                 items: [
                                     { label: 'Pregnancy Weeks', value: data.pregnancy_weeks },
                                     { label: 'Baby Weeks Old', value: data.baby_weeks_old },
@@ -236,7 +260,7 @@
                                 ],
                             },
                             {
-                                title: 'Hospitali',
+                                title: 'Hospital',
                                 items: [
                                     { label: 'Hospital Planned', value: data.hospital_planned },
                                     { label: 'Hospital Alternative', value: data.hospital_alternative },
@@ -245,14 +269,14 @@
                                 ],
                             },
                             {
-                                title: 'Ridhaa / Mawasiliano',
+                                title: 'Consents',
                                 items: [
-                                    { label: 'Agree Comms', value: (typeof data.agree_comms !== 'undefined') ? String(!!data.agree_comms) : null },
-                                    { label: 'Disclaimer Ack', value: (typeof data.disclaimer_ack !== 'undefined') ? String(!!data.disclaimer_ack) : null },
+                                    { label: 'Agree to receive advice (WhatsApp/SMS)', value: (typeof data.agree_comms !== 'undefined') ? (data.agree_comms ? 'Yes' : 'No') : null },
+                                    { label: 'Agree to disclaimer', value: (typeof data.disclaimer_ack !== 'undefined') ? (data.disclaimer_ack ? 'Yes' : 'No') : null },
                                 ],
                             },
                             {
-                                title: 'Ufuatiliaji (Local/Admin)',
+                                title: 'Tracking (Local/Admin)',
                                 items: [
                                     { label: 'Status', value: data.status },
                                     { label: 'Priority', value: data.priority },
@@ -275,7 +299,7 @@
 
                         if (extraKeys.length) {
                             sections.push({
-                                title: 'Taarifa Nyingine',
+                                title: 'Other Fields',
                                 items: extraKeys.sort().map(function (k) {
                                     const v = data[k];
                                     return { label: k, value: Array.isArray(v) ? v.join(', ') : v };

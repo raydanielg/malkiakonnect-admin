@@ -11,6 +11,7 @@ use Modules\Adminmodules\Http\Controllers\AdminDashboardController;
 use Modules\Adminmodules\Http\Controllers\AdminOverviewController;
 use Modules\Adminmodules\Http\Controllers\AdminStatisticsController;
 use Modules\Adminmodules\Http\Controllers\AdminmodulesController;
+use Modules\Adminmodules\Http\Controllers\MotherIntakeApprovalController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
@@ -224,6 +225,9 @@ Route::middleware(['auth'])->group(function () {
                 ],
             ]);
         })->name('forms.mother_intakes.mk.generate');
+
+        Route::post('/forms/mother-intakes/{sourceId}/approve', [MotherIntakeApprovalController::class, 'approve'])
+            ->name('forms.mother_intakes.approve');
 
         Route::post('/forms/mother-intakes/{sourceId}/details', function (Request $request, int $sourceId) {
             $record = MotherIntake::query()->where('source_id', $sourceId)->first();
