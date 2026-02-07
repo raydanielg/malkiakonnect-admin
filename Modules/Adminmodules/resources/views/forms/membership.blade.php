@@ -271,9 +271,9 @@
                 const step1El = document.getElementById('add-member-step-1');
                 const step2El = document.getElementById('add-member-step-2');
                 const step3El = document.getElementById('add-member-step-3');
-                const backBtn = document.getElementById('am-back');
-                const nextBtn = document.getElementById('am-next');
-                const saveBtn = document.getElementById('am-save');
+                const amBackBtn = document.getElementById('am-back');
+                const amNextBtn = document.getElementById('am-next');
+                const amSaveBtn = document.getElementById('am-save');
 
                 const amFullName = document.getElementById('am-full-name');
                 const amPhone = document.getElementById('am-phone');
@@ -317,19 +317,19 @@
                 }
 
                 function renderAddStep() {
-                    if (!stepTitleEl || !stepIndicatorEl || !step1El || !step2El || !step3El || !backBtn || !nextBtn || !saveBtn) return;
+                    if (!stepTitleEl || !stepIndicatorEl || !step1El || !step2El || !step3El || !amBackBtn || !amNextBtn || !amSaveBtn) return;
 
                     stepIndicatorEl.textContent = String(addStep) + ' / 3';
                     step1El.classList.toggle('hidden', addStep !== 1);
                     step2El.classList.toggle('hidden', addStep !== 2);
                     step3El.classList.toggle('hidden', addStep !== 3);
 
-                    backBtn.disabled = addStep === 1;
-                    backBtn.classList.toggle('opacity-50', backBtn.disabled);
-                    backBtn.classList.toggle('cursor-not-allowed', backBtn.disabled);
+                    amBackBtn.disabled = addStep === 1;
+                    amBackBtn.classList.toggle('opacity-50', amBackBtn.disabled);
+                    amBackBtn.classList.toggle('cursor-not-allowed', amBackBtn.disabled);
 
-                    nextBtn.classList.toggle('hidden', addStep === 3);
-                    saveBtn.classList.toggle('hidden', addStep !== 3);
+                    amNextBtn.classList.toggle('hidden', addStep === 3);
+                    amSaveBtn.classList.toggle('hidden', addStep !== 3);
 
                     if (addStep === 1) stepTitleEl.textContent = 'Step 1: Basic Info';
                     if (addStep === 2) stepTitleEl.textContent = 'Step 2: Journey';
@@ -390,9 +390,9 @@
                         notes: amNotes ? String(amNotes.value || '').trim() : '',
                     };
 
-                    if (saveBtn) {
-                        saveBtn.disabled = true;
-                        saveBtn.textContent = 'Inahifadhi...';
+                    if (amSaveBtn) {
+                        amSaveBtn.disabled = true;
+                        amSaveBtn.textContent = 'Inahifadhi...';
                     }
 
                     try {
@@ -418,9 +418,9 @@
                     } catch (e) {
                         setAddError('Imeshindikana kuhifadhi member.');
                     } finally {
-                        if (saveBtn) {
-                            saveBtn.disabled = false;
-                            saveBtn.textContent = 'Save Member';
+                        if (amSaveBtn) {
+                            amSaveBtn.disabled = false;
+                            amSaveBtn.textContent = 'Save Member';
                         }
                     }
                 }
@@ -686,24 +686,24 @@
                     });
                 }
 
-                if (backBtn) {
-                    backBtn.addEventListener('click', function () {
+                if (amBackBtn) {
+                    amBackBtn.addEventListener('click', function () {
                         if (addStep <= 1) return;
                         addStep -= 1;
                         renderAddStep();
                     });
                 }
 
-                if (nextBtn) {
-                    nextBtn.addEventListener('click', function () {
+                if (amNextBtn) {
+                    amNextBtn.addEventListener('click', function () {
                         if (addStep >= 3) return;
                         addStep += 1;
                         renderAddStep();
                     });
                 }
 
-                if (saveBtn) {
-                    saveBtn.addEventListener('click', function () {
+                if (amSaveBtn) {
+                    amSaveBtn.addEventListener('click', function () {
                         saveNewMember();
                     });
                 }
