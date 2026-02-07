@@ -24,9 +24,16 @@
 
             <main class="px-4 sm:px-6 py-6">
                 <div class="bg-white rounded-2xl border border-slate-200 p-6">
-                    <div class="text-sm text-slate-500">Usimamizi wa Fomu</div>
-                    <h1 class="mt-1 text-2xl font-extrabold text-slate-900">Fomu Zote</h1>
-                    <p class="mt-2 text-slate-600">Majibu yote ya fomu ya kujiunga (Mother Intake) yanatoka kwenye API.</p>
+                    <div class="text-sm text-slate-500">Form Management</div>
+                    <h1 class="mt-1 text-2xl font-extrabold text-slate-900">{{ $pageTitle ?? 'All Forms' }}</h1>
+                    <p class="mt-2 text-slate-600">Hapa tunaonyesha majibu yote ya fomu kutoka kwenye API. Ukisha-approve, intake itahifadhiwa kwenye database ya hapa (local).</p>
+                    @if(!empty($defaultJourneyStage))
+                        <div class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm font-extrabold">
+                            <span>Journey:</span>
+                            <span class="uppercase">{{ $defaultJourneyStage }}</span>
+                            <a href="{{ url('/admin/forms') }}" class="ml-2 text-slate-600 hover:text-slate-900 font-semibold">Clear</a>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="mt-6 bg-white rounded-2xl border border-slate-200 overflow-hidden">
@@ -214,6 +221,8 @@
                 const refreshBtn = document.getElementById('btn-refresh');
                 const prevBtn = document.getElementById('btn-prev');
                 const nextBtn = document.getElementById('btn-next');
+
+                const DEFAULT_JOURNEY_STAGE = @json($defaultJourneyStage ?? '');
 
                 const modalEl = document.getElementById('intake-modal');
                 const modalTitleEl = document.getElementById('intake-modal-title');
@@ -496,6 +505,7 @@
                     if (statusEl && statusEl.value) url.searchParams.set('status', statusEl.value);
                     if (phoneEl && phoneEl.value) url.searchParams.set('phone', phoneEl.value);
                     if (fullNameEl && fullNameEl.value) url.searchParams.set('full_name', fullNameEl.value);
+                    if (DEFAULT_JOURNEY_STAGE) url.searchParams.set('journey_stage', DEFAULT_JOURNEY_STAGE);
                     return url.toString();
                 }
 

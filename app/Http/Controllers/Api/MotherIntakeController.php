@@ -24,6 +24,7 @@ class MotherIntakeController extends Controller
         $phone = trim((string) $request->query('phone', ''));
         $fullName = trim((string) $request->query('full_name', ''));
         $status = trim((string) $request->query('status', ''));
+        $journeyStage = trim((string) $request->query('journey_stage', ''));
 
         $query = MotherIntake::query();
 
@@ -37,6 +38,10 @@ class MotherIntakeController extends Controller
 
         if ($status !== '') {
             $query->where('status', $status);
+        }
+
+        if ($journeyStage !== '') {
+            $query->where('journey_stage', $journeyStage);
         }
 
         $phoneColumn = Schema::hasColumn('mother_intakes', 'phone') ? 'phone' : null;

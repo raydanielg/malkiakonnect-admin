@@ -26,6 +26,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admins', fn () => view('adminmodules::users.all-admin'))->name('admins.index');
 
         Route::get('/forms', fn () => view('adminmodules::forms.all-forms'))->name('forms.index');
+        Route::get('/forms/pregnant', fn () => view('adminmodules::forms.all-forms', [
+            'pageTitle' => 'Pregnant Forms',
+            'defaultJourneyStage' => 'pregnant',
+        ]))->name('forms.pregnant');
+        Route::get('/forms/ttc', fn () => view('adminmodules::forms.all-forms', [
+            'pageTitle' => 'TTC Forms',
+            'defaultJourneyStage' => 'ttc',
+        ]))->name('forms.ttc');
         Route::get('/forms/intakes/{id}', function (int $id) {
             return view('adminmodules::forms.intake-details', ['intakeId' => $id]);
         })->name('forms.intakes.show');
