@@ -93,6 +93,26 @@ class MotherIntakeApprovalController
                     return ['error' => 'Imeshindikana kutengeneza MK Number.', 'status' => 500];
                 }
 
+                $phone = trim((string) ($record->phone ?? ''));
+                if ($phone !== '') {
+                    $dup = MotherIntake::query()
+                        ->where('phone', $phone)
+                        ->whereNotNull('mk_number')
+                        ->where('source_id', '!=', $sourceId);
+
+                    if (Schema::hasColumn('mother_intakes', 'approved_at')) {
+                        $dup->whereNotNull('approved_at');
+                    }
+
+                    $existing = $dup->first();
+                    if ($existing) {
+                        return [
+                            'error' => 'Namba ya simu tayari ime-approve (MK: '.$existing->mk_number.').',
+                            'status' => 422,
+                        ];
+                    }
+                }
+
                 if (Schema::hasColumn('mother_intakes', 'approved_at') && ! $record->approved_at) {
                     $record->approved_at = now();
                 }

@@ -301,7 +301,7 @@
                     }
 
                     tbody.innerHTML = rows.map(function (r) {
-                        const editUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.id)) + '/edit';
+                        const editUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.source_id || r.id)) + '/edit';
                         const progressUrl = @json(url('/admin/forms/members')) + '/' + encodeURIComponent(String(r.id)) + '/progress';
                         return (
                             '<tr class="hover:bg-slate-50">'
