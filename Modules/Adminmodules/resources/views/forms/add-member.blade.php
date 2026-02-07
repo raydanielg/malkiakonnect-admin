@@ -14,14 +14,10 @@
 
             <main class="px-4 sm:px-6 py-6 max-w-4xl mx-auto">
                 <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                    <div class="flex items-center justify-between gap-3">
-                        <div>
-                            <div class="text-sm font-semibold text-slate-500">New Member</div>
-                            <h1 class="mt-1 text-2xl font-extrabold text-slate-900">Add New Member</h1>
-                        </div>
-                        <a href="{{ url('/admin/forms/membership') }}" class="px-4 py-2 text-sm font-semibold text-slate-600 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition">
-                            Back to Members
-                        </a>
+                    <div class="text-center mb-8">
+                        <p class="text-xs sm:text-sm uppercase tracking-wide text-gray-600">New Member Registration</p>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold mt-1 text-slate-900">Malkia Konnect</h1>
+                        <p class="text-emerald-600 mt-1 font-semibold text-lg tracking-wide">Admin Portal Intake</p>
                     </div>
 
                     <!-- Progress Steps -->
@@ -53,7 +49,7 @@
                         <!-- Step 1: Basic Info -->
                         <div id="step-content-1" class="space-y-6">
                             <div class="bg-slate-50 rounded-2xl border border-slate-200 p-6 mb-6">
-                                <label class="block text-xs font-bold text-slate-500 uppercase mb-3">MK Number (Manual or Auto)</label>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">MK Number (Manual or Auto)</label>
                                 <div class="flex items-center gap-3">
                                     <div class="flex items-center flex-1">
                                         <div class="px-4 py-3 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 text-sm font-extrabold text-slate-600 shadow-sm">MK-</div>
@@ -64,61 +60,86 @@
                                         Generate
                                     </button>
                                 </div>
-                                <p class="mt-2 text-[11px] text-slate-500">Ukiacha wazi, mfumo utatengeneza namba mpya automatically.</p>
+                                <p class="mt-2 text-[11px] text-slate-500 italic">Ukiacha wazi, mfumo utatengeneza namba mpya automatically wakati wa kusave.</p>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-5">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Full Name <span class="text-rose-500">*</span></label>
-                                    <input id="am-full-name" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="John Doe" />
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">What is their full name? <span class="text-rose-500 font-bold">*</span></label>
+                                    <input id="am-full-name" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. Asha Mwita" />
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Whatsapp Number <span class="text-rose-500">*</span></label>
-                                    <input id="am-phone" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="+2557..." />
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Enter their WhatsApp Phone Number <span class="text-rose-500 font-bold">*</span></label>
+                                    <input id="am-phone" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. 07xxxxxxx or +2557xxxxxxx" />
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Email Address</label>
-                                    <input id="am-email" type="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="email@example.com" />
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Email Address (Hiari)</label>
+                                    <input id="am-email" type="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. name@example.com" />
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Age</label>
-                                    <input id="am-age" type="number" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="25" />
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Location</label>
-                                    <input id="am-location" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="Dar es Salaam, Masaki" />
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Age</label>
+                                        <input id="am-age" type="number" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. 25" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Location</label>
+                                        <input id="am-location" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. Dar es Salaam, Masaki" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Step 2: Journey Info -->
                         <div id="step-content-2" class="space-y-6 hidden">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 gap-6">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Journey Stage</label>
-                                    <select id="am-journey-stage" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm bg-white">
-                                        <option value="">Select Stage</option>
-                                        <option value="pregnant">Pregnant</option>
-                                        <option value="postpartum">Postpartum</option>
-                                        <option value="ttc">TTC</option>
-                                        <option value="other">Other</option>
-                                    </select>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-3">Where are they on their motherhood Journey? (Choose one)</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                        <label class="flex items-center gap-2 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-sm">
+                                            <input type="radio" name="journey_stage" value="pregnant" x-model="stage" class="text-emerald-600 focus:ring-emerald-500" />
+                                            <span class="text-sm font-bold text-slate-700">A • Pregnant</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-sm">
+                                            <input type="radio" name="journey_stage" value="postpartum" x-model="stage" class="text-emerald-600 focus:ring-emerald-500" />
+                                            <span class="text-sm font-bold text-slate-700">B • Postpartum</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-sm">
+                                            <input type="radio" name="journey_stage" value="ttc" x-model="stage" class="text-emerald-600 focus:ring-emerald-500" />
+                                            <span class="text-sm font-bold text-slate-700">C • TTC</span>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Due Date</label>
-                                    <input id="am-due-date" type="date" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" />
+
+                                <!-- Pregnant Specifics -->
+                                <div id="specifics-pregnant" class="hidden space-y-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">In which hospital do you plan to deliver your baby?</label>
+                                        <input id="am-hospital-planned" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. Muhimbili National Hospital" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">How many weeks pregnant are you?</label>
+                                        <input id="am-pregnancy-weeks" type="number" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. 22" />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Pregnancy Weeks</label>
-                                    <input id="am-pregnancy-weeks" type="number" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. 12" />
+
+                                <!-- Postpartum Specifics -->
+                                <div id="specifics-postpartum" class="hidden space-y-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">In which hospital did you deliver your baby?</label>
+                                        <input id="am-delivery-hospital" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. Muhimbili National Hospital" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">How many weeks old is your baby?</label>
+                                        <input id="am-baby-weeks-old" type="number" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. 6" />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Baby Weeks Old</label>
-                                    <input id="am-baby-weeks-old" type="number" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. 4" />
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Hospital Planned</label>
-                                    <input id="am-hospital" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. Aga Khan Hospital" />
+
+                                <!-- TTC Specifics -->
+                                <div id="specifics-ttc" class="hidden space-y-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">For how long have you been trying to conceive?</label>
+                                        <input id="am-ttc-duration" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="e.g. 3 months, 1 year, 6 weeks" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -144,9 +165,17 @@
                                         <span class="text-slate-500 font-semibold">Journey</span>
                                         <span id="c-journey" class="font-extrabold text-slate-900">-</span>
                                     </div>
-                                    <div class="flex flex-col gap-1">
+                                    <div class="flex flex-col gap-1" id="preview-hospital-row">
                                         <span class="text-slate-500 font-semibold">Hospital</span>
                                         <span id="c-hospital" class="font-extrabold text-slate-900">-</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 hidden" id="preview-weeks-row">
+                                        <span id="c-weeks-label" class="text-slate-500 font-semibold">Weeks</span>
+                                        <span id="c-weeks-val" class="font-extrabold text-slate-900">-</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 hidden" id="preview-ttc-row">
+                                        <span class="text-slate-500 font-semibold">TTC Duration</span>
+                                        <span id="c-ttc-val" class="font-extrabold text-slate-900">-</span>
                                     </div>
                                 </div>
                                 <div class="mt-6 pt-4 border-t border-slate-200 text-xs text-slate-500 italic">
@@ -202,12 +231,15 @@
                 const amEmail = document.getElementById('am-email');
                 const amAge = document.getElementById('am-age');
                 const amLocation = document.getElementById('am-location');
-                const amJourney = document.getElementById('am-journey-stage');
-                const amDueDate = document.getElementById('am-due-date');
-                const amPregWeeks = document.getElementById('am-pregnancy-weeks');
-                const amBabyWeeks = document.getElementById('am-baby-weeks-old');
-                const amHospital = document.getElementById('am-hospital');
                 const amNotes = document.getElementById('am-notes');
+
+                // Journey Inputs
+                const journeyRadios = document.getElementsByName('journey_stage');
+                const amHospitalPlanned = document.getElementById('am-hospital-planned');
+                const amPregWeeks = document.getElementById('am-pregnancy-weeks');
+                const amDeliveryHospital = document.getElementById('am-delivery-hospital');
+                const amBabyWeeks = document.getElementById('am-baby-weeks-old');
+                const amTtcDuration = document.getElementById('am-ttc-duration');
 
                 // Preview
                 const cMk = document.getElementById('c-mk');
@@ -215,6 +247,34 @@
                 const cPhone = document.getElementById('c-phone');
                 const cJourney = document.getElementById('c-journey');
                 const cHospital = document.getElementById('c-hospital');
+                const cWeeksLabel = document.getElementById('c-weeks-label');
+                const cWeeksVal = document.getElementById('c-weeks-val');
+                const cTtcVal = document.getElementById('c-ttc-val');
+                const previewHospitalRow = document.getElementById('preview-hospital-row');
+                const previewWeeksRow = document.getElementById('preview-weeks-row');
+                const previewTtcRow = document.getElementById('preview-ttc-row');
+
+                let selectedStage = '';
+
+                function getSelectedStage() {
+                    for (const rb of journeyRadios) {
+                        if (rb.checked) return rb.value;
+                    }
+                    return '';
+                }
+
+                function updateJourneySpecifics() {
+                    selectedStage = getSelectedStage();
+                    const specPregnant = document.getElementById('specifics-pregnant');
+                    const specPostpartum = document.getElementById('specifics-postpartum');
+                    const specTtc = document.getElementById('specifics-ttc');
+                    
+                    if (specPregnant) specPregnant.classList.toggle('hidden', selectedStage !== 'pregnant');
+                    if (specPostpartum) specPostpartum.classList.toggle('hidden', selectedStage !== 'postpartum');
+                    if (specTtc) specTtc.classList.toggle('hidden', selectedStage !== 'ttc');
+                }
+
+                journeyRadios.forEach(rb => rb.addEventListener('change', updateJourneySpecifics));
 
                 function updateUI() {
                     // Update content
@@ -263,8 +323,41 @@
                         if (cMk) cMk.textContent = digits ? `MK-${digits}` : 'Auto-generated';
                         if (cName) cName.textContent = amFullName ? amFullName.value : '-';
                         if (cPhone) cPhone.textContent = amPhone ? amPhone.value : '-';
-                        if (cJourney) cJourney.textContent = amJourney ? amJourney.options[amJourney.selectedIndex]?.text : '-';
-                        if (cHospital) cHospital.textContent = amHospital ? amHospital.value : '-';
+                        
+                        selectedStage = getSelectedStage();
+                        if (cJourney) cJourney.textContent = selectedStage.charAt(0).toUpperCase() + selectedStage.slice(1);
+
+                        // Reset rows
+                        if (previewHospitalRow) previewHospitalRow.classList.add('hidden');
+                        if (previewWeeksRow) previewWeeksRow.classList.add('hidden');
+                        if (previewTtcRow) previewTtcRow.classList.add('hidden');
+
+                        if (selectedStage === 'pregnant') {
+                            if (previewHospitalRow) {
+                                previewHospitalRow.classList.remove('hidden');
+                                if (cHospital) cHospital.textContent = amHospitalPlanned.value || '-';
+                            }
+                            if (previewWeeksRow) {
+                                previewWeeksRow.classList.remove('hidden');
+                                if (cWeeksLabel) cWeeksLabel.textContent = 'Pregnancy Weeks';
+                                if (cWeeksVal) cWeeksVal.textContent = amPregWeeks.value || '-';
+                            }
+                        } else if (selectedStage === 'postpartum') {
+                            if (previewHospitalRow) {
+                                previewHospitalRow.classList.remove('hidden');
+                                if (cHospital) cHospital.textContent = amDeliveryHospital.value || '-';
+                            }
+                            if (previewWeeksRow) {
+                                previewWeeksRow.classList.remove('hidden');
+                                if (cWeeksLabel) cWeeksLabel.textContent = 'Baby Weeks Old';
+                                if (cWeeksVal) cWeeksVal.textContent = amBabyWeeks.value || '-';
+                            }
+                        } else if (selectedStage === 'ttc') {
+                            if (previewTtcRow) {
+                                previewTtcRow.classList.remove('hidden');
+                                if (cTtcVal) cTtcVal.textContent = amTtcDuration.value || '-';
+                            }
+                        }
                     }
                 }
 
@@ -316,6 +409,7 @@
                 async function saveMember() {
                     clearError();
                     
+                    selectedStage = getSelectedStage();
                     const payload = {
                         mk_digits: amMkDigits ? amMkDigits.value.trim() || null : null,
                         full_name: amFullName ? amFullName.value.trim() : '',
@@ -323,11 +417,12 @@
                         email: amEmail ? amEmail.value.trim() : '',
                         age: (amAge && amAge.value) ? Number(amAge.value) : null,
                         location: amLocation ? amLocation.value.trim() : '',
-                        journey_stage: amJourney ? amJourney.value : '',
-                        pregnancy_weeks: (amPregWeeks && amPregWeeks.value) ? Number(amPregWeeks.value) : null,
-                        baby_weeks_old: (amBabyWeeks && amBabyWeeks.value) ? Number(amBabyWeeks.value) : null,
-                        due_date: (amDueDate && amDueDate.value) || null,
-                        hospital_planned: amHospital ? amHospital.value.trim() : '',
+                        journey_stage: selectedStage,
+                        pregnancy_weeks: (selectedStage === 'pregnant' && amPregWeeks.value) ? Number(amPregWeeks.value) : null,
+                        baby_weeks_old: (selectedStage === 'postpartum' && amBabyWeeks.value) ? Number(amBabyWeeks.value) : null,
+                        due_date: null, // Computed or optional
+                        hospital_planned: selectedStage === 'pregnant' ? amHospitalPlanned.value.trim() : (selectedStage === 'postpartum' ? amDeliveryHospital.value.trim() : ''),
+                        ttc_duration: selectedStage === 'ttc' ? amTtcDuration.value.trim() : '',
                         notes: amNotes ? amNotes.value.trim() : '',
                     };
 
@@ -357,7 +452,6 @@
                             throw new Error(json.message || 'Failed to save member.');
                         }
 
-                        // Success!
                         window.location.href = '{{ url("/admin/forms/membership") }}?success=1';
                     } catch (e) {
                         setError(e.message);
@@ -374,6 +468,12 @@
                         if (currentStep === 1) {
                             if (!amFullName || !amPhone || !amFullName.value.trim() || !amPhone.value.trim()) {
                                 setError('Full Name and Phone are required.');
+                                return;
+                            }
+                        }
+                        if (currentStep === 2) {
+                            if (!getSelectedStage()) {
+                                setError('Please select a journey stage.');
                                 return;
                             }
                         }
@@ -399,6 +499,7 @@
 
                 // Initial UI
                 updateUI();
+                updateJourneySpecifics();
             })();
         </script>
     </div>
