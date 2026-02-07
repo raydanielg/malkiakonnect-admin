@@ -314,6 +314,37 @@
                     }
                 }
 
+                const expandedGroups = {};
+
+                function groupByPhone(rows) {
+                    const list = Array.isArray(rows) ? rows : [];
+                    const map = {};
+                    const order = [];
+
+                    list.forEach(function (r) {
+                        const phoneKey = normalizePhone(r && r.phone);
+                        const key = phoneKey ? ('phone:' + phoneKey) : ('id:' + String(r && r.id));
+                        if (!map[key]) {
+                            map[key] = [];
+                            order.push(key);
+                        }
+                        map[key].push(r);
+                    });
+
+                    order.forEach(function (key) {
+                        map[key].sort(function (a, b) {
+                            const aTime = String(a && a.created_at ? a.created_at : '');
+                            const bTime = String(b && b.created_at ? b.created_at : '');
+                            if (aTime === bTime) {
+                                return Number(b && b.id ? b.id : 0) - Number(a && a.id ? a.id : 0);
+                            }
+                            return aTime < bTime ? 1 : -1;
+                        });
+                    });
+
+                    return { map, order };
+                }
+
                 async function openEdit(sourceId, fullName, phone) {
                     if (!editModal || !mkDigitsEl) return;
                     activeEdit = { sourceId: String(sourceId), fullName: fullName || '', phone: phone || '' };
@@ -563,6 +594,14 @@
                     return '-';
                 }
 
+                function normalizePhone(phone) {
+                    const raw = String(phone || '').trim();
+                    if (!raw) return '';
+                    const digits = raw.replace(/[^0-9]/g, '');
+                    if (!digits) return '';
+                    return digits;
+                }
+
                 function mkNumber(row) {
                     if (!row) return '-';
                     const id = row.id;
@@ -617,18 +656,72 @@
                         return;
                     }
 
-                    tbody.innerHTML = rows.map(function (r) {
-                        return (
-                            '<tr class="hover:bg-slate-50 cursor-pointer" data-view-intake="' + escapeHtml(r.id) + '">'
-                            + '<td class="py-3 px-4 text-slate-900 font-semibold">' + escapeHtml(r.full_name || '-') + '</td>'
-                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.phone || '-') + '</td>'
-                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.journey_stage || '-') + '</td>'
-                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
-                            + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
-                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
+                    const grouped = groupByPhone(rows);
+
+                    const html = [];
+
+                    grouped.order.forEach(function (key) {
+                        const group = grouped.map[key] || [];
+                        if (!group.length) return;
+
+                        const top = group[0];
+                        const phoneKey = normalizePhone(top && top.phone);
+                        const isDuplicateGroup = phoneKey && group.length > 1;
+
+                        const expanded = !!expandedGroups[key];
+                        const chevron = isDuplicateGroup
+                            ? ('<button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700" data-toggle-phone-group="' + escapeHtml(key) + '" title="Expand">'
+                                + '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform ' + (expanded ? 'rotate-90' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                    + '<path d="M9 18l6-6-6-6" />'
+                                + '</svg>'
+                            + '</button>')
+                            : '<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-transparent"></span>';
+
+                        const dupBadge = isDuplicateGroup
+                            ? ('<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-50 text-amber-800 border border-amber-200">' + escapeHtml(String(group.length)) + '</span>')
+                            : '';
+
+                        html.push(
+                            '<tr class="hover:bg-slate-50 cursor-pointer" data-view-intake="' + escapeHtml(top.id) + '">'
+                            + '<td class="py-3 px-4 text-slate-900 font-semibold">'
+                                + '<div class="flex items-center gap-2">'
+                                    + chevron
+                                    + '<div class="min-w-0">'
+                                        + '<div class="truncate">' + escapeHtml(top.full_name || '-') + dupBadge + '</div>'
+                                        + (isDuplicateGroup ? '<div class="text-xs text-slate-500 font-semibold">Duplicate submissions (phone)</div>' : '')
+                                    + '</div>'
+                                + '</div>'
+                            + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(top.phone || '-') + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(top.journey_stage || '-') + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(top)) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(top.created_at)) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(top.hospital_planned || '-') + '</td>'
                             + '</tr>'
                         );
-                    }).join('');
+
+                        if (isDuplicateGroup && expanded) {
+                            group.slice(1).forEach(function (r, idx) {
+                                html.push(
+                                    '<tr class="bg-white hover:bg-slate-50 cursor-pointer" data-view-intake="' + escapeHtml(r.id) + '">'
+                                    + '<td class="py-3 pl-14 pr-4 text-slate-900 font-semibold">'
+                                        + '<div class="flex items-center gap-2">'
+                                            + '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-slate-100 text-slate-700 border border-slate-200">#' + escapeHtml(String(idx + 2)) + '</span>'
+                                            + '<span class="truncate">' + escapeHtml(r.full_name || '-') + '</span>'
+                                        + '</div>'
+                                    + '</td>'
+                                    + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.phone || '-') + '</td>'
+                                    + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.journey_stage || '-') + '</td>'
+                                    + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
+                                    + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
+                                    + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
+                                    + '</tr>'
+                                );
+                            });
+                        }
+                    });
+
+                    tbody.innerHTML = html.join('');
                 }
 
                 function cardItem(label, value) {
@@ -816,6 +909,17 @@
                 }
 
                 document.addEventListener('click', function (e) {
+                    const toggle = e.target.closest && e.target.closest('[data-toggle-phone-group]');
+                    if (toggle) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const key = toggle.getAttribute('data-toggle-phone-group');
+                        if (!key) return;
+                        expandedGroups[key] = !expandedGroups[key];
+                        fetchList();
+                        return;
+                    }
+
                     const btn = e.target.closest && e.target.closest('[data-view-intake]');
                     if (!btn) return;
                     openDetails(btn.getAttribute('data-view-intake'));
