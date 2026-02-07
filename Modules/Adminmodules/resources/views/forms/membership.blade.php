@@ -53,7 +53,7 @@
                             </div>
 
                             <div class="flex items-center gap-2">
-                                <button id="btn-apply" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Tafuta</button>
+                                <button id="btn-add-member" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Add New Member</button>
                             </div>
                         </div>
 
@@ -111,6 +111,109 @@
                     </div>
                 </div>
 
+                <div id="add-member-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+                    <div class="relative p-4 w-full max-w-3xl h-full md:h-auto">
+                        <div class="relative p-4 bg-white rounded-2xl border border-slate-200 shadow md:p-8">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <div class="text-sm font-semibold text-slate-500">New Member</div>
+                                    <h3 class="mt-1 text-2xl font-extrabold text-slate-900">Add New Member</h3>
+                                </div>
+                                <button id="add-member-close" type="button" class="py-2 px-4 text-sm font-semibold text-slate-600 bg-white rounded-xl border border-slate-200 hover:bg-slate-50">Funga</button>
+                            </div>
+
+                            <div class="mt-5 hidden" id="add-member-error">
+                                <div class="px-4 py-3 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 text-sm font-semibold"></div>
+                            </div>
+
+                            <div class="mt-6">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-sm font-extrabold text-slate-900" id="add-member-step-title">Step 1: Basic Info</div>
+                                    <div class="text-sm text-slate-500 font-semibold" id="add-member-step-indicator">1 / 3</div>
+                                </div>
+
+                                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4" id="add-member-step-1">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Full Name</div>
+                                        <input id="am-full-name" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Full name" />
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Whatsapp Number</div>
+                                        <input id="am-phone" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="+2557..." />
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Email</div>
+                                        <input id="am-email" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="email@example.com" />
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Age</div>
+                                        <input id="am-age" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Age" inputmode="numeric" />
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Location</div>
+                                        <input id="am-location" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Location" />
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 hidden" id="add-member-step-2">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Journey Stage</div>
+                                        <select id="am-journey-stage" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                                            <option value="">-</option>
+                                            <option value="pregnant">pregnant</option>
+                                            <option value="postpartum">postpartum</option>
+                                            <option value="ttc">ttc</option>
+                                            <option value="other">other</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Due Date</div>
+                                        <input id="am-due-date" type="date" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" />
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Pregnancy Weeks</div>
+                                        <input id="am-pregnancy-weeks" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="e.g 12" inputmode="numeric" />
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Baby Weeks Old</div>
+                                        <input id="am-baby-weeks-old" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="e.g 4" inputmode="numeric" />
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Hospital Planned</div>
+                                        <input id="am-hospital" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Hospital planned" />
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 hidden" id="add-member-step-3">
+                                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                        <div class="text-sm font-extrabold text-slate-900">Confirm</div>
+                                        <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                            <div><span class="font-bold text-slate-600">Name:</span> <span id="am-c-name" class="font-extrabold text-slate-900">-</span></div>
+                                            <div><span class="font-bold text-slate-600">Phone:</span> <span id="am-c-phone" class="font-extrabold text-slate-900">-</span></div>
+                                            <div><span class="font-bold text-slate-600">Journey:</span> <span id="am-c-journey" class="font-extrabold text-slate-900">-</span></div>
+                                            <div><span class="font-bold text-slate-600">Hospital:</span> <span id="am-c-hospital" class="font-extrabold text-slate-900">-</span></div>
+                                        </div>
+                                        <div class="mt-3 text-xs text-slate-500">MK Number itatengenezwa automatically na member atawekwa approved.</div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Notes</div>
+                                        <textarea id="am-notes" rows="3" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Notes..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 flex items-center justify-between gap-2">
+                                    <button id="am-back" type="button" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Back</button>
+                                    <div class="flex items-center gap-2">
+                                        <button id="am-next" type="button" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold transition">Next</button>
+                                        <button id="am-save" type="button" class="hidden px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Save Member</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 @include('adminmodules::partials.footer')
             </main>
         </div>
@@ -147,7 +250,7 @@
                 const journeyStageEl = document.getElementById('filter-journey-stage');
                 const phoneEl = document.getElementById('filter-phone');
                 const fullNameEl = document.getElementById('filter-full-name');
-                const applyBtn = document.getElementById('btn-apply');
+                const addMemberBtn = document.getElementById('btn-add-member');
                 const prevBtn = document.getElementById('btn-prev');
                 const nextBtn = document.getElementById('btn-next');
 
@@ -159,6 +262,41 @@
                 const errorWrapEl = document.getElementById('members-error');
                 const errorTextEl = errorWrapEl ? errorWrapEl.querySelector('div') : null;
 
+                const addModalEl = document.getElementById('add-member-modal');
+                const addCloseEl = document.getElementById('add-member-close');
+                const addErrorWrapEl = document.getElementById('add-member-error');
+                const addErrorTextEl = addErrorWrapEl ? addErrorWrapEl.querySelector('div') : null;
+                const stepTitleEl = document.getElementById('add-member-step-title');
+                const stepIndicatorEl = document.getElementById('add-member-step-indicator');
+                const step1El = document.getElementById('add-member-step-1');
+                const step2El = document.getElementById('add-member-step-2');
+                const step3El = document.getElementById('add-member-step-3');
+                const backBtn = document.getElementById('am-back');
+                const nextBtn = document.getElementById('am-next');
+                const saveBtn = document.getElementById('am-save');
+
+                const amFullName = document.getElementById('am-full-name');
+                const amPhone = document.getElementById('am-phone');
+                const amEmail = document.getElementById('am-email');
+                const amAge = document.getElementById('am-age');
+                const amLocation = document.getElementById('am-location');
+                const amJourney = document.getElementById('am-journey-stage');
+                const amDueDate = document.getElementById('am-due-date');
+                const amPregWeeks = document.getElementById('am-pregnancy-weeks');
+                const amBabyWeeks = document.getElementById('am-baby-weeks-old');
+                const amHospital = document.getElementById('am-hospital');
+                const amNotes = document.getElementById('am-notes');
+                const cName = document.getElementById('am-c-name');
+                const cPhone = document.getElementById('am-c-phone');
+                const cJourney = document.getElementById('am-c-journey');
+                const cHospital = document.getElementById('am-c-hospital');
+
+                const addMemberModal = (addModalEl && typeof Modal !== 'undefined')
+                    ? new Modal(addModalEl, { placement: 'center' })
+                    : null;
+
+                let addStep = 1;
+
                 let currentPage = 1;
                 let lastPage = 1;
                 let debounceTimer = null;
@@ -166,6 +304,126 @@
                 const detailsModal = (modalEl && typeof Modal !== 'undefined')
                     ? new Modal(modalEl, { placement: 'center' })
                     : null;
+
+                function setAddError(message) {
+                    if (!addErrorWrapEl || !addErrorTextEl) return;
+                    addErrorTextEl.textContent = message;
+                    addErrorWrapEl.classList.remove('hidden');
+                }
+
+                function clearAddError() {
+                    if (!addErrorWrapEl) return;
+                    addErrorWrapEl.classList.add('hidden');
+                }
+
+                function renderAddStep() {
+                    if (!stepTitleEl || !stepIndicatorEl || !step1El || !step2El || !step3El || !backBtn || !nextBtn || !saveBtn) return;
+
+                    stepIndicatorEl.textContent = String(addStep) + ' / 3';
+                    step1El.classList.toggle('hidden', addStep !== 1);
+                    step2El.classList.toggle('hidden', addStep !== 2);
+                    step3El.classList.toggle('hidden', addStep !== 3);
+
+                    backBtn.disabled = addStep === 1;
+                    backBtn.classList.toggle('opacity-50', backBtn.disabled);
+                    backBtn.classList.toggle('cursor-not-allowed', backBtn.disabled);
+
+                    nextBtn.classList.toggle('hidden', addStep === 3);
+                    saveBtn.classList.toggle('hidden', addStep !== 3);
+
+                    if (addStep === 1) stepTitleEl.textContent = 'Step 1: Basic Info';
+                    if (addStep === 2) stepTitleEl.textContent = 'Step 2: Journey';
+                    if (addStep === 3) stepTitleEl.textContent = 'Step 3: Confirm';
+
+                    if (addStep === 3) {
+                        if (cName) cName.textContent = (amFullName && amFullName.value) ? amFullName.value : '-';
+                        if (cPhone) cPhone.textContent = (amPhone && amPhone.value) ? amPhone.value : '-';
+                        if (cJourney) cJourney.textContent = (amJourney && amJourney.value) ? amJourney.value : '-';
+                        if (cHospital) cHospital.textContent = (amHospital && amHospital.value) ? amHospital.value : '-';
+                    }
+                }
+
+                function openAddMember() {
+                    if (!addMemberModal) return;
+                    clearAddError();
+                    addStep = 1;
+                    if (amFullName) amFullName.value = '';
+                    if (amPhone) amPhone.value = '';
+                    if (amEmail) amEmail.value = '';
+                    if (amAge) amAge.value = '';
+                    if (amLocation) amLocation.value = '';
+                    if (amJourney) amJourney.value = '';
+                    if (amDueDate) amDueDate.value = '';
+                    if (amPregWeeks) amPregWeeks.value = '';
+                    if (amBabyWeeks) amBabyWeeks.value = '';
+                    if (amHospital) amHospital.value = '';
+                    if (amNotes) amNotes.value = '';
+                    renderAddStep();
+                    addMemberModal.show();
+                }
+
+                async function saveNewMember() {
+                    clearAddError();
+                    const fullName = (amFullName && amFullName.value) ? String(amFullName.value).trim() : '';
+                    const phone = (amPhone && amPhone.value) ? String(amPhone.value).trim() : '';
+
+                    if (fullName === '') {
+                        setAddError('Weka Full Name.');
+                        return;
+                    }
+                    if (phone === '') {
+                        setAddError('Weka Whatsapp Number.');
+                        return;
+                    }
+
+                    const payload = {
+                        full_name: fullName,
+                        phone: phone,
+                        email: amEmail ? String(amEmail.value || '').trim() : '',
+                        age: amAge && String(amAge.value || '').trim() !== '' ? Number(amAge.value) : null,
+                        location: amLocation ? String(amLocation.value || '').trim() : '',
+                        journey_stage: amJourney ? String(amJourney.value || '').trim() : '',
+                        pregnancy_weeks: amPregWeeks && String(amPregWeeks.value || '').trim() !== '' ? Number(amPregWeeks.value) : null,
+                        baby_weeks_old: amBabyWeeks && String(amBabyWeeks.value || '').trim() !== '' ? Number(amBabyWeeks.value) : null,
+                        due_date: amDueDate ? (amDueDate.value || null) : null,
+                        hospital_planned: amHospital ? String(amHospital.value || '').trim() : '',
+                        notes: amNotes ? String(amNotes.value || '').trim() : '',
+                    };
+
+                    if (saveBtn) {
+                        saveBtn.disabled = true;
+                        saveBtn.textContent = 'Inahifadhi...';
+                    }
+
+                    try {
+                        const res = await fetch(@json(url('/admin/forms/members/manual')), {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+                        const json = await res.json().catch(function () { return null; });
+                        if (!res.ok) {
+                            const msg = (json && json.message) ? json.message : 'Imeshindikana kuhifadhi member.';
+                            setAddError(msg);
+                            return;
+                        }
+
+                        if (addMemberModal) addMemberModal.hide();
+                        await fetchList();
+                    } catch (e) {
+                        setAddError('Imeshindikana kuhifadhi member.');
+                    } finally {
+                        if (saveBtn) {
+                            saveBtn.disabled = false;
+                            saveBtn.textContent = 'Save Member';
+                        }
+                    }
+                }
 
                 function escapeHtml(str) {
                     return String(str ?? '')
@@ -403,10 +661,9 @@
                     }, 350);
                 }
 
-                if (applyBtn) {
-                    applyBtn.addEventListener('click', function () {
-                        currentPage = 1;
-                        fetchList();
+                if (addMemberBtn) {
+                    addMemberBtn.addEventListener('click', function () {
+                        openAddMember();
                     });
                 }
 
@@ -420,6 +677,42 @@
 
                 if (fullNameEl) {
                     fullNameEl.addEventListener('input', scheduleFetch);
+                }
+
+                if (journeyStageEl) {
+                    journeyStageEl.addEventListener('change', function () {
+                        currentPage = 1;
+                        fetchList();
+                    });
+                }
+
+                if (backBtn) {
+                    backBtn.addEventListener('click', function () {
+                        if (addStep <= 1) return;
+                        addStep -= 1;
+                        renderAddStep();
+                    });
+                }
+
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function () {
+                        if (addStep >= 3) return;
+                        addStep += 1;
+                        renderAddStep();
+                    });
+                }
+
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', function () {
+                        saveNewMember();
+                    });
+                }
+
+                if (addCloseEl) {
+                    addCloseEl.addEventListener('click', function () {
+                        if (!addMemberModal) return;
+                        addMemberModal.hide();
+                    });
                 }
 
                 if (prevBtn) {

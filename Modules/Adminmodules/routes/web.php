@@ -11,6 +11,7 @@ use Modules\Adminmodules\Http\Controllers\AdminDashboardController;
 use Modules\Adminmodules\Http\Controllers\AdminOverviewController;
 use Modules\Adminmodules\Http\Controllers\AdminStatisticsController;
 use Modules\Adminmodules\Http\Controllers\AdminmodulesController;
+use Modules\Adminmodules\Http\Controllers\MotherIntakeManualMemberController;
 use Modules\Adminmodules\Http\Controllers\MotherIntakeProgressController;
 use Modules\Adminmodules\Http\Controllers\MotherIntakeApprovalController;
 
@@ -41,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
             return view('adminmodules::forms.intake-edit', ['intakeId' => $id]);
         })->name('forms.intakes.edit');
         Route::get('/forms/membership', fn () => view('adminmodules::forms.membership'))->name('forms.membership');
+        Route::post('/forms/members/manual', [MotherIntakeManualMemberController::class, 'store'])
+            ->name('forms.members.manual.store');
         Route::get('/forms/members/{id}/progress', function (int $id) {
             return view('adminmodules::forms.member-progress', ['intakeId' => $id]);
         })->name('forms.members.progress');
