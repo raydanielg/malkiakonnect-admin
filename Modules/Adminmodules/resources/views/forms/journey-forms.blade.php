@@ -82,18 +82,21 @@
                         <table class="min-w-full text-sm">
                             <thead class="text-xs uppercase text-slate-500 bg-slate-50 border-b border-slate-200">
                                 <tr>
+                                    <th class="text-left py-3 px-4">MK Number</th>
                                     <th class="text-left py-3 px-4">Full Name</th>
                                     <th class="text-left py-3 px-4">Whatsapp Number</th>
+                                    <th class="text-left py-3 px-4">Progress</th>
                                     <th class="text-left py-3 px-4">Journey Stage</th>
                                     <th class="text-left py-3 px-4">Weeks while joining</th>
                                     <th class="text-left py-3 px-4">Date of Joining</th>
+                                    <th class="text-left py-3 px-4">Approved Date</th>
                                     <th class="text-left py-3 px-4">Hospital Planned</th>
                                     <th class="text-right py-3 px-4">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="mother-intakes-body" class="divide-y divide-slate-100">
                                 <tr>
-                                    <td colspan="7" class="py-10 px-4 text-slate-500" id="mother-intakes-loading">Inapakia...</td>
+                                    <td colspan="10" class="py-10 px-4 text-slate-500" id="mother-intakes-loading">Inapakia...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -322,7 +325,7 @@
                     if (!tbody) return;
                     tbody.innerHTML = [
                         '<tr class="animate-pulse">',
-                        '<td colspan="7" class="py-6 px-4">',
+                        '<td colspan="10" class="py-6 px-4">',
                         '<div class="h-3 bg-slate-100 rounded w-1/4"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/2"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/3"></div>',
@@ -335,6 +338,17 @@
                     if (!dateString) return '-';
                     const dateOnly = String(dateString).slice(0, 10);
                     return dateOnly || '-';
+                }
+
+                function statusBadge(status) {
+                    const s = String(status || '').toLowerCase();
+                    if (s === 'completed') {
+                        return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">completed</span>';
+                    }
+                    if (s === 'reviewed') {
+                        return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">reviewed</span>';
+                    }
+                    return '<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">' + escapeHtml(status || 'pending') + '</span>';
                 }
 
                 function weeksWhileJoining(row) {
@@ -398,11 +412,22 @@
                             }
                             if (item.approved_at) {
                                 approvedBySourceId[String(k)] = true;
+                                approvedAtBySourceId[String(k)] = item.approved_at;
                             }
                         });
                     } catch (e) {
                         // ignore
                     }
+                }
+
+                const approvedAtBySourceId = {};
+
+                function approvedDate(row) {
+                    if (!row) return '-';
+                    const key = String(row.id ?? '');
+                    if (approvedAtBySourceId[key]) return fmtDate(approvedAtBySourceId[key]);
+                    if (row.approved_at) return fmtDate(row.approved_at);
+                    return '-';
                 }
 
                 const expandedGroups = {};
@@ -439,7 +464,7 @@
                 function renderRows(rows) {
                     if (!tbody) return;
                     if (!rows || rows.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="7" class="py-10 px-4 text-slate-500">Hakuna majibu ya fomu.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="10" class="py-10 px-4 text-slate-500">Hakuna majibu ya fomu.</td></tr>';
                         return;
                     }
 
@@ -491,6 +516,7 @@
 
                         html.push(
                             '<tr class="hover:bg-slate-50 cursor-pointer" data-view-intake="' + escapeHtml(top.id) + '">' 
+                            + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(mkNumber(top)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-900 font-semibold">'
                                 + '<div class="flex items-center gap-2">'
                                     + chevron
@@ -501,9 +527,11 @@
                                 + '</div>'
                             + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(top.phone || '-') + '</td>'
+                            + '<td class="py-3 px-4">' + statusBadge(top.status) + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(top.journey_stage || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(top)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(top.created_at)) + '</td>'
+                            + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(approvedDate(top)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(top.hospital_planned || '-') + '</td>'
                             + '<td class="py-3 px-4">'
                                 + '<div class="flex items-center justify-end gap-2">'
@@ -538,6 +566,7 @@
 
                                 html.push(
                                     '<tr class="bg-white hover:bg-slate-50 cursor-pointer" data-view-intake="' + escapeHtml(r.id) + '">' 
+                                    + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(mkNumber(r)) + '</td>'
                                     + '<td class="py-3 pl-14 pr-4 text-slate-900 font-semibold">'
                                         + '<div class="flex items-center gap-2">'
                                             + '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-slate-100 text-slate-700 border border-slate-200">#' + escapeHtml(String(idx + 2)) + '</span>'
@@ -545,9 +574,11 @@
                                         + '</div>'
                                     + '</td>'
                                     + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.phone || '-') + '</td>'
+                                    + '<td class="py-3 px-4">' + statusBadge(r.status) + '</td>'
                                     + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.journey_stage || '-') + '</td>'
                                     + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
                                     + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
+                                    + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(approvedDate(r)) + '</td>'
                                     + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
                                     + '<td class="py-3 px-4">'
                                         + '<div class="flex items-center justify-end gap-2">'
@@ -658,7 +689,7 @@
                         if (nextBtn) nextBtn.disabled = currentPage >= lastPage;
                     } catch (err) {
                         if (tbody) {
-                            tbody.innerHTML = '<tr><td colspan="7" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
+                            tbody.innerHTML = '<tr><td colspan="10" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
                         }
                         setError((err && err.message) ? err.message : 'Imeshindikana kupata data.');
                     }
