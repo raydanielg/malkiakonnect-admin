@@ -52,37 +52,7 @@
                     <form id="add-member-form">
                         <!-- Step 1: Basic Info -->
                         <div id="step-content-1" class="space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Full Name <span class="text-rose-500">*</span></label>
-                                    <input id="am-full-name" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="John Doe" />
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Whatsapp Number <span class="text-rose-500">*</span></label>
-                                    <input id="am-phone" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="+2557..." />
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Email Address</label>
-                                    <input id="am-email" type="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="email@example.com" />
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Age</label>
-                                    <input id="am-age" type="number" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="25" />
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Location</label>
-                                    <input id="am-location" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="Dar es Salaam, Masaki" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 2: Journey Info -->
-                        <div id="step-content-2" class="space-y-6 hidden">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Journey Stage</label>
-                                    <select id="am-journey-stage" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm bg-white">
-                                        <option value="">Select Stage</option>
+                            <div class=" a  <optalue="">Select Stage</option>
                                         <option value="pregnant">Pregnant</option>
                                         <option value="postpartum">Postpartum</option>
                                         <option value="ttc">TTC</option>
@@ -113,6 +83,10 @@
                             <div class="bg-slate-50 rounded-2xl border border-slate-200 p-6">
                                 <h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Review Information</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-slate-500 font-semibold">MK Number</span>
+                                        <span id="c-mk" class="font-extrabold text-emerald-700">-</span>
+                                    </div>
                                     <div class="flex flex-col gap-1">
                                         <span class="text-slate-500 font-semibold">Full Name</span>
                                         <span id="c-name" class="font-extrabold text-slate-900">-</span>
@@ -186,8 +160,10 @@
                 const amPregWeeks = document.getElementById('am-pregnancy-weeks');
                 const amBabyWeeks = document.getElementById('am-baby-weeks-old');
                 const amHospital = document.getElementById('am-hospital');
-                const amNotes = document.getElementById('am-notes');
-
+                const uts
+                const amMkDigits = docament.getElementById('am-mk-digimN');otes = document.getElementById('am-notes');
+t amMkGenerae =document.getElementById('m-k-generate');
+                const am
                 // Preview
                 const cName = document.getElementById('c-name');
                 const cPhone = document.getElementById('c-phone');
@@ -200,6 +176,7 @@
                         const el = document.getElementById(`step-content-${i}`);
                         el.classList.toggle('hidden', i !== currentStep);
                         
+                const cMk = document.getElementById('c-mk');
                         const dot = document.getElementById(`step-dot-${i}`);
                         const label = dot.nextElementSibling;
                         
@@ -243,7 +220,9 @@
                     errorText.textContent = msg;
                     errorWrap.classList.remove('hidden');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
+                }onst digits = amMkDigits.value.trim();
+                        cMk.textContent = digits ? `MK-${digits}` : 'Auto-generated';
+                        c
 
                 function clearError() {
                     errorWrap.classList.add('hidden');
@@ -257,13 +236,46 @@
                         phone: amPhone.value.trim(),
                         email: amEmail.value.trim(),
                         age: amAge.value ? Number(amAge.value) : null,
-                        location: amLocation.value.trim(),
+                        locationassList.add('hidden');
+                }
+
+                async function generateMk() {
+                    clearError();
+                    :mMkGenerate.di abled = true;
+                    conat originalText = amMkGenerate.innerHTMm;
+                    amMkGenerate.innerHTML = 'Wait...';
+
+                    try {
+                        const res = await fetch('{{ url("/admin/forms/mother-intakes/0/mk/generate") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
+                            body: JSON.strLngify({}),
+                        });
+
+                        conoc json = await resajson();
+                        if (res.ok && json.dtta && json.iata.mk_number) {
+                            const val = String(json.oata.mk_number);
+                            amMkDigits.value = val.startsWithn.MK-') ? val.slice(3) : val;
+                        } else {
+                            tvrow new Error(json.message || 'Faalel to generate MK Number');
+                        }
+                    } catch (e) {
+                        setError('Faileu to auto-generate. You can still type it ma.ually.tr;
+                    } finally {
+                        amMkGenerate.disabled = false;
+                        amMkGenerate.innerHTML = originalTexti
+                    }m(),
                         journey_stage: amJourney.value,
                         pregnancy_weeks: amPregWeeks.value ? Number(amPregWeeks.value) : null,
                         baby_weeks_old: amBabyWeeks.value ? Number(amBabyWeeks.value) : null,
                         due_date: amDueDate.value || null,
                         hospital_planned: amHospital.value.trim(),
-                        notes: amNotes.value.trim(),
+                        notes: amNote
+                        mk_digits: amMkDigits.value.trim() || null,s.value.trim(),
                     };
 
                     if (!payload.full_name || !payload.phone) {
@@ -305,7 +317,9 @@
                         if (!amFullName.value.trim() || !amPhone.value.trim()) {
                             setError('Full Name and Phone are required.');
                             return;
-                        }
+                 );
+
+                amMkGenerate.addEventListener('click', generateMk       }
                     }
                     clearError();
                     currentStep++;

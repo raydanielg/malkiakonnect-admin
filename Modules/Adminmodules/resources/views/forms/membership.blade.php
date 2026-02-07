@@ -610,10 +610,9 @@ console.log('openAddMember called');
                                             + '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />'
                                         + '</svg>'
                                     + '</a>'
-                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-assess-member="' + escapeHtml(r.id) + '" title="Assess">'
+                                    + '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-rose-100 bg-rose-50 hover:bg-rose-100 text-rose-600 transition" data-delete-member="' + escapeHtml(r.id) + '" data-delete-name="' + escapeHtml(r.full_name || '') + '" title="Delete">'
                                         + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-                                            + '<path d="M3 3v18h18" />'
-                                            + '<path d="M7 14l4-4 4 4 6-6" />'
+                                            + '<path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />'
                                         + '</svg>'
                                     + '</button>'
                                 + '</div>'
@@ -765,6 +764,40 @@ console.log('openAddMember called');
                     if (!btn) return;
                     openDetails(btn.getAttribute('data-assess-member'));
                 });
+
+                document.addEventListener('click', function (e) {
+                    const btn = e.target.closest && e.target.closest('[data-delete-member]');
+                    if (!btn) return;
+                    
+                    const id = btn.getAttribute('data-delete-member');
+                    const name = btn.getAttribute('data-delete-name');
+                    
+                    if (confirm(`Je, una uhakika unataka kumfuta member "${name}"? Kitendo hiki hakiwezi kurudishwa.`)) {
+                        deleteMember(id);
+                    }
+                });
+
+                async function deleteMember(id) {
+                    try {
+                        const res = await fetch(@json(url('/admin/forms/members')) + '/' + encodeURIComponent(id), {
+                            method: 'DELETE',
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': @json(csrf_token()),
+                            }
+                        });
+
+                        if (!res.ok) {
+                            const json = await res.json().catch(() => ({}));
+                            throw new Error(json.message || 'Imeshindikana kumfuta member.');
+                        }
+
+                        // Refresh the list
+                        fetchList();
+                    } catch (e) {
+                        setError(e.message);
+                    }
+                }
 
                 if (modalCloseEl) {
                     modalCloseEl.addEventListener('click', function () {

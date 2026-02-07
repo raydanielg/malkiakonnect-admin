@@ -14,6 +14,7 @@ class MotherIntakeManualMemberController
     public function store(Request $request, MkNumberGenerator $generator): JsonResponse
     {
         $validated = $request->validate([
+            'mk_digits' => ['nullable', 'regex:/^[0-9]{1,10}$/'],
             'full_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:50'],
             'email' => ['nullable', 'string', 'max:255'],
@@ -44,16 +45,23 @@ class MotherIntakeManualMemberController
             }
 
             $mk = null;
-            $attempts = 0;
-            while ($attempts < 5) {
-                $attempts++;
-                $candidate = $generator->next();
-                $exists = MotherIntake::query()->where('mk_number', $candidate)->exists();
-                if ($exists) {
-                    continue;
+            if (! empty($validated['mk_digits'])) {
+                $mk = 'MK-' . $validated['mk_digits'];
+                if (MotherIntake::query()->where('mk_number', $mk)->exists()) {
+                    return ['error' => 'MK Number tayari ipo. Tumia namba nyingine.', 'status' => 422];
                 }
-                $mk = $candidate;
-                break;
+            } else {
+                $attempts = 0;
+                while ($attempts < 5) {
+                    $attempts++;
+                    $candidate = $generator->next();
+                    $exists = MotherIntake::query()->where('mk_number', $candidate)->exists();
+                    if ($exists) {
+                        continue;
+                    }
+                    $mk = $candidate;
+                    break;
+                }
             }
 
             if (! $mk) {
