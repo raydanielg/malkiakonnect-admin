@@ -22,7 +22,16 @@
                 <div class="mt-6 bg-white rounded-2xl border border-slate-200 overflow-hidden">
                     <div class="px-6 py-4 border-b border-slate-200 bg-white">
                         <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 w-full">
+                                <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Limit</div>
+                                    <select id="filter-limit" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                                        <option value="25">25 per page</option>
+                                        <option value="50">50 per page</option>
+                                        <option value="100">100 per page</option>
+                                        <option value="250">250 per page</option>
+                                    </select>
+                                </div>
                                 <div>
                                     <div class="text-xs font-bold text-slate-500 uppercase">Status</div>
                                     <select id="filter-status" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
@@ -53,6 +62,20 @@
                             </div>
 
                             <div class="flex items-center gap-2">
+                                <button id="btn-export-csv" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+                                    </svg>
+                                    <span>Export CSV</span>
+                                </button>
+                                <button id="btn-export-pdf" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M6 9V2h12v7" />
+                                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                        <path d="M6 14h12v8H6z" />
+                                    </svg>
+                                    <span>Export PDF</span>
+                                </button>
                                 <a href="{{ url('/admin/forms/members/add') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-extrabold transition">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M5 12h14m-7-7v14" />
@@ -475,13 +498,232 @@ console.log('openAddMember called');
 
                 function buildUrl() {
                     const url = new URL(@json(url('/api/members')));
-                    url.searchParams.set('per_page', '25');
+                    const limit = limitEl ? limitEl.value : '25';
+                    url.searchParams.set('per_page', limit);
                     url.searchParams.set('page', String(currentPage));
                     if (statusEl && statusEl.value) url.searchParams.set('status', statusEl.value);
                     if (journeyStageEl && journeyStageEl.value) url.searchParams.set('journey_stage', journeyStageEl.value);
                     if (phoneEl && phoneEl.value) url.searchParams.set('phone', phoneEl.value);
                     if (fullNameEl && fullNameEl.value) url.searchParams.set('full_name', fullNameEl.value);
                     return url.toString();
+                }
+
+                const limitEl = document.getElementById('filter-limit');
+                const btnExportCsv = document.getElementById('btn-export-csv');
+                const btnExportPdf = document.getElementById('btn-export-pdf');
+
+                if (limitEl) {
+                    limitEl.addEventListener('change', function() {
+                        currentPage = 1;
+                        fetchList();
+                    });
+                }
+
+                async function fetchAllMembersForExport() {
+                    const all = [];
+                    let page = 1;
+                    let last = 1;
+
+                    while (page <= last) {
+                        const url = new URL(@json(url('/api/members')));
+                        url.searchParams.set('per_page', '100');
+                        url.searchParams.set('page', String(page));
+                        if (statusEl && statusEl.value) url.searchParams.set('status', statusEl.value);
+                        if (journeyStageEl && journeyStageEl.value) url.searchParams.set('journey_stage', journeyStageEl.value);
+                        if (phoneEl && phoneEl.value) url.searchParams.set('phone', phoneEl.value);
+                        if (fullNameEl && fullNameEl.value) url.searchParams.set('full_name', fullNameEl.value);
+
+                        const res = await fetch(url.toString(), { headers: { 'Accept': 'application/json' } });
+                        const json = await res.json().catch(function () { return null; });
+                        if (!res.ok || !json || !json.success) {
+                            throw new Error((json && json.message) ? json.message : 'Imeshindikana ku-export.');
+                        }
+
+                        const rows = Array.isArray(json.data) ? json.data : [];
+                        rows.forEach(function (r) { all.push(r); });
+
+                        const meta = json.meta || {};
+                        last = Number(meta.last_page || 1);
+                        page++;
+                    }
+
+                    return all;
+                }
+
+                function csvEscape(v) {
+                    const s = String(v ?? '').replace(/\r?\n/g, ' ').trim();
+                    return `"${s.replace(/"/g, '""')}"`;
+                }
+
+                function downloadCsv(rows) {
+                    let csv = [
+                        'MK Number',
+                        'Full Name',
+                        'Phone',
+                        'Journey Stage',
+                        'Weeks',
+                        'Date of Joining',
+                        'Approved Date',
+                        'Hospital Planned'
+                    ].join(',') + '\n';
+
+                    rows.forEach(function (r) {
+                        const wk = (r && r.journey_stage === 'pregnant') ? (r.pregnancy_weeks ?? '')
+                            : ((r && r.journey_stage === 'postpartum') ? (r.baby_weeks_old ?? '') : (r.pregnancy_weeks ?? r.baby_weeks_old ?? ''));
+
+                        const line = [
+                            csvEscape(r && r.mk_number ? r.mk_number : ''),
+                            csvEscape(r && r.full_name ? r.full_name : ''),
+                            csvEscape(r && r.phone ? r.phone : ''),
+                            csvEscape(r && r.journey_stage ? r.journey_stage : ''),
+                            csvEscape(wk),
+                            csvEscape(r && r.created_at ? String(r.created_at).slice(0, 10) : ''),
+                            csvEscape(r && r.approved_at ? String(r.approved_at).slice(0, 10) : ''),
+                            csvEscape(r && r.hospital_planned ? r.hospital_planned : '')
+                        ].join(',');
+                        csv += line + '\n';
+                    });
+
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', `malkia_members_export_${new Date().toISOString().slice(0,10)}.csv`);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+
+                function openPdfPrint(rows) {
+                    const printWin = window.open('', '_blank');
+                    if (!printWin) {
+                        alert('Browser imezuia pop-up. Ruhusu pop-up kisha jaribu tena.');
+                        return;
+                    }
+
+                    const title = 'Members Export';
+                    const head = `
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 16px; color: #0f172a; }
+                            h1 { font-size: 18px; margin: 0 0 10px; }
+                            .meta { font-size: 12px; color: #475569; margin-bottom: 12px; }
+                            table { width: 100%; border-collapse: collapse; font-size: 12px; }
+                            th, td { border: 1px solid #cbd5e1; padding: 6px; text-align: left; vertical-align: top; }
+                            th { background: #f1f5f9; }
+                        </style>
+                    `;
+
+                    const now = new Date();
+                    const meta = `Exported: ${now.toISOString().slice(0, 19).replace('T', ' ')}`;
+
+                    const headerRow = `
+                        <tr>
+                            <th>MK Number</th>
+                            <th>Full Name</th>
+                            <th>Phone</th>
+                            <th>Journey</th>
+                            <th>Weeks</th>
+                            <th>Joining</th>
+                            <th>Approved</th>
+                            <th>Hospital</th>
+                        </tr>
+                    `;
+
+                    const bodyRows = rows.map(function (r) {
+                        const wk = (r && r.journey_stage === 'pregnant') ? (r.pregnancy_weeks ?? '')
+                            : ((r && r.journey_stage === 'postpartum') ? (r.baby_weeks_old ?? '') : (r.pregnancy_weeks ?? r.baby_weeks_old ?? ''));
+
+                        const td = function (v) {
+                            return String(v ?? '').replace(/[&<>]/g, function (ch) {
+                                if (ch === '&') return '&amp;';
+                                if (ch === '<') return '&lt;';
+                                if (ch === '>') return '&gt;';
+                                return ch;
+                            });
+                        };
+
+                        return `
+                            <tr>
+                                <td>${td(r && r.mk_number ? r.mk_number : '')}</td>
+                                <td>${td(r && r.full_name ? r.full_name : '')}</td>
+                                <td>${td(r && r.phone ? r.phone : '')}</td>
+                                <td>${td(r && r.journey_stage ? r.journey_stage : '')}</td>
+                                <td>${td(wk)}</td>
+                                <td>${td(r && r.created_at ? String(r.created_at).slice(0, 10) : '')}</td>
+                                <td>${td(r && r.approved_at ? String(r.approved_at).slice(0, 10) : '')}</td>
+                                <td>${td(r && r.hospital_planned ? r.hospital_planned : '')}</td>
+                            </tr>
+                        `;
+                    }).join('');
+
+                    const html = `
+                        <html>
+                            <head>
+                                <title>${title}</title>
+                                ${head}
+                            </head>
+                            <body>
+                                <h1>${title}</h1>
+                                <div class="meta">${meta}</div>
+                                <table>
+                                    <thead>${headerRow}</thead>
+                                    <tbody>${bodyRows}</tbody>
+                                </table>
+                                <script>
+                                    window.onload = function () { window.print(); };
+                                <\/script>
+                            </body>
+                        </html>
+                    `;
+
+                    printWin.document.open();
+                    printWin.document.write(html);
+                    printWin.document.close();
+                }
+
+                async function exportAll(type) {
+                    clearError();
+                    try {
+                        if (type === 'csv' && btnExportCsv) {
+                            btnExportCsv.disabled = true;
+                            btnExportCsv.classList.add('opacity-60');
+                        }
+                        if (type === 'pdf' && btnExportPdf) {
+                            btnExportPdf.disabled = true;
+                            btnExportPdf.classList.add('opacity-60');
+                        }
+
+                        const rows = await fetchAllMembersForExport();
+                        if (!rows.length) {
+                            alert('Hakuna data ya kuexport.');
+                            return;
+                        }
+
+                        if (type === 'csv') {
+                            downloadCsv(rows);
+                        } else {
+                            openPdfPrint(rows);
+                        }
+                    } catch (e) {
+                        setError(e.message || 'Imeshindikana ku-export.');
+                    } finally {
+                        if (btnExportCsv) {
+                            btnExportCsv.disabled = false;
+                            btnExportCsv.classList.remove('opacity-60');
+                        }
+                        if (btnExportPdf) {
+                            btnExportPdf.disabled = false;
+                            btnExportPdf.classList.remove('opacity-60');
+                        }
+                    }
+                }
+
+                if (btnExportCsv) {
+                    btnExportCsv.addEventListener('click', function () { exportAll('csv'); });
+                }
+                if (btnExportPdf) {
+                    btnExportPdf.addEventListener('click', function () { exportAll('pdf'); });
                 }
 
                 function setLoading() {

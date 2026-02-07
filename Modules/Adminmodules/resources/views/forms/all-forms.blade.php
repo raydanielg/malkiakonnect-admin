@@ -51,7 +51,7 @@
                                 </div>
                                 <div>
                                     <div class="text-xs font-bold text-slate-500 uppercase">Simu</div>
-                                    <input id="filter-phone" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Mfano: +2557..." />
+                                    <input id="filter-phone" type="text" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Mfano: +2557..." />
                                 </div>
                                 <div>
                                     <div class="text-xs font-bold text-slate-500 uppercase">Jina</div>
