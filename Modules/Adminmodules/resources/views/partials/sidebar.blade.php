@@ -101,18 +101,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/admin/forms/pregnant') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">pregnant_woman</span>
-                            <span>Pregnant</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('/admin/forms/ttc') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                            <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">favorite</span>
-                            <span>TTC</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="{{ url('/admin/forms/membership') }}" class="flex items-center gap-3 pl-9 pr-2 py-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
                             <span class="material-symbols-outlined text-[18px] text-gray-400 dark:text-gray-500">card_membership</span>
                             <span>Membership</span>

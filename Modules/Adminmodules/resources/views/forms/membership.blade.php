@@ -33,6 +33,16 @@
                                     </select>
                                 </div>
                                 <div>
+                                    <div class="text-xs font-bold text-slate-500 uppercase">Journey Stage</div>
+                                    <select id="filter-journey-stage" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                                        <option value="">Zote</option>
+                                        <option value="pregnant">pregnant</option>
+                                        <option value="postpartum">postpartum</option>
+                                        <option value="ttc">ttc</option>
+                                        <option value="other">other</option>
+                                    </select>
+                                </div>
+                                <div>
                                     <div class="text-xs font-bold text-slate-500 uppercase">Whatsapp Number</div>
                                     <input id="filter-phone" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Mfano: +2557..." />
                                 </div>
@@ -40,19 +50,9 @@
                                     <div class="text-xs font-bold text-slate-500 uppercase">Full Name</div>
                                     <input id="filter-full-name" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800" placeholder="Tafuta jina..." />
                                 </div>
-                                <div>
-                                    <div class="text-xs font-bold text-slate-500 uppercase">Kwa ukurasa</div>
-                                    <select id="filter-per-page" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 hover:bg-slate-50">
-                                        <option value="10">10</option>
-                                        <option value="25" selected>25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
                             </div>
 
                             <div class="flex items-center gap-2">
-                                <button id="btn-refresh" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition">Onyesha upya</button>
                                 <button id="btn-apply" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold transition">Tafuta</button>
                             </div>
                         </div>
@@ -144,11 +144,10 @@
                 const metaEl = document.getElementById('members-meta');
 
                 const statusEl = document.getElementById('filter-status');
+                const journeyStageEl = document.getElementById('filter-journey-stage');
                 const phoneEl = document.getElementById('filter-phone');
                 const fullNameEl = document.getElementById('filter-full-name');
-                const perPageEl = document.getElementById('filter-per-page');
                 const applyBtn = document.getElementById('btn-apply');
-                const refreshBtn = document.getElementById('btn-refresh');
                 const prevBtn = document.getElementById('btn-prev');
                 const nextBtn = document.getElementById('btn-next');
 
@@ -179,9 +178,10 @@
 
                 function buildUrl() {
                     const url = new URL(@json(url('/api/members')));
-                    url.searchParams.set('per_page', perPageEl ? perPageEl.value : '25');
+                    url.searchParams.set('per_page', '25');
                     url.searchParams.set('page', String(currentPage));
                     if (statusEl && statusEl.value) url.searchParams.set('status', statusEl.value);
+                    if (journeyStageEl && journeyStageEl.value) url.searchParams.set('journey_stage', journeyStageEl.value);
                     if (phoneEl && phoneEl.value) url.searchParams.set('phone', phoneEl.value);
                     if (fullNameEl && fullNameEl.value) url.searchParams.set('full_name', fullNameEl.value);
                     return url.toString();
@@ -396,11 +396,11 @@
                 }
 
                 function scheduleFetch() {
-                    if (debounceTimer) window.clearTimeout(debounceTimer);
-                    debounceTimer = window.setTimeout(function () {
+                    if (debounceTimer) clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(function () {
                         currentPage = 1;
                         fetchList();
-                    }, 450);
+                    }, 350);
                 }
 
                 if (applyBtn) {
@@ -410,21 +410,8 @@
                     });
                 }
 
-                if (refreshBtn) {
-                    refreshBtn.addEventListener('click', function () {
-                        fetchList();
-                    });
-                }
-
                 if (statusEl) {
                     statusEl.addEventListener('change', scheduleFetch);
-                }
-
-                if (perPageEl) {
-                    perPageEl.addEventListener('change', function () {
-                        currentPage = 1;
-                        fetchList();
-                    });
                 }
 
                 if (phoneEl) {
