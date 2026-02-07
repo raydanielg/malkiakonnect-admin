@@ -275,6 +275,19 @@
                 const amNextBtn = document.getElementById('am-next');
                 const amSaveBtn = document.getElementById('am-save');
 
+                console.log('Flowbite Modal type check:', typeof Modal !== 'undefined' ? 'Defined' : 'Undefined');
+
+                const addMemberModal = (addModalEl && typeof Modal !== 'undefined')
+                    ? new Modal(addModalEl, { placement: 'center' })
+                    : (function() { 
+                        console.error('Modal class not found during initialization'); 
+                        return null; 
+                      })();
+
+                if (addMemberModal) {
+                    console.log('addMemberModal initialized successfully');
+                }
+
                 const amFullName = document.getElementById('am-full-name');
                 const amPhone = document.getElementById('am-phone');
                 const amEmail = document.getElementById('am-email');
@@ -290,10 +303,6 @@
                 const cPhone = document.getElementById('am-c-phone');
                 const cJourney = document.getElementById('am-c-journey');
                 const cHospital = document.getElementById('am-c-hospital');
-
-                const addMemberModal = (addModalEl && typeof Modal !== 'undefined')
-                    ? new Modal(addModalEl, { placement: 'center' })
-                    : null;
 
                 let addStep = 1;
 
@@ -342,7 +351,11 @@
                         if (cHospital) cHospital.textContent = (amHospital && amHospital.value) ? amHospital.value : '-';
                     }
                 }
-
+console.log('openAddMember called');
+                     {
+                       console.error('addMemberModal is not initialized');
+                        
+                    }
                 function openAddMember() {
                     if (!addMemberModal) return;
                     clearAddError();
