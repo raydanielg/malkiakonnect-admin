@@ -85,19 +85,17 @@
                         <table class="min-w-full text-sm">
                             <thead class="text-xs uppercase text-slate-500 bg-slate-50 border-b border-slate-200">
                                 <tr>
-                                    <th class="text-left py-3 px-4">MK Number</th>
                                     <th class="text-left py-3 px-4">Full Name</th>
                                     <th class="text-left py-3 px-4">Whatsapp Number</th>
                                     <th class="text-left py-3 px-4">Journey Stage</th>
                                     <th class="text-left py-3 px-4">Weeks while joining</th>
                                     <th class="text-left py-3 px-4">Date of Joining</th>
                                     <th class="text-left py-3 px-4">Hospital Planned</th>
-                                    <th class="text-right py-3 px-4">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="mother-intakes-body" class="divide-y divide-slate-100">
                                 <tr>
-                                    <td colspan="8" class="py-10 px-4 text-slate-500" id="mother-intakes-loading">Inapakia...</td>
+                                    <td colspan="6" class="py-10 px-4 text-slate-500" id="mother-intakes-loading">Inapakia...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -124,6 +122,8 @@
                             </div>
 
                             <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4" id="intake-modal-grid"></div>
+
+                            <div class="mt-6 flex flex-wrap items-center justify-end gap-2" id="intake-modal-actions"></div>
                         </div>
                     </div>
                 </div>
@@ -217,6 +217,7 @@
                 const modalEl = document.getElementById('intake-modal');
                 const modalTitleEl = document.getElementById('intake-modal-title');
                 const modalGridEl = document.getElementById('intake-modal-grid');
+                const modalActionsEl = document.getElementById('intake-modal-actions');
                 const modalCloseEl = document.getElementById('intake-close');
 
                 const mkModalEl = document.getElementById('mk-modal');
@@ -245,6 +246,7 @@
                 const mkBySourceId = {};
                 const approvedBySourceId = {};
                 let activeEdit = null;
+                let activeDetails = null;
 
                 const detailsModal = (modalEl && typeof Modal !== 'undefined')
                     ? new Modal(modalEl, { placement: 'center' })
@@ -511,7 +513,7 @@
                     if (!tbody) return;
                     tbody.innerHTML = [
                         '<tr class="animate-pulse">',
-                        '<td colspan="8" class="py-6 px-4">',
+                        '<td colspan="6" class="py-6 px-4">',
                         '<div class="h-3 bg-slate-100 rounded w-1/4"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/2"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/3"></div>',
@@ -611,57 +613,19 @@
                 function renderRows(rows) {
                     if (!tbody) return;
                     if (!rows || rows.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="8" class="py-10 px-4 text-slate-500">Hakuna majibu ya fomu.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="6" class="py-10 px-4 text-slate-500">Hakuna majibu ya fomu.</td></tr>';
                         return;
                     }
 
                     tbody.innerHTML = rows.map(function (r) {
-                        const viewUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.id));
-                        const editUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(String(r.id)) + '/edit';
-                        const approved = isApproved(r);
                         return (
-                            '<tr class="hover:bg-slate-50">'
-                            + '<td class="py-3 px-4 font-semibold text-slate-900">' + escapeHtml(mkNumber(r)) + '</td>'
+                            '<tr class="hover:bg-slate-50 cursor-pointer" data-view-intake="' + escapeHtml(r.id) + '">'
                             + '<td class="py-3 px-4 text-slate-900 font-semibold">' + escapeHtml(r.full_name || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.phone || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.journey_stage || '-') + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
-                            + '<td class="py-3 px-4 relative">'
-                                + '<div class="flex items-center justify-end gap-2 relative z-10">'
-                                    + (approved
-                                        ? '<span class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700" title="Approved">'
-                                            + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-                                                + '<path d="M20 6 9 17l-5-5" />'
-                                            + '</svg>'
-                                        + '</span>'
-                                        : '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-approve-intake="' + escapeHtml(r.id) + '" data-approve-full-name="' + escapeHtml(r.full_name || '') + '" data-approve-phone="' + escapeHtml(r.phone || '') + '" title="Approve">'
-                                            + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-                                                + '<path d="M20 6 9 17l-5-5" />'
-                                            + '</svg>'
-                                        + '</button>'
-                                    )
-                                    + '<a href="' + escapeHtml(viewUrl) + '" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="View">'
-                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-                                            + '<path d="M2.062 12.348a1 1 0 0 1 0-.696C3.423 8.02 7.36 5 12 5c4.64 0 8.577 3.02 9.938 6.652a1 1 0 0 1 0 .696C20.577 15.98 16.64 19 12 19c-4.64 0-8.577-3.02-9.938-6.652" />'
-                                            + '<circle cx="12" cy="12" r="3" />'
-                                        + '</svg>'
-                                    + '</a>'
-                                    + '<a href="' + escapeHtml(editUrl) + '" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Edit">'
-                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-                                            + '<path d="M12 20h9" />'
-                                            + '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />'
-                                        + '</svg>'
-                                    + '</a>'
-                                    + '<button type="button" class="action-btn inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-assess-intake="' + escapeHtml(r.id) + '" title="Assess">'
-                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-                                            + '<path d="M3 3v18h18" />'
-                                            + '<path d="M7 14l4-4 4 4 6-6" />'
-                                        + '</svg>'
-                                    + '</button>'
-                                + '</div>'
-                            + '</td>'
                             + '</tr>'
                         );
                     }).join('');
@@ -712,6 +676,19 @@
                         cardItem('created_at', data && data.created_at),
                         cardItem('updated_at', data && data.updated_at)
                     ].join('');
+
+                    if (!modalActionsEl) return;
+
+                    const id = data && typeof data.id !== 'undefined' ? String(data.id) : '';
+                    const approved = isApproved(data);
+                    const editUrl = @json(url('/admin/forms/intakes')) + '/' + encodeURIComponent(id) + '/edit';
+
+                    modalActionsEl.innerHTML = [
+                        approved
+                            ? '<span class="inline-flex items-center px-3 py-2 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm font-extrabold">Approved</span>'
+                            : '<button type="button" id="modal-approve" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-extrabold transition" data-approve-intake="' + escapeHtml(id) + '" data-approve-full-name="' + escapeHtml((data && data.full_name) || '') + '" data-approve-phone="' + escapeHtml((data && data.phone) || '') + '">Approve</button>',
+                        '<a href="' + escapeHtml(editUrl) + '" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-extrabold transition">Edit</a>',
+                    ].join('');
                 }
 
                 async function fetchList() {
@@ -754,7 +731,7 @@
                         if (nextBtn) nextBtn.disabled = currentPage >= lastPage;
                     } catch (err) {
                         if (tbody) {
-                            tbody.innerHTML = '<tr><td colspan="8" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
+                            tbody.innerHTML = '<tr><td colspan="6" class="py-10 px-4 text-slate-500">Hakuna data kwa sasa.</td></tr>';
                         }
                         setError((err && err.message) ? err.message : 'Imeshindikana kupata data.');
                     }
@@ -762,8 +739,10 @@
 
                 async function openDetails(id) {
                     if (!detailsModal || !modalGridEl) return;
+                    activeDetails = String(id);
                     modalTitleEl.textContent = 'Mother Intake #' + id;
                     modalGridEl.innerHTML = '<div class="md:col-span-2 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-sm font-semibold">Inapakia...</div>';
+                    if (modalActionsEl) modalActionsEl.innerHTML = '';
                     detailsModal.show();
 
                     try {
@@ -843,14 +822,9 @@
                 });
 
                 document.addEventListener('click', function (e) {
-                    const btn = e.target.closest && e.target.closest('[data-assess-intake]');
-                    if (!btn) return;
-                    openDetails(btn.getAttribute('data-assess-intake'));
-                });
-
-                document.addEventListener('click', function (e) {
                     const btn = e.target.closest && e.target.closest('[data-approve-intake]');
                     if (!btn) return;
+                    e.preventDefault();
                     approveIntake(
                         btn.getAttribute('data-approve-intake'),
                         btn.getAttribute('data-approve-full-name'),
