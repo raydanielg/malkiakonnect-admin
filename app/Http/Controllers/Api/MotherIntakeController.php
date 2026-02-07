@@ -102,10 +102,6 @@ class MotherIntakeController extends Controller
 
         $query = MotherIntake::query()->whereNotNull('mk_number');
 
-        if (Schema::hasColumn('mother_intakes', 'approved_at')) {
-            $query->whereNotNull('approved_at');
-        }
-
         if ($phone !== '') {
             $query->where('phone', 'like', "%{$phone}%");
         }
