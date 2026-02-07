@@ -52,7 +52,52 @@
                     <form id="add-member-form">
                         <!-- Step 1: Basic Info -->
                         <div id="step-content-1" class="space-y-6">
-                            <div class=" a  <optalue="">Select Stage</option>
+                            <div class="bg-slate-50 rounded-2xl border border-slate-200 p-6 mb-6">
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-3">MK Number (Manual or Auto)</label>
+                                <div class="flex items-center gap-3">
+                                    <div class="flex items-center flex-1">
+                                        <div class="px-4 py-3 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 text-sm font-extrabold text-slate-600 shadow-sm">MK-</div>
+                                        <input id="am-mk-digits" class="flex-1 px-4 py-3 rounded-r-xl border border-slate-200 text-sm font-extrabold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="1000" inputmode="numeric" />
+                                    </div>
+                                    <button id="am-mk-generate" type="button" class="px-4 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-bold transition shadow-sm flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+                                        Generate
+                                    </button>
+                                </div>
+                                <p class="mt-2 text-[11px] text-slate-500">Ukiacha wazi, mfumo utatengeneza namba mpya automatically.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Full Name <span class="text-rose-500">*</span></label>
+                                    <input id="am-full-name" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="John Doe" />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Whatsapp Number <span class="text-rose-500">*</span></label>
+                                    <input id="am-phone" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="+2557..." />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Email Address</label>
+                                    <input id="am-email" type="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="email@example.com" />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Age</label>
+                                    <input id="am-age" type="number" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="25" />
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Location</label>
+                                    <input id="am-location" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm" placeholder="Dar es Salaam, Masaki" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Journey Info -->
+                        <div id="step-content-2" class="space-y-6 hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Journey Stage</label>
+                                    <select id="am-journey-stage" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-sm bg-white">
+                                        <option value="">Select Stage</option>
                                         <option value="pregnant">Pregnant</option>
                                         <option value="postpartum">Postpartum</option>
                                         <option value="ttc">TTC</option>
@@ -105,7 +150,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-6 pt-4 border-t border-slate-200 text-xs text-slate-500 italic">
-                                    Note: MK Number will be auto-generated upon saving.
+                                    Note: MK Number will be auto-generated upon saving if left blank.
                                 </div>
                             </div>
 
@@ -150,6 +195,8 @@
                 const errorText = errorWrap.querySelector('div');
 
                 // Inputs
+                const amMkDigits = document.getElementById('am-mk-digits');
+                const amMkGenerate = document.getElementById('am-mk-generate');
                 const amFullName = document.getElementById('am-full-name');
                 const amPhone = document.getElementById('am-phone');
                 const amEmail = document.getElementById('am-email');
@@ -160,11 +207,10 @@
                 const amPregWeeks = document.getElementById('am-pregnancy-weeks');
                 const amBabyWeeks = document.getElementById('am-baby-weeks-old');
                 const amHospital = document.getElementById('am-hospital');
-                const uts
-                const amMkDigits = docament.getElementById('am-mk-digimN');otes = document.getElementById('am-notes');
-t amMkGenerae =document.getElementById('m-k-generate');
-                const am
+                const amNotes = document.getElementById('am-notes');
+
                 // Preview
+                const cMk = document.getElementById('c-mk');
                 const cName = document.getElementById('c-name');
                 const cPhone = document.getElementById('c-phone');
                 const cJourney = document.getElementById('c-journey');
@@ -174,75 +220,71 @@ t amMkGenerae =document.getElementById('m-k-generate');
                     // Update content
                     for (let i = 1; i <= totalSteps; i++) {
                         const el = document.getElementById(`step-content-${i}`);
-                        el.classList.toggle('hidden', i !== currentStep);
+                        if (el) el.classList.toggle('hidden', i !== currentStep);
                         
-                const cMk = document.getElementById('c-mk');
                         const dot = document.getElementById(`step-dot-${i}`);
-                        const label = dot.nextElementSibling;
-                        
-                        if (i < currentStep) {
-                            dot.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>`;
-                            dot.className = "w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold transition-colors";
-                            label.className = "text-xs font-bold text-slate-900";
-                        } else if (i === currentStep) {
-                            dot.textContent = i;
-                            dot.className = "w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold transition-colors";
-                            label.className = "text-xs font-bold text-slate-900";
-                        } else {
-                            dot.textContent = i;
-                            dot.className = "w-10 h-10 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center font-bold transition-colors border-2 border-transparent";
-                            label.className = "text-xs font-bold text-slate-400";
+                        if (dot) {
+                            const label = dot.nextElementSibling;
+                            if (i < currentStep) {
+                                dot.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>`;
+                                dot.className = "w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold transition-colors";
+                                if (label) label.className = "text-xs font-bold text-slate-900";
+                            } else if (i === currentStep) {
+                                dot.textContent = i;
+                                dot.className = "w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold transition-colors";
+                                if (label) label.className = "text-xs font-bold text-slate-900";
+                            } else {
+                                dot.textContent = i;
+                                dot.className = "w-10 h-10 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center font-bold transition-colors border-2 border-transparent";
+                                if (label) label.className = "text-xs font-bold text-slate-400";
+                            }
                         }
                     }
 
                     // Update line
-                    const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-                    stepLine.style.width = `${progress}%`;
+                    if (stepLine) {
+                        const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+                        stepLine.style.width = `${progress}%`;
+                    }
 
                     // Buttons
-                    btnBack.disabled = currentStep === 1;
-                    btnBack.classList.toggle('opacity-50', currentStep === 1);
-                    btnBack.classList.toggle('cursor-not-allowed', currentStep === 1);
+                    if (btnBack) {
+                        btnBack.disabled = currentStep === 1;
+                        btnBack.classList.toggle('opacity-50', currentStep === 1);
+                        btnBack.classList.toggle('cursor-not-allowed', currentStep === 1);
+                    }
 
-                    btnNext.classList.toggle('hidden', currentStep === totalSteps);
-                    btnSave.classList.toggle('hidden', currentStep !== totalSteps);
+                    if (btnNext) btnNext.classList.toggle('hidden', currentStep === totalSteps);
+                    if (btnSave) btnSave.classList.toggle('hidden', currentStep !== totalSteps);
 
                     // If confirm step, update preview
                     if (currentStep === 3) {
-                        cName.textContent = amFullName.value || '-';
-                        cPhone.textContent = amPhone.value || '-';
-                        cJourney.textContent = amJourney.options[amJourney.selectedIndex]?.text || '-';
-                        cHospital.textContent = amHospital.value || '-';
+                        const digits = amMkDigits ? amMkDigits.value.trim() : '';
+                        if (cMk) cMk.textContent = digits ? `MK-${digits}` : 'Auto-generated';
+                        if (cName) cName.textContent = amFullName ? amFullName.value : '-';
+                        if (cPhone) cPhone.textContent = amPhone ? amPhone.value : '-';
+                        if (cJourney) cJourney.textContent = amJourney ? amJourney.options[amJourney.selectedIndex]?.text : '-';
+                        if (cHospital) cHospital.textContent = amHospital ? amHospital.value : '-';
                     }
                 }
 
                 function setError(msg) {
-                    errorText.textContent = msg;
-                    errorWrap.classList.remove('hidden');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }onst digits = amMkDigits.value.trim();
-                        cMk.textContent = digits ? `MK-${digits}` : 'Auto-generated';
-                        c
-
-                function clearError() {
-                    errorWrap.classList.add('hidden');
+                    if (errorText && errorWrap) {
+                        errorText.textContent = msg;
+                        errorWrap.classList.remove('hidden');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
                 }
 
-                async function saveMember() {
-                    clearError();
-                    
-                    const payload = {
-                        full_name: amFullName.value.trim(),
-                        phone: amPhone.value.trim(),
-                        email: amEmail.value.trim(),
-                        age: amAge.value ? Number(amAge.value) : null,
-                        locationassList.add('hidden');
+                function clearError() {
+                    if (errorWrap) errorWrap.classList.add('hidden');
                 }
 
                 async function generateMk() {
                     clearError();
-                    :mMkGenerate.di abled = true;
-                    conat originalText = amMkGenerate.innerHTMm;
+                    if (!amMkGenerate) return;
+                    amMkGenerate.disabled = true;
+                    const originalText = amMkGenerate.innerHTML;
                     amMkGenerate.innerHTML = 'Wait...';
 
                     try {
@@ -253,29 +295,40 @@ t amMkGenerae =document.getElementById('m-k-generate');
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                             },
-                            body: JSON.strLngify({}),
+                            body: JSON.stringify({}),
                         });
 
-                        conoc json = await resajson();
-                        if (res.ok && json.dtta && json.iata.mk_number) {
-                            const val = String(json.oata.mk_number);
-                            amMkDigits.value = val.startsWithn.MK-') ? val.slice(3) : val;
+                        const json = await res.json();
+                        if (res.ok && json.data && json.data.mk_number) {
+                            const val = String(json.data.mk_number);
+                            if (amMkDigits) amMkDigits.value = val.startsWith('MK-') ? val.slice(3) : val;
                         } else {
-                            tvrow new Error(json.message || 'Faalel to generate MK Number');
+                            throw new Error(json.message || 'Failed to generate MK Number');
                         }
                     } catch (e) {
-                        setError('Faileu to auto-generate. You can still type it ma.ually.tr;
+                        setError('Failed to auto-generate. You can still type it manually.');
                     } finally {
                         amMkGenerate.disabled = false;
-                        amMkGenerate.innerHTML = originalTexti
-                    }m(),
-                        journey_stage: amJourney.value,
-                        pregnancy_weeks: amPregWeeks.value ? Number(amPregWeeks.value) : null,
-                        baby_weeks_old: amBabyWeeks.value ? Number(amBabyWeeks.value) : null,
-                        due_date: amDueDate.value || null,
-                        hospital_planned: amHospital.value.trim(),
-                        notes: amNote
-                        mk_digits: amMkDigits.value.trim() || null,s.value.trim(),
+                        amMkGenerate.innerHTML = originalText;
+                    }
+                }
+
+                async function saveMember() {
+                    clearError();
+                    
+                    const payload = {
+                        mk_digits: amMkDigits ? amMkDigits.value.trim() || null : null,
+                        full_name: amFullName ? amFullName.value.trim() : '',
+                        phone: amPhone ? amPhone.value.trim() : '',
+                        email: amEmail ? amEmail.value.trim() : '',
+                        age: (amAge && amAge.value) ? Number(amAge.value) : null,
+                        location: amLocation ? amLocation.value.trim() : '',
+                        journey_stage: amJourney ? amJourney.value : '',
+                        pregnancy_weeks: (amPregWeeks && amPregWeeks.value) ? Number(amPregWeeks.value) : null,
+                        baby_weeks_old: (amBabyWeeks && amBabyWeeks.value) ? Number(amBabyWeeks.value) : null,
+                        due_date: (amDueDate && amDueDate.value) || null,
+                        hospital_planned: amHospital ? amHospital.value.trim() : '',
+                        notes: amNotes ? amNotes.value.trim() : '',
                     };
 
                     if (!payload.full_name || !payload.phone) {
@@ -283,8 +336,10 @@ t amMkGenerae =document.getElementById('m-k-generate');
                         return;
                     }
 
-                    btnSave.disabled = true;
-                    btnSave.textContent = 'Saving...';
+                    if (btnSave) {
+                        btnSave.disabled = true;
+                        btnSave.textContent = 'Saving...';
+                    }
 
                     try {
                         const res = await fetch('{{ url("/admin/forms/members/manual") }}', {
@@ -306,34 +361,41 @@ t amMkGenerae =document.getElementById('m-k-generate');
                         window.location.href = '{{ url("/admin/forms/membership") }}?success=1';
                     } catch (e) {
                         setError(e.message);
-                        btnSave.disabled = false;
-                        btnSave.textContent = 'Save Member';
+                        if (btnSave) {
+                            btnSave.disabled = false;
+                            btnSave.textContent = 'Save Member';
+                        }
                     }
                 }
 
                 // Listeners
-                btnNext.addEventListener('click', () => {
-                    if (currentStep === 1) {
-                        if (!amFullName.value.trim() || !amPhone.value.trim()) {
-                            setError('Full Name and Phone are required.');
-                            return;
-                 );
+                if (btnNext) {
+                    btnNext.addEventListener('click', () => {
+                        if (currentStep === 1) {
+                            if (!amFullName || !amPhone || !amFullName.value.trim() || !amPhone.value.trim()) {
+                                setError('Full Name and Phone are required.');
+                                return;
+                            }
+                        }
+                        clearError();
+                        if (currentStep < totalSteps) {
+                            currentStep++;
+                            updateUI();
+                        }
+                    });
+                }
 
-                amMkGenerate.addEventListener('click', generateMk       }
-                    }
-                    clearError();
-                    currentStep++;
-                    updateUI();
-                });
+                if (btnBack) {
+                    btnBack.addEventListener('click', () => {
+                        if (currentStep > 1) {
+                            currentStep--;
+                            updateUI();
+                        }
+                    });
+                }
 
-                btnBack.addEventListener('click', () => {
-                    if (currentStep > 1) {
-                        currentStep--;
-                        updateUI();
-                    }
-                });
-
-                btnSave.addEventListener('click', saveMember);
+                if (amMkGenerate) amMkGenerate.addEventListener('click', generateMk);
+                if (btnSave) btnSave.addEventListener('click', saveMember);
 
                 // Initial UI
                 updateUI();
