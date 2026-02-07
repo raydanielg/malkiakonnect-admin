@@ -91,11 +91,12 @@
                                     <th class="text-left py-3 px-4">Weeks while joining</th>
                                     <th class="text-left py-3 px-4">Date of Joining</th>
                                     <th class="text-left py-3 px-4">Hospital Planned</th>
+                                    <th class="text-right py-3 px-4">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="mother-intakes-body" class="divide-y divide-slate-100">
                                 <tr>
-                                    <td colspan="6" class="py-10 px-4 text-slate-500" id="mother-intakes-loading">Inapakia...</td>
+                                    <td colspan="7" class="py-10 px-4 text-slate-500" id="mother-intakes-loading">Inapakia...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -544,7 +545,7 @@
                     if (!tbody) return;
                     tbody.innerHTML = [
                         '<tr class="animate-pulse">',
-                        '<td colspan="6" class="py-6 px-4">',
+                        '<td colspan="7" class="py-6 px-4">',
                         '<div class="h-3 bg-slate-100 rounded w-1/4"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/2"></div>',
                         '<div class="mt-3 h-3 bg-slate-100 rounded w-1/3"></div>',
@@ -652,7 +653,7 @@
                 function renderRows(rows) {
                     if (!tbody) return;
                     if (!rows || rows.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="6" class="py-10 px-4 text-slate-500">Hakuna majibu ya fomu.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7" class="py-10 px-4 text-slate-500">Hakuna majibu ya fomu.</td></tr>';
                         return;
                     }
 
@@ -667,6 +668,27 @@
                         const top = group[0];
                         const phoneKey = normalizePhone(top && top.phone);
                         const isDuplicateGroup = phoneKey && group.length > 1;
+
+                        const approvedTop = isApproved(top);
+
+                        const approveBtnTop = approvedTop
+                            ? '<span class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700" title="Approved">'
+                                + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                    + '<path d="M20 6 9 17l-5-5" />'
+                                + '</svg>'
+                            + '</span>'
+                            : '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-row-action="1" data-approve-intake="' + escapeHtml(top.id) + '" data-approve-full-name="' + escapeHtml(top.full_name || '') + '" data-approve-phone="' + escapeHtml(top.phone || '') + '" title="Approve">'
+                                + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                    + '<path d="M20 6 9 17l-5-5" />'
+                                + '</svg>'
+                            + '</button>';
+
+                        const viewBtnTop = '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-row-action="1" data-view-intake="' + escapeHtml(top.id) + '" title="View">'
+                            + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                + '<path d="M2.062 12.348a1 1 0 0 1 0-.696C3.423 8.02 7.36 5 12 5c4.64 0 8.577 3.02 9.938 6.652a1 1 0 0 1 0 .696C20.577 15.98 16.64 19 12 19c-4.64 0-8.577-3.02-9.938-6.652" />'
+                                + '<circle cx="12" cy="12" r="3" />'
+                            + '</svg>'
+                        + '</button>';
 
                         const expanded = !!expandedGroups[key];
                         const chevron = isDuplicateGroup
@@ -697,11 +719,37 @@
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(top)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(top.created_at)) + '</td>'
                             + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(top.hospital_planned || '-') + '</td>'
+                            + '<td class="py-3 px-4">'
+                                + '<div class="flex items-center justify-end gap-2">'
+                                    + viewBtnTop
+                                    + approveBtnTop
+                                + '</div>'
+                            + '</td>'
                             + '</tr>'
                         );
 
                         if (isDuplicateGroup && expanded) {
                             group.slice(1).forEach(function (r, idx) {
+                                const approvedChild = isApproved(r);
+                                const approveBtnChild = approvedChild
+                                    ? '<span class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700" title="Approved">'
+                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                            + '<path d="M20 6 9 17l-5-5" />'
+                                        + '</svg>'
+                                    + '</span>'
+                                    : '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-row-action="1" data-approve-intake="' + escapeHtml(r.id) + '" data-approve-full-name="' + escapeHtml(r.full_name || '') + '" data-approve-phone="' + escapeHtml(r.phone || '') + '" title="Approve">'
+                                        + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                            + '<path d="M20 6 9 17l-5-5" />'
+                                        + '</svg>'
+                                    + '</button>';
+
+                                const viewBtnChild = '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" data-row-action="1" data-view-intake="' + escapeHtml(r.id) + '" title="View">'
+                                    + '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+                                        + '<path d="M2.062 12.348a1 1 0 0 1 0-.696C3.423 8.02 7.36 5 12 5c4.64 0 8.577 3.02 9.938 6.652a1 1 0 0 1 0 .696C20.577 15.98 16.64 19 12 19c-4.64 0-8.577-3.02-9.938-6.652" />'
+                                        + '<circle cx="12" cy="12" r="3" />'
+                                    + '</svg>'
+                                + '</button>';
+
                                 html.push(
                                     '<tr class="bg-white hover:bg-slate-50 cursor-pointer" data-view-intake="' + escapeHtml(r.id) + '">'
                                     + '<td class="py-3 pl-14 pr-4 text-slate-900 font-semibold">'
@@ -715,6 +763,12 @@
                                     + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(weeksWhileJoining(r)) + '</td>'
                                     + '<td class="py-3 px-4 text-slate-600">' + escapeHtml(fmtDate(r.created_at)) + '</td>'
                                     + '<td class="py-3 px-4 text-slate-700">' + escapeHtml(r.hospital_planned || '-') + '</td>'
+                                    + '<td class="py-3 px-4">'
+                                        + '<div class="flex items-center justify-end gap-2">'
+                                            + viewBtnChild
+                                            + approveBtnChild
+                                        + '</div>'
+                                    + '</td>'
                                     + '</tr>'
                                 );
                             });
@@ -922,6 +976,10 @@
 
                     const btn = e.target.closest && e.target.closest('[data-view-intake]');
                     if (!btn) return;
+                    if (btn.getAttribute('data-row-action')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                     openDetails(btn.getAttribute('data-view-intake'));
                 });
 
@@ -929,6 +987,7 @@
                     const btn = e.target.closest && e.target.closest('[data-approve-intake]');
                     if (!btn) return;
                     e.preventDefault();
+                    e.stopPropagation();
                     approveIntake(
                         btn.getAttribute('data-approve-intake'),
                         btn.getAttribute('data-approve-full-name'),
