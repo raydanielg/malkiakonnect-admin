@@ -116,6 +116,27 @@
                     </div>
                 </div>
 
+                <!-- Custom Delete Confirmation Modal -->
+                <div id="delete-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+                    <div class="relative p-4 w-full max-w-lg h-full md:h-auto">
+                        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 md:p-8">
+                            <div class="mb-4 text-sm font-light text-gray-500 dark:text-gray-400 text-left">
+                                <h3 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">Delete Member</h3>
+                                <p>
+                                    Je, una uhakika unataka kumfuta member <span id="delete-member-name" class="font-extrabold text-slate-900 dark:text-white"></span>? Kitendo hiki hakiwezi kurudishwa na data zake zote zitapotea.
+                                </p>
+                            </div>
+                            <div class="justify-between items-center pt-0 space-y-4 sm:flex sm:space-y-0">
+                                <a href="#" class="font-medium text-emerald-600 dark:text-emerald-500 hover:underline">Learn more about deletion</a>
+                                <div class="items-center space-y-4 sm:space-x-4 sm:flex sm:space-y-0">
+                                    <button id="delete-cancel" type="button" class="py-2 px-4 w-full text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 sm:w-auto hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-slate-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Hapana, Ghairi</button>
+                                    <button id="delete-confirm" type="button" class="py-2 px-4 w-full text-sm font-medium text-center text-white rounded-lg bg-rose-700 sm:w-auto hover:bg-rose-800 focus:ring-4 focus:outline-none focus:ring-rose-300 dark:bg-rose-600 dark:hover:bg-rose-700 dark:focus:ring-rose-800">Ndiyo, Futa</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="add-member-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
                     <div class="relative p-4 w-full max-w-3xl h-full md:h-auto">
                         <div class="relative p-4 bg-white rounded-2xl border border-slate-200 shadow md:p-8">
@@ -476,6 +497,17 @@ console.log('openAddMember called');
                     ].join('');
                 }
 
+                const deleteModalEl = document.getElementById('delete-modal');
+                const deleteConfirmBtn = document.getElementById('delete-confirm');
+                const deleteCancelBtn = document.getElementById('delete-cancel');
+                const deleteMemberNameEl = document.getElementById('delete-member-name');
+
+                const deleteModal = (deleteModalEl && typeof Modal !== 'undefined')
+                    ? new Modal(deleteModalEl, { placement: 'center' })
+                    : null;
+
+                let memberIdToDelete = null;
+
                 function setError(message) {
                     if (!errorWrapEl || !errorTextEl) return;
                     errorTextEl.textContent = message;
@@ -769,13 +801,28 @@ console.log('openAddMember called');
                     const btn = e.target.closest && e.target.closest('[data-delete-member]');
                     if (!btn) return;
                     
-                    const id = btn.getAttribute('data-delete-member');
+                    memberIdToDelete = btn.getAttribute('data-delete-member');
                     const name = btn.getAttribute('data-delete-name');
                     
-                    if (confirm(`Je, una uhakika unataka kumfuta member "${name}"? Kitendo hiki hakiwezi kurudishwa.`)) {
-                        deleteMember(id);
-                    }
+                    if (deleteMemberNameEl) deleteMemberNameEl.textContent = name || 'huyu';
+                    if (deleteModal) deleteModal.show();
                 });
+
+                if (deleteConfirmBtn) {
+                    deleteConfirmBtn.addEventListener('click', function () {
+                        if (memberIdToDelete) {
+                            deleteMember(memberIdToDelete);
+                        }
+                        if (deleteModal) deleteModal.hide();
+                    });
+                }
+
+                if (deleteCancelBtn) {
+                    deleteCancelBtn.addEventListener('click', function () {
+                        if (deleteModal) deleteModal.hide();
+                        memberIdToDelete = null;
+                    });
+                }
 
                 async function deleteMember(id) {
                     try {
