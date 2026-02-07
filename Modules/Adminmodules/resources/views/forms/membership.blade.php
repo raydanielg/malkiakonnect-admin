@@ -53,12 +53,12 @@
                             </div>
 
                             <div class="flex items-center gap-2">
-                                <button id="btn-add-member" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-extrabold transition">
+                                <a href="{{ url('/admin/forms/members/add') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-extrabold transition">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M5 12h14m-7-7v14" />
                                     </svg>
                                     <span>Add</span>
-                                </button>
+                                </a>
                             </div>
                         </div>
 

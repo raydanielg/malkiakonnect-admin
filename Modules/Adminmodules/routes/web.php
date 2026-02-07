@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
             return view('adminmodules::forms.intake-edit', ['intakeId' => $id]);
         })->name('forms.intakes.edit');
         Route::get('/forms/membership', fn () => view('adminmodules::forms.membership'))->name('forms.membership');
+        Route::get('/forms/members/add', fn () => view('adminmodules::forms.add-member'))->name('forms.members.add');
         Route::post('/forms/members/manual', [MotherIntakeManualMemberController::class, 'store'])
             ->name('forms.members.manual.store');
         Route::get('/forms/members/{id}/progress', function (int $id) {
