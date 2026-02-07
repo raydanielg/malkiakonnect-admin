@@ -26,12 +26,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admins', fn () => view('adminmodules::users.all-admin'))->name('admins.index');
 
         Route::get('/forms', fn () => view('adminmodules::forms.all-forms'))->name('forms.index');
-        Route::get('/forms/pregnant', fn () => view('adminmodules::forms.all-forms', [
-            'pageTitle' => 'Pregnant Forms',
+        Route::get('/forms/pregnant', fn () => view('adminmodules::forms.journey-forms', [
+            'pageTitle' => 'Pregnant',
             'defaultJourneyStage' => 'pregnant',
         ]))->name('forms.pregnant');
-        Route::get('/forms/ttc', fn () => view('adminmodules::forms.all-forms', [
-            'pageTitle' => 'TTC Forms',
+        Route::get('/forms/ttc', fn () => view('adminmodules::forms.journey-forms', [
+            'pageTitle' => 'TTC',
             'defaultJourneyStage' => 'ttc',
         ]))->name('forms.ttc');
         Route::get('/forms/intakes/{id}', function (int $id) {
