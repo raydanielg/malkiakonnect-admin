@@ -498,11 +498,11 @@ console.log('openAddMember called');
                 }
 
                 const deleteModalEl = document.getElementById('delete-modal');
-                const deleteConfirmBtn = document.getElementById('delete-confirm');
-                const deleteCancelBtn = document.getElementById('delete-cancel');
+                const btnDeleteConfirm = document.getElementById('delete-confirm');
+                const btnDeleteCancel = document.getElementById('delete-cancel');
                 const deleteMemberNameEl = document.getElementById('delete-member-name');
 
-                const deleteModal = (deleteModalEl && typeof Modal !== 'undefined')
+                const deleteModalInstance = (deleteModalEl && typeof Modal !== 'undefined')
                     ? new Modal(deleteModalEl, { placement: 'center' })
                     : null;
 
@@ -801,25 +801,33 @@ console.log('openAddMember called');
                     const btn = e.target.closest && e.target.closest('[data-delete-member]');
                     if (!btn) return;
                     
+                    console.log('Delete button clicked');
                     memberIdToDelete = btn.getAttribute('data-delete-member');
                     const name = btn.getAttribute('data-delete-name');
                     
                     if (deleteMemberNameEl) deleteMemberNameEl.textContent = name || 'huyu';
-                    if (deleteModal) deleteModal.show();
+                    if (deleteModalInstance) {
+                        deleteModalInstance.show();
+                    } else {
+                        console.error('deleteModalInstance not initialized');
+                        // Fallback to browser confirm if modal fails
+                        if (confirm(`Futa ${name}?`)) deleteMember(memberIdToDelete);
+                    }
                 });
 
-                if (deleteConfirmBtn) {
-                    deleteConfirmBtn.addEventListener('click', function () {
+                if (btnDeleteConfirm) {
+                    btnDeleteConfirm.addEventListener('click', function () {
+                        console.log('Confirm delete clicked');
                         if (memberIdToDelete) {
                             deleteMember(memberIdToDelete);
                         }
-                        if (deleteModal) deleteModal.hide();
+                        if (deleteModalInstance) deleteModalInstance.hide();
                     });
                 }
 
-                if (deleteCancelBtn) {
-                    deleteCancelBtn.addEventListener('click', function () {
-                        if (deleteModal) deleteModal.hide();
+                if (btnDeleteCancel) {
+                    btnDeleteCancel.addEventListener('click', function () {
+                        if (deleteModalInstance) deleteModalInstance.hide();
                         memberIdToDelete = null;
                     });
                 }
