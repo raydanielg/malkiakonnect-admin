@@ -118,6 +118,34 @@ class MotherIntakeController extends Controller
             $query->where('status', $status);
         }
 
+        if ($journeyStage !== '') {
+            $query->where('journey_stage', $journeyStage);
+        }
+
+        $phoneColumn = Schema::hasColumn('mother_intakes', 'phone') ? 'phone' : null;
+        if ($phoneColumn) {
+            $base = (clone $query);
+
+            $idsWithPhone = (clone $base)
+                ->whereNotNull($phoneColumn)
+                ->where($phoneColumn, '!=', '')
+                ->select(DB::raw('MAX(id) as id'))
+                ->groupBy($phoneColumn);
+
+            $idsWithoutPhone = (clone $base)
+                ->where(function ($q) use ($phoneColumn) {
+                    $q->whereNull($phoneColumn)->orWhere($phoneColumn, '=', '');
+                })
+                ->select('id');
+
+            $idUnion = $idsWithPhone->union($idsWithoutPhone);
+            $ids = DB::query()->fromSub($idUnion, 'dedup_ids')->pluck('id')->filter()->values();
+
+            if ($ids->isNotEmpty()) {
+                $query->whereIn('id', $ids->all());
+            }
+        }
+
         $paginator = $query
             ->orderByDesc('id')
             ->paginate($perPage)
